@@ -14,5 +14,5 @@ Está aplicación web se compondrá de una base de datos en la cual, la tablas p
 + Los productos estarán segmentados por categorías y subcategorías, para mejorar la herramienta de filtrado del comprador.
 + Los productos estarán activos durante un número determinado de días, si no se venden serán desactivados, puediendose activar de nuevo por parte del usuario
 
-+ > [!NOTE]
+> [!NOTE]
 > Los requisitos están abiertos a modificaciones a lo largo del proyecto.
