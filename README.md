@@ -1,6 +1,6 @@
-# Proyecto_TFG
+# Proyecto_TFC
 
-Proyecto fin de grado de la FP Superior Desarrollo de Aplicaciones Web.
+Proyecto fin de ciclo de la FP Superior Desarrollo de Aplicaciones Web.
 
 ## Descripción
 Aplicación web destinada a la venta de productos de segunda mano por parte de los usuarios.
