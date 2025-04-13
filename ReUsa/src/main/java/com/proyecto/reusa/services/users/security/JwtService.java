@@ -1,6 +1,7 @@
 package com.proyecto.reusa.services.users.security;
 
 import com.proyecto.reusa.models.Usuario;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -23,6 +24,15 @@ public class JwtService {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private Integer refreshExpiration;
 
+    public String extractUsername(final String token){
+        final Claims jwtToken = Jwts.parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return jwtToken.getSubject();
+    }
+
     public String generateToken(final Usuario user){
         return buildToken(user, jwtExpiration);
     }
@@ -41,6 +51,25 @@ public class JwtService {
                 .signWith(getSignInKey())
                 .compact();
     }
+
+    public boolean isTokenValid(final String token, final Usuario user){
+        final String email = extractUsername(token);
+        return (email.equals(user.getEmail())) && !isTokenExpirated(token);
+    }
+
+    private boolean isTokenExpirated(final String token){
+        return extractExpiration(token).before(new Date()); //Revisar
+    }
+
+    private Date extractExpiration(final String token){
+        final Claims jwtToken = Jwts.parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return jwtToken.getExpiration();
+    }
+
 
     private SecretKey getSignInKey(){
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);

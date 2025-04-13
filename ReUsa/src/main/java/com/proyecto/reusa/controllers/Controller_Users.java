@@ -1,7 +1,10 @@
 package com.proyecto.reusa.controllers;
 
 import com.proyecto.reusa.exceptions.CustomException;
+import com.proyecto.reusa.models.Usuario;
+import com.proyecto.reusa.models.repositories.UserRepository;
 import com.proyecto.reusa.services.users.Service_user;
+import com.proyecto.reusa.services.users.security.JwtService;
 import com.proyecto.reusa.services.users.serializers.UserLoginDTO;
 import com.proyecto.reusa.services.users.serializers.UserSigninDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/auth")
 @CacheConfig(cacheNames = {"auth"})
@@ -17,6 +22,10 @@ public class Controller_Users {
 
     @Autowired
     private Service_user serviceUser;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Integer id) throws CustomException{
@@ -40,8 +49,8 @@ public class Controller_Users {
         return ResponseEntity.ok(serviceUser.login(user));
     }
 
-//    @PostMapping("/refresh")
-//    public TokenResponse refreshToken(@RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader){
-//        return service.refreshToken(authHeader);
-//    }
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader) throws CustomException{
+        return ResponseEntity.ok(serviceUser.refreshToken(authHeader));
+    }
 }
