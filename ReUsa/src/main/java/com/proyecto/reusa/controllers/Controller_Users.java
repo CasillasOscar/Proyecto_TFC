@@ -1,17 +1,18 @@
 package com.proyecto.reusa.controllers;
 
 import com.proyecto.reusa.exceptions.CustomException;
-import com.proyecto.reusa.models.Usuario;
 import com.proyecto.reusa.services.users.Service_user;
 import com.proyecto.reusa.services.users.serializers.UserLoginDTO;
+import com.proyecto.reusa.services.users.serializers.UserSigninDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
-@CacheConfig(cacheNames = {"user"})
+@RequestMapping("/auth")
+@CacheConfig(cacheNames = {"auth"})
 public class Controller_Users {
 
     @Autowired
@@ -27,9 +28,20 @@ public class Controller_Users {
         return ResponseEntity.ok(serviceUser.getUserByNickname(nickname));
     }
 
+
+    //ACCESS
     @PostMapping("/signin")
-    public ResponseEntity<?> signin (@RequestBody UserLoginDTO user) throws CustomException {
+    public ResponseEntity<?> signin (@RequestBody UserSigninDTO user) throws CustomException {
         return ResponseEntity.ok(serviceUser.signin(user));
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login (@RequestBody UserLoginDTO user) throws CustomException {
+        return ResponseEntity.ok(serviceUser.login(user));
+    }
+
+//    @PostMapping("/refresh")
+//    public TokenResponse refreshToken(@RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader){
+//        return service.refreshToken(authHeader);
+//    }
 }

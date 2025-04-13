@@ -1,9 +1,14 @@
 package com.proyecto.reusa.services.users;
 
 import com.proyecto.reusa.exceptions.CustomException;
+import com.proyecto.reusa.models.Token;
 import com.proyecto.reusa.models.Usuario;
+import com.proyecto.reusa.models.repositories.TokenRepository;
 import com.proyecto.reusa.models.repositories.UserRepository;
+import com.proyecto.reusa.services.users.security.JwtService;
 import com.proyecto.reusa.services.users.serializers.UserLoginDTO;
+import com.proyecto.reusa.services.users.serializers.UserSigninDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,23 +17,18 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class Service_user implements Interface_service_user {
 
-    public Service_user() {
-        this.passwordEncoder = new BCryptPasswordEncoder();
-    }
 
     @Autowired
     private UserRepository repositoryUser;
+
+    @Autowired
+    private TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public String encryptPassword(String rawPassword) {
-        return passwordEncoder.encode(rawPassword);
-    }
-
-    public boolean verifyPassword(String rawPassword, String hashPassword) {
-        return passwordEncoder.matches(rawPassword, hashPassword);
-    }
 
     @Override
     public Optional<Usuario> getUserById(Integer id) throws CustomException{
@@ -53,32 +53,43 @@ public class Service_user implements Interface_service_user {
     }
 
     @Override
-    public Optional<Usuario> login(String nickname, String password) throws CustomException {
+    public Optional<Usuario> login(UserLoginDTO user) throws CustomException {
         return Optional.empty();
     }
 
     @Override
-    public Optional<Usuario> signin(UserLoginDTO userDTO) throws CustomException {
+    public Optional<Usuario> signin(UserSigninDTO userDTO) throws CustomException {
 
-        String rawPassword = userDTO.getPassword();
-        String hashedPassword = encryptPassword(rawPassword);
-        userDTO.setPassword(hashedPassword);
+        var user = Usuario.builder()
+                .nickname(userDTO.nickname())
+                .nombre(userDTO.nombre())
+                .apellido(userDTO.apellido())
+                .email(userDTO.email())
+                .password(passwordEncoder.encode(userDTO.password()))
+                .telefono(userDTO.telefono())
+                .build();
 
-        Usuario user = new Usuario();
-        user.setNickname(userDTO.getNickname());
-        user.setNombre(userDTO.getNombre());
-        user.setApellido(userDTO.getApellido());
-        user.setPassword(userDTO.getPassword());
-        user.setEmail(userDTO.getEmail());
-        user.setTelefono(userDTO.getTelefono());
+        Usuario savedUser = repositoryUser.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(savedUser, jwtToken);
 
-        Usuario user_save = repositoryUser.save(user);
-
-        if(Optional.of(user_save).isPresent()){
-            return Optional.of(user_save);
+        if(Optional.of(savedUser).isPresent()){
+            return Optional.of(savedUser);
         } else {
             throw new CustomException("El usuario no ha podido ser creado");
         }
+    }
+
+    private void saveUserToken(Usuario user, String jwtToken){
+        var token = Token.builder()
+                .usuario(user)
+                .token(jwtToken)
+                .tokenType(Token.TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        tokenRepository.save(token);
     }
 
     @Override
