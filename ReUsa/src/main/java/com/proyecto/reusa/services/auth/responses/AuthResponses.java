@@ -5,19 +5,16 @@ import com.proyecto.reusa.models.Usuario;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserResponses {
+public class AuthResponses {
 
     private Usuario user;
     private String accessToken;
     private String refreshToken;
 
-    public UserResponses(Usuario user, String accessToken, String refreshToken) {
+    public AuthResponses(Usuario user, String accessToken, String refreshToken) {
         this.user = user;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-    }
-    public UserResponses(Usuario user) {
-        this.user = user;
     }
 
     public Map<String, Object> responseLogin200() {

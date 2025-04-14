@@ -5,7 +5,7 @@ import com.proyecto.reusa.models.Token;
 import com.proyecto.reusa.models.Usuario;
 import com.proyecto.reusa.models.repositories.TokenRepository;
 import com.proyecto.reusa.models.repositories.UserRepository;
-import com.proyecto.reusa.services.auth.responses.UserResponses;
+import com.proyecto.reusa.services.auth.responses.AuthResponses;
 import com.proyecto.reusa.services.auth.serializers.UserLoginDTO;
 import com.proyecto.reusa.services.auth.serializers.UserSigninDTO;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +47,7 @@ public class Service_auth {
             revokeAllUserTokens(userFind.get());
             saveUserToken(userFind.get(), jwtToken);
 
-            return new UserResponses(userFind.get(), jwtToken, refreshToken).responseLogin200();
+            return new AuthResponses(userFind.get(), jwtToken, refreshToken).responseLogin200();
         } else {
             throw new CustomException("Usuario y contraseña no coinciden");
         }
@@ -82,7 +82,7 @@ public class Service_auth {
         saveUserToken(savedUser, jwtToken);
 
         if(Optional.of(savedUser).isPresent()){
-            return new UserResponses(savedUser, jwtToken, refreshToken).responseSignin200();
+            return new AuthResponses(savedUser, jwtToken, refreshToken).responseSignin200();
         } else {
             throw new CustomException("El usuario no ha podido ser creado");
         }
@@ -117,7 +117,7 @@ public class Service_auth {
                     final String accessToken = jwtService.generateToken(user.get());
                     revokeAllUserTokens(user.get());
                     saveUserToken(user.get(), accessToken);
-                    return new UserResponses(user.get(), accessToken, refreshToken).responseLogin200();
+                    return new AuthResponses(user.get(), accessToken, refreshToken).responseLogin200();
 
                 } else {
                     throw new CustomException("RefreshToken no válido");
@@ -127,5 +127,5 @@ public class Service_auth {
             }
         }
     }
-    
+
 }

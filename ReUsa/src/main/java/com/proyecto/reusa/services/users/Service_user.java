@@ -1,14 +1,8 @@
 package com.proyecto.reusa.services.users;
 
 import com.proyecto.reusa.exceptions.CustomException;
-import com.proyecto.reusa.models.Token;
 import com.proyecto.reusa.models.Usuario;
-import com.proyecto.reusa.models.repositories.TokenRepository;
 import com.proyecto.reusa.models.repositories.UserRepository;
-import com.proyecto.reusa.services.auth.JwtService;
-import com.proyecto.reusa.services.auth.responses.UserResponses;
-import com.proyecto.reusa.services.auth.serializers.UserLoginDTO;
-import com.proyecto.reusa.services.auth.serializers.UserSigninDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
