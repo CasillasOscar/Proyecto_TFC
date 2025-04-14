@@ -1,4 +1,4 @@
-package com.proyecto.reusa.services.users.security;
+package com.proyecto.reusa.services.auth;
 
 import com.proyecto.reusa.models.Usuario;
 import io.jsonwebtoken.Claims;
@@ -58,7 +58,8 @@ public class JwtService {
     }
 
     private boolean isTokenExpirated(final String token){
-        return extractExpiration(token).before(new Date()); //Revisar
+        System.out.println(new Date());
+        return extractExpiration(token).before(new Date());
     }
 
     private Date extractExpiration(final String token){

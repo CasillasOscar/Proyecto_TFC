@@ -1,25 +1,23 @@
 package com.proyecto.reusa.security;
 
-import com.proyecto.reusa.models.Usuario;
-import com.proyecto.reusa.models.repositories.UserRepository;
+import com.proyecto.reusa.models.Token;
+import com.proyecto.reusa.models.repositories.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Optional;
 
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @RequiredArgsConstructor
@@ -27,53 +25,49 @@ import java.util.Optional;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final UserRepository userRepository;
-
-    @Bean
-    public UserDetailsService userDetailsService(){
-        return username -> {
-            final Optional<Usuario> user = userRepository.findByEmail(username);
-
-            if(user.isPresent()){
-
-                return org.springframework.security.core.userdetails.User.builder()
-                        .username(user.get().getEmail())
-                        .password(user.get().getPassword())
-                        .build();
-
-            } else {
-                throw new UsernameNotFoundException("Usuario no encontrado");
-            }
-        };
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
-        return config.getAuthenticationManager();
-    }
-
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return  new BCryptPasswordEncoder();
-    }
-
+    private final JwtAuthFilter jwtAuthFilter;
+    private final AuthenticationProvider authenticationProvider;
+    private final TokenRepository tokenRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((requests) -> requests
-                        .anyRequest().permitAll() // Permite todas las peticiones sin autenticación
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(requests ->
+                        requests.requestMatchers("/auth/**")
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated()
                 )
-                .csrf(csrf -> csrf.disable()); // Deshabilita la protección CSRF (¡Cuidado en producción!)
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout ->
+                        logout.logoutUrl("/auth/logout")
+                                .addLogoutHandler((request, response, authentication) -> {
+                                    final var authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+                                    logout(authHeader);
+                                })
+                                .logoutSuccessHandler(((request, response, authentication) ->
+                                        SecurityContextHolder.clearContext()))
+                );
         return http.build();
+    }
+
+    private void logout(final String token){
+        if(token == null || !token.startsWith("Bearer ")){
+            throw new IllegalArgumentException("Token no válido");
+        }
+
+        final String jwtToken = token.substring(7);
+        final Optional<Token> foundToken = tokenRepository.getTokenByToken(jwtToken);
+        if(token.isEmpty()){
+            throw new IllegalArgumentException("Token no válido");
+        }
+        foundToken.get().setExpired(true);
+        foundToken.get().setRevoked(true);
+        tokenRepository.save(foundToken.get());
+
+
     }
 }

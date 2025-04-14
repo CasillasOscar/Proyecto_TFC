@@ -1,4 +1,4 @@
-package com.proyecto.reusa.services.users.serializers;
+package com.proyecto.reusa.services.auth.serializers;
 
 public record UserSigninDTO (
         String nickname,
