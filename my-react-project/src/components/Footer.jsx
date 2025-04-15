@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <Box sx={{ bgcolor: 'success.dark', color: 'white', p: 2, mt: 4 }} component="footer">
       <Typography variant="body2" align="center">
-        © 2025 Supermercado App. Todos los derechos reservados.
+        © 2025 Supermercado App. Todos los derechos reservados por Christian y Oscar.
       </Typography>
     </Box>
   );
