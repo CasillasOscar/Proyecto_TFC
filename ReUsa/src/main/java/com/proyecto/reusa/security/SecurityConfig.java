@@ -61,7 +61,7 @@ public class SecurityConfig {
 
         final String jwtToken = token.substring(7);
         final Optional<Token> foundToken = tokenRepository.getTokenByToken(jwtToken);
-        if(token.isEmpty()){
+        if(foundToken.isEmpty() || foundToken.get().getRevoked()){
             throw new IllegalArgumentException("Token no válido");
         }
         foundToken.get().setExpired(true);

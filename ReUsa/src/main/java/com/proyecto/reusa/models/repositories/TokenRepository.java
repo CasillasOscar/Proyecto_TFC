@@ -18,4 +18,6 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
     Token findByToken(@Size(min = 1) @NotNull String token);
 
     Optional<Token> getTokenByToken(@Size(min = 1) @NotNull String token);
+
+    Optional<Token> getTokenByTokenAndUsuario_Id(@Size(min = 1) @NotNull String token, Integer usuarioId);
 }

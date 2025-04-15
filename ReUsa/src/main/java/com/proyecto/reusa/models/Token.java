@@ -1,5 +1,7 @@
 package com.proyecto.reusa.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,6 +17,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties({"usuario"})
 @Table(name = "token")
 public class Token {
 
@@ -49,5 +52,10 @@ public class Token {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
+
+    @JsonProperty("usuario")
+    public String getEmailUser() {
+        return usuario != null ? usuario.getEmail() : null;
+    }
 
 }
