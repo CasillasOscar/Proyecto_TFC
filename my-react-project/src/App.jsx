@@ -1,22 +1,23 @@
 import React from 'react';
-import { Container, Typography, Box } from '@mui/material';
 import Header from './components/Header';
-import ProductGrid from './components/ProductGrid';
 import Footer from './components/Footer';
+import Home2 from './pages/Home2'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Vistas
+import Home from './pages/Home';
 
 export default function App() {
   return (
     <>
-      <Header />
-      <Box sx={{ backgroundColor: '#FFF59D', py: 3 }}>
-        <Typography variant="h5" align="center">
-          🛍️ ¡Aprovechá las ofertas del día!
-        </Typography>
-      </Box>
-      <Container sx={{ py: 4 }}>
-        <ProductGrid />
-      </Container>
-      <Footer />
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home/>} />
+          <Route path="/grid" element={<Home2/>} />
+        </Routes>
+        <Footer />
+      </Router>
     </>
   );
 }
