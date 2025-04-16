@@ -67,6 +67,16 @@ public class Service_auth {
 
     public Map<String, Object> signin(UserSigninDTO userDTO) throws CustomException {
 
+        Optional<Usuario> userNicknameExist = repositoryUser.getUsuarioByNickname(userDTO.nickname());
+        if(userNicknameExist.isPresent()){
+            throw new CustomException("El nickname " + userDTO.nickname() + " no disponible");
+        }
+
+        Optional<Usuario> userEmailExist = repositoryUser.getUsuarioByEmail(userDTO.email());
+        if(userEmailExist.isPresent()){
+            throw new CustomException("Ya existe un usuario con el email " + userDTO.email());
+        }
+
         var user = Usuario.builder()
                 .nickname(userDTO.nickname())
                 .nombre(userDTO.nombre())

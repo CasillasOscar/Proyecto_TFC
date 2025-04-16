@@ -26,13 +26,6 @@ public class SerializerUser {
         this.imagen_perfil = imagen_perfil;
     }
 
-    public SerializerUser(String nickname, String nombre, String apellido, String email) {
-        this.nickname = nickname;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.email = email;
-    }
-
     public String getProvincia() {
         return provincia;
     }
