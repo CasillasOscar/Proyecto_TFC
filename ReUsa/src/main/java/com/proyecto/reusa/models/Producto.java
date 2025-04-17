@@ -3,6 +3,9 @@ package com.proyecto.reusa.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -10,6 +13,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "productos")
 public class Producto {
     @Id
@@ -73,8 +79,21 @@ public class Producto {
 
     @NotNull
     @Lob
-    @Column(name = "vendido", nullable = false)
-    private String vendido;
+    @Column(name = "etapa", nullable = false)
+    private String etapa;
+
+    @Size(max = 200)
+    @NotNull
+    @Column(name = "nombre", nullable = false, length = 200)
+    private String nombre;
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
     public Integer getId() {
         return id;
@@ -172,12 +191,12 @@ public class Producto {
         this.imagen4 = imagen4;
     }
 
-    public String getVendido() {
-        return vendido;
+    public String getEtapa() {
+        return etapa;
     }
 
-    public void setVendido(String vendido) {
-        this.vendido = vendido;
+    public void setEtapa(String vendido) {
+        this.etapa = vendido;
     }
 
 }
