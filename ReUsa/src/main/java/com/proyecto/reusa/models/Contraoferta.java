@@ -31,6 +31,57 @@ public class Contraoferta {
     @Column(name = "precio", nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_usuario_vendedor", nullable = false)
+    private Usuario idUsuarioVendedor;
+
+    @NotNull
+    @Column(name = "expired", nullable = false)
+    private Boolean expired = false;
+
+    @NotNull
+    @Lob
+    @Column(name = "tipo", nullable = false)
+    private String tipo;
+
+    @NotNull
+    @Lob
+    @Column(name = "estado", nullable = false)
+    private String estado;
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public Boolean getExpired() {
+        return expired;
+    }
+
+    public void setExpired(Boolean expired) {
+        this.expired = expired;
+    }
+
+    public Usuario getIdUsuarioVendedor() {
+        return idUsuarioVendedor;
+    }
+
+    public void setIdUsuarioVendedor(Usuario idUsuarioVendedor) {
+        this.idUsuarioVendedor = idUsuarioVendedor;
+    }
+
     public Integer getId() {
         return id;
     }
