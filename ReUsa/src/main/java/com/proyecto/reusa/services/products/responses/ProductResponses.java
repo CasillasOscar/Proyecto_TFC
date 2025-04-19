@@ -50,18 +50,7 @@ public class ProductResponses {
         List<Map<String, String>> productList = new ArrayList<>();
 
         for (Producto p: products){
-            Map<String, String> productData = new HashMap<>();
-            productData.put("nombre", p.getNombre());
-            productData.put("precio", p.getPrecio().toString());
-            productData.put("descripcion", p.getDescripcion());
-            productData.put("estado", p.getEstado());
-            productData.put("fecha_publicacion", p.getFechaPublicacion().toString());
-            productData.put("categoria", p.getCategoria());
-            productData.put("subcategoria", p.getSubcategoria());
-            productData.put("imagen_1", p.getImagen1());
-            productData.put("imagen_2", p.getImagen2());
-            productData.put("imagen_3", p.getImagen3());
-            productData.put("imagen_4", p.getImagen4());
+            Map<String, String> productData = extractProductData(p);
             productList.add(productData);
 
         }
@@ -75,26 +64,29 @@ public class ProductResponses {
     public Map<String, Object> responseGetProduct200() {
         Map<String, Object> response = new HashMap<>();
 
-        Map<String, String> productData = new HashMap<>();
-        productData.put("nombre", product.getNombre());
-        productData.put("precio", product.getPrecio().toString());
-        productData.put("descripcion", product.getDescripcion());
-        productData.put("estado", product.getEstado());
-        productData.put("fecha_publicacion", product.getFechaPublicacion().toString());
-        productData.put("categoria", product.getCategoria());
-        productData.put("subcategoria", product.getSubcategoria());
-        productData.put("imagen_1", product.getImagen1());
-        productData.put("imagen_2", product.getImagen2());
-        productData.put("imagen_3", product.getImagen3());
-        productData.put("imagen_4", product.getImagen4());
-
-        response.put("product", productData);
+        response.put("product", extractProductData(product));
         response.put("response_successfully", responseBoolean.toString());
 
         return response;
     }
 
+    private Map<String, String> extractProductData(Producto p) {
+        Map<String, String> productData = new HashMap<>();
+        productData.put("id", p.getId().toString());
+        productData.put("nombre", p.getNombre());
+        productData.put("precio", p.getPrecio().toString());
+        productData.put("descripcion", p.getDescripcion());
+        productData.put("estado", p.getEstado());
+        productData.put("fecha_publicacion", p.getFechaPublicacion().toString());
+        productData.put("categoria", p.getCategoria());
+        productData.put("subcategoria", p.getSubcategoria());
+        productData.put("imagen_1", p.getImagen1());
+        productData.put("imagen_2", p.getImagen2());
+        productData.put("imagen_3", p.getImagen3());
+        productData.put("imagen_4", p.getImagen4());
 
+        return productData;
+    }
 
 
 }
