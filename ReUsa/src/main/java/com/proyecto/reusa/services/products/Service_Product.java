@@ -9,6 +9,7 @@ import com.proyecto.reusa.models.repositories.*;
 import com.proyecto.reusa.services.products.responses.ProductResponses;
 import com.proyecto.reusa.services.products.serializers.FiltersDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,19 +20,32 @@ import java.util.*;
 @RequiredArgsConstructor
 public class Service_Product {
 
+    @Autowired
     private ProductoRepository productoRepository;
+    @Autowired
     private TokenRepository tokenRepository;
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private VentaRepository ventaRepository;
 
     public List<Producto> getAllProductsActive(){
         return productoRepository.getProductosByEtapa("activo");
     }
 
-//    public List<Producto> getProductsWithFilters(FiltersDTO filters){
-//        List<String> filtersNotNull = getNonNullFilters(filters);
-//
-//    }
+    public Map<String, Object> getProductsWithFilters(FiltersDTO filters){
+        List<Producto> filteredProducts = productoRepository.getProductWithFilters(
+                filters.categoria(),
+                filters.subcategoria(),
+                filters.maxPrecio(),
+                filters.minPrecio(),
+                filters.provincia(),
+                filters.ccaa(),
+                filters.estado()
+        );
+
+        return new ProductResponses(true, filteredProducts).responseProductFilters200();
+    }
 
     public Map<String, Object> buyProduct(String buyer_nickname, Integer id_product, String authHeader) throws CustomException {
         Usuario user = findOutNickAndToken(buyer_nickname, authHeader);
@@ -83,33 +97,6 @@ public class Service_Product {
         return user.get();
     }
 
-    private List<String> getNonNullFilters(FiltersDTO filtersDTO) {
-        List<String> nonNullFilters = new ArrayList<>();
-
-        if (filtersDTO.categoria() != null) {
-            nonNullFilters.add("categoria");
-        }
-        if (filtersDTO.subcategoria() != null) {
-            nonNullFilters.add("subcategoria");
-        }
-        if (filtersDTO.maxPrecio() != null) {
-            nonNullFilters.add("maxPrecio");
-        }
-        if (filtersDTO.minPrecio() != null) {
-            nonNullFilters.add("minPrecio");
-        }
-        if (filtersDTO.provincia() != null) {
-            nonNullFilters.add("provincia");
-        }
-        if (filtersDTO.CCAA() != null) {
-            nonNullFilters.add("CCAA");
-        }
-        if (filtersDTO.estado() != null) {
-            nonNullFilters.add("estado");
-        }
-
-        return nonNullFilters;
-    }
 
 }
 

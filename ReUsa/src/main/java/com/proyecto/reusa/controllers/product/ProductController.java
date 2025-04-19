@@ -12,18 +12,19 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/product")
-@CacheConfig(cacheNames = {"product"})
+@RequestMapping("/products")
+@CacheConfig(cacheNames = {"products"})
 public class ProductController {
 
+    @Autowired
     private Service_Product serviceProduct;
 
-    @GetMapping("/products")
+    @GetMapping()
     public ResponseEntity<?> getAllProductsActive(){
         return ResponseEntity.ok(serviceProduct.getAllProductsActive());
     }
 
-    @PostMapping("products/filters")
+    @PostMapping("/filters")
     public ResponseEntity<?> getProductsFilter(@RequestBody FiltersDTO filters){
         return ResponseEntity.ok(serviceProduct.getProductsWithFilters(filters));
     }

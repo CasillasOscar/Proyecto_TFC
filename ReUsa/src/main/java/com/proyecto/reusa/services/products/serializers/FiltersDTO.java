@@ -6,6 +6,6 @@ public record FiltersDTO(
         Integer maxPrecio,
         Integer minPrecio,
         String provincia,
-        String CCAA,
+        String ccaa,
         String estado
 ) {}

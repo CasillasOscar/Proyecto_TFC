@@ -1,5 +1,7 @@
 package com.proyecto.reusa.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -16,6 +18,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"idUsuario", "idSubcategoria"})
 @Table(name = "productos")
 public class Producto {
     @Id
@@ -29,11 +32,25 @@ public class Producto {
     @JoinColumn(name = "id_usuario", nullable = false)
     private com.proyecto.reusa.models.Usuario idUsuario;
 
+    @JsonProperty("usuario_vendedor")
+    public String getUsuarioVendedor() {
+        return idUsuario != null ? idUsuario.getNickname() : null;
+    }
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "id_subcategoria", nullable = false)
     private com.proyecto.reusa.models.Subcategoria idSubcategoria;
+
+    @JsonProperty("subcategoria")
+    public String getSubcategoria() {
+        return idSubcategoria != null ? idSubcategoria.getNombre() : null;
+    }
+    @JsonProperty("categoria")
+    public String getCategoria() {
+        return idSubcategoria != null ? idSubcategoria.getIdCategoria().getNombre() : null;
+    }
 
     @NotNull
     @Column(name = "precio", nullable = false, precision = 10, scale = 2)
@@ -52,10 +69,6 @@ public class Producto {
     @NotNull
     @Column(name = "fecha_publicacion", nullable = false)
     private LocalDate fechaPublicacion;
-
-    @NotNull
-    @Column(name = "fecha_inactivo", nullable = false)
-    private LocalDate fechaInactivo;
 
     @Size(max = 250)
     @NotNull
@@ -149,14 +162,6 @@ public class Producto {
 
     public void setFechaPublicacion(LocalDate fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
-    }
-
-    public LocalDate getFechaInactivo() {
-        return fechaInactivo;
-    }
-
-    public void setFechaInactivo(LocalDate fechaInactivo) {
-        this.fechaInactivo = fechaInactivo;
     }
 
     public String getImagen1() {
