@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,6 +26,11 @@ public class ProductController {
     @PostMapping("/filters")
     public ResponseEntity<?> getProductsFilter(@RequestBody FiltersDTO filters){
         return ResponseEntity.ok(serviceProduct.getProductsWithFilters(filters));
+    }
+
+    @GetMapping("/product/{id_product}")
+    public ResponseEntity<?> getProductById(@PathVariable Integer id_product) throws CustomException {
+        return ResponseEntity.ok(serviceProduct.getProductById(id_product));
     }
 
 

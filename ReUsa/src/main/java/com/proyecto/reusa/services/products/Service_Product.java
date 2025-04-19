@@ -33,6 +33,14 @@ public class Service_Product {
         return productoRepository.getProductosByEtapa("activo");
     }
 
+    public Map<String, Object> getProductById(Integer id_product) throws CustomException {
+        Optional<Producto> product = productoRepository.getProductoByIdAndEtapa(id_product, "activo");
+        if(product.isEmpty()){
+            throw new CustomException("No existe el producto con id: " + id_product);
+        }
+        return new ProductResponses(product.get(), true).responseGetProduct200();
+    }
+
     public Map<String, Object> getProductsWithFilters(FiltersDTO filters){
         List<Producto> filteredProducts = productoRepository.getProductWithFilters(
                 filters.categoria(),
@@ -44,7 +52,7 @@ public class Service_Product {
                 filters.estado()
         );
 
-        return new ProductResponses(true, filteredProducts).responseProductFilters200();
+        return new ProductResponses(filteredProducts, true).responseProductFilters200();
     }
 
     public Map<String, Object> buyProduct(String buyer_nickname, Integer id_product, String authHeader) throws CustomException {

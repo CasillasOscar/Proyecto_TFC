@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -41,4 +42,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
             @Param("ccaa") String ccaa,
             @Param("estado") String estado
     );
+
+    Producto getProductoById(Integer id);
+
+    Integer id(Integer id);
 }
