@@ -1,9 +1,11 @@
 package com.proyecto.reusa.services.users;
 
 import com.proyecto.reusa.exceptions.CustomException;
+import com.proyecto.reusa.models.Favorito;
 import com.proyecto.reusa.models.Provincia;
 import com.proyecto.reusa.models.Token;
 import com.proyecto.reusa.models.Usuario;
+import com.proyecto.reusa.models.repositories.FavoritosRepository;
 import com.proyecto.reusa.models.repositories.ProvinciaRepository;
 import com.proyecto.reusa.models.repositories.TokenRepository;
 import com.proyecto.reusa.models.repositories.UserRepository;
@@ -16,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.io.Serial;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,12 +32,14 @@ public class Service_user {
     private UserRepository repositoryUser;
     @Autowired
     private TokenRepository tokenRepository;
-    private final PasswordEncoder passwordEncoder;
     @Autowired
     private ProvinciaRepository provinciaRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private FavoritosRepository favoritosRepository;
 
+    private final PasswordEncoder passwordEncoder;
 
     public SerializerUser getUserByNickname(
             String nickname,
@@ -79,7 +83,7 @@ public class Service_user {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         repositoryUser.save(user);
 
-        return new UserResponses(true, user).responseUpdatedPwd200();
+        return new UserResponses(user, true).responseUpdatedPwd200();
     }
 
     public Map<String, Object> updateUser(
@@ -108,9 +112,34 @@ public class Service_user {
 
         userRepository.save(userFound);
 
-        return new UserResponses(true, userFound).responseUpdatedUser200();
+        return new UserResponses(userFound, true).responseUpdatedUser200();
     }
 
+    public Map<String, Object> getFavoritesProducts(
+            String nickname,
+            String authHeader
+    ) throws CustomException {
+        Usuario userFound = findOutNickAndToken(nickname, authHeader);
+        List<Favorito> favoritos = favoritosRepository.getFavoritosByIdUsuarioComprador_Nickname(nickname);
+
+        return new UserResponses(favoritos, true).responseFavoritos200();
+    }
+
+    public Map<String, String> removeFavoriteProduct(
+            String nickname,
+            Integer id_product,
+            String authHeader
+    ) throws CustomException {
+        Usuario userFound = findOutNickAndToken(nickname, authHeader);
+
+        Optional<Favorito> favorite_product = favoritosRepository.getFavoritoByIdProducto_IdAndIdUsuarioComprador_Nickname(id_product, userFound.getNickname());
+        if(favorite_product.isEmpty()){
+            throw new CustomException("Producto no encontrado en favoritos");
+        }
+        favoritosRepository.deleteById(favorite_product.get().getId());
+
+        return new UserResponses(true).responseRemoveFavorite200();
+    }
 
 
     private Usuario findOutNickAndToken(

@@ -28,7 +28,7 @@ public class ProductController {
         return ResponseEntity.ok(serviceProduct.getProductsWithFilters(filters));
     }
 
-    @GetMapping("/product/{id_product}")
+    @GetMapping("/{id_product}")
     public ResponseEntity<?> getProductById(@PathVariable Integer id_product) throws CustomException {
         return ResponseEntity.ok(serviceProduct.getProductById(id_product));
     }
