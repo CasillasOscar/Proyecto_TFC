@@ -2,12 +2,19 @@ package com.proyecto.reusa.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "venta")
 public class Venta {
     @Id
@@ -39,15 +46,8 @@ public class Venta {
 
     @NotNull
     @Column(name = "precio", nullable = false)
-    private Integer precio;
+    private BigDecimal precio;
 
-    @NotNull
-    @Column(name = "valoracion_comprador", nullable = false)
-    private Integer valoracionComprador;
-
-    @NotNull
-    @Column(name = "valoracion_vendedor", nullable = false)
-    private Integer valoracionVendedor;
 
     public Integer getId() {
         return id;
@@ -89,28 +89,13 @@ public class Venta {
         this.fechaVenta = fechaVenta;
     }
 
-    public Integer getPrecio() {
+    public BigDecimal getPrecio() {
         return precio;
     }
 
-    public void setPrecio(Integer precio) {
+    public void setPrecio(BigDecimal precio) {
         this.precio = precio;
     }
 
-    public Integer getValoracionComprador() {
-        return valoracionComprador;
-    }
-
-    public void setValoracionComprador(Integer valoracionComprador) {
-        this.valoracionComprador = valoracionComprador;
-    }
-
-    public Integer getValoracionVendedor() {
-        return valoracionVendedor;
-    }
-
-    public void setValoracionVendedor(Integer valoracionVendedor) {
-        this.valoracionVendedor = valoracionVendedor;
-    }
 
 }

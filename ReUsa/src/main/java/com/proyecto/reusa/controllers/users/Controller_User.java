@@ -1,9 +1,7 @@
 package com.proyecto.reusa.controllers.users;
 
 import com.proyecto.reusa.exceptions.CustomException;
-import com.proyecto.reusa.models.Usuario;
 import com.proyecto.reusa.services.users.Service_user;
-import com.proyecto.reusa.services.users.serializers.SerializerUser;
 import com.proyecto.reusa.services.users.serializers.UpdatePwdDTO;
 import com.proyecto.reusa.services.users.serializers.UpdateUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @CacheConfig(cacheNames = {"user"})
 public class Controller_User {
 
@@ -22,7 +20,7 @@ public class Controller_User {
 
     //Endpoint para obtener la información del usuario a través del nickname
     //Endpoint destinado a abrir la información del perfil
-    @GetMapping("nickname/{nickname}")
+    @GetMapping("/{nickname}")
     public ResponseEntity<?> getUserByNickname(
             @PathVariable String nickname,
             @RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader
@@ -48,5 +46,24 @@ public class Controller_User {
             @RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader
     ) throws CustomException{
         return ResponseEntity.ok(serviceUser.updateUser(user, authHeader, nickname));
+    }
+
+    //Endpoint para listar los favoritos de un usuario
+    @GetMapping("/{nickname}/favorites")
+    public ResponseEntity<?> getFavoritesProducts(
+            @PathVariable String nickname,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader
+    ) throws CustomException {
+        return ResponseEntity.ok(serviceUser.getFavoritesProducts(nickname,authHeader));
+    }
+
+    //Enpoint para eliminar un favorito
+    @GetMapping("/{nickname}/removeFavorite/{id_product}")
+    public ResponseEntity<?> deleteFavoriteProduct(
+            @PathVariable String nickname,
+            @PathVariable Integer id_product,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader
+    ) throws CustomException {
+        return ResponseEntity.ok(serviceUser.removeFavoriteProduct(nickname, id_product, authHeader));
     }
 }
