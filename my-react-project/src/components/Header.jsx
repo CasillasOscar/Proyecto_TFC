@@ -3,19 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-
 import MenuIcon from '@mui/icons-material/Menu';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import logo from '../assets/logo.png';
 
 export default function Header() {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -33,14 +32,10 @@ export default function Header() {
             <MenuIcon />
           </IconButton>
 
-          <Typography
-            variant="h6"
-            component="div"
-            onClick={() => navigate('/')}
-            sx={{ cursor: 'pointer', textAlign: 'center', flexGrow: 1 }}
-          >
-            ReUsa
-          </Typography>
+          <Box sx={{ cursor: 'pointer', textAlign: 'center', flexGrow: 1 }} onClick={() => navigate('/')}>
+            <img src={logo} alt="ReUsa" style={{ height: '130px' }} />
+          </Box>
+
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <IconButton onClick={() => navigate('/favoritos')} title="Favoritos">
