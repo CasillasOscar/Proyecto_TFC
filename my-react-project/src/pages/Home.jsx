@@ -10,12 +10,22 @@ const productos = Array.from({ length: 20 }, (_, i) => ({
 
 export default function Home() {
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h6" gutterBottom>
+    <Box sx={{
+      p: 3,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}>
+      <Typography 
+        variant="h5" 
+        gutterBottom 
+        sx={{ textAlign: 'center' }}
+      >
         🛍️ Productos disponibles
       </Typography>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={2} justifyContent="center">
         {productos.map((producto) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={producto.id}>
             <Card>

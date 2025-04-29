@@ -16,20 +16,36 @@ export default function NuevoProducto() {
   const handleSubmit = (e) => {
     e.preventDefault();
     alert("Producto subido (simulado)");
-    // Aquí enviarías los datos al backend
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h5" mb={2}>📦 Añadir nuevo producto</Typography>
+    <Box sx={{
+      p: 3,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}>
+      <Box 
+        component="form" 
+        onSubmit={handleSubmit} 
+        sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          gap: 2, 
+          maxWidth: 500 
+        }}
+      >
+        <Typography variant="h5" mb={2} sx={{ textAlign: 'center' }}>
+          📦 Añadir nuevo producto
+        </Typography>
 
-      <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 500 }}>
-        <TextField label="Título del producto" required />
-        <TextField label="Precio (€)" type="number" required />
-        <TextField label="Descripción" multiline rows={4} required />
+        <TextField label="Título del producto" required fullWidth />
+        <TextField label="Precio (€)" type="number" required fullWidth />
+        <TextField label="Descripción" multiline rows={4} required fullWidth />
 
         <Input type="file" onChange={handleImagenChange} accept="image/*" />
-        
+
         {preview && (
           <Box mt={2}>
             <Typography variant="subtitle2">Vista previa:</Typography>
@@ -37,7 +53,7 @@ export default function NuevoProducto() {
           </Box>
         )}
 
-        <Button variant="contained" type="submit" color="success">
+        <Button variant="contained" type="submit" color="success" fullWidth>
           Publicar
         </Button>
       </Box>
