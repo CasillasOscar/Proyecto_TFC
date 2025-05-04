@@ -10,6 +10,9 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -20,6 +23,10 @@ import org.hibernate.annotations.OnDeleteAction;
 @JsonIgnoreProperties({"usuario"})
 @Table(name = "token")
 public class Token {
+
+    @NotNull
+    @Column(name = "date_expired", nullable = false)
+    private LocalDateTime dateExpired;
 
     public enum TokenType{
         BEARER

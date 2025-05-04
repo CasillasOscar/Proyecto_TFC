@@ -2,6 +2,7 @@ package com.proyecto.reusa.services.auth.responses;
 
 import com.proyecto.reusa.models.Usuario;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,11 +11,21 @@ public class AuthResponses {
     private Usuario user;
     private String accessToken;
     private String refreshToken;
+    private LocalDateTime refreshToken_expired;
+    private LocalDateTime token_expired;
 
     public AuthResponses(Usuario user, String accessToken, String refreshToken) {
         this.user = user;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+    }
+
+    public AuthResponses(Usuario user, String accessToken, LocalDateTime token_expired, String refreshToken, LocalDateTime refreshToken_expired) {
+        this.user = user;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.token_expired = token_expired;
+        this.refreshToken_expired = refreshToken_expired;
     }
 
     public Map<String, Object> responseLogin200() {
@@ -27,7 +38,9 @@ public class AuthResponses {
 
         response.put("user", userData);
         response.put("token", accessToken);
+        response.put("token_expired", token_expired);
         response.put("refreshToken", refreshToken);
+        response.put("refreshToken_expired", refreshToken_expired);
 
         return response;
     }
@@ -42,7 +55,9 @@ public class AuthResponses {
 
         response.put("user", userData);
         response.put("token", accessToken);
+        response.put("token_expired", token_expired);
         response.put("refreshToken", refreshToken);
+        response.put("refreshToken_expired", refreshToken_expired);
 
         return response;
     }

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
 
@@ -33,9 +35,7 @@ public class JwtService {
         return jwtToken.getSubject();
     }
 
-    public String generateToken(final Usuario user){
-        return buildToken(user, jwtExpiration);
-    }
+    public String generateToken(final Usuario user){return buildToken(user, jwtExpiration);}
 
     public String generateRefreshToken(final Usuario user){
         return buildToken(user, refreshExpiration);
@@ -59,7 +59,7 @@ public class JwtService {
 
     private boolean isTokenExpirated(final String token){
         System.out.println(new Date());
-        return extractExpiration(token).before(new Date());
+        return extractLocalDateTimeExpiration(token).isBefore(LocalDateTime.now(ZoneId.of("UTC")));
     }
 
     private Date extractExpiration(final String token){
@@ -71,6 +71,13 @@ public class JwtService {
         return jwtToken.getExpiration();
     }
 
+    public LocalDateTime extractLocalDateTimeExpiration(final String token) {
+        Date date = extractExpiration(token);
+        if (date != null) {
+            return date.toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime();
+        }
+        return null;
+    }
 
     private SecretKey getSignInKey(){
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
