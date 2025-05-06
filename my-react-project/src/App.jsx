@@ -18,6 +18,9 @@ export default function App() {
     <>
       <Header />
       <Routes>
+        {/* Para que la página que se muestre como principal sea Home */}
+        <Route path="/" element={<Home />} />
+
         <Route path="/home" element={<Home />} />
         <Route path="/favoritos" element={<Favoritos />} />
         <Route path="/perfil" element={<Perfil />} />
