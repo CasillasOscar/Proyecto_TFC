@@ -27,17 +27,25 @@ export default function Header() {
   return (
     <>
       <AppBar position="sticky" sx={{ backgroundColor: '#ffffff', color: 'black', boxShadow: 2 }}>
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <IconButton edge="start" onClick={toggleDrawer(true)}>
+        <Toolbar sx={{ position: 'relative', minHeight: '100px' }}>
+          <IconButton edge="start" onClick={toggleDrawer(true)} sx={{ zIndex: 2 }}>
             <MenuIcon />
           </IconButton>
 
-          <Box sx={{ cursor: 'pointer', textAlign: 'center', flexGrow: 1 }} onClick={() => navigate('/')}>
-            <img src={logo} alt="ReUsa" style={{ height: '130px' }} />
+          <Box
+            sx={{
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              cursor: 'pointer',
+            }}
+            onClick={() => navigate('/')}
+          >
+            <img src={logo} alt="ReUsa" style={{ height: '100px' }} />
           </Box>
 
-
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {/* Botones de la derecha */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginLeft: 'auto', zIndex: 2 }}>
             <IconButton onClick={() => navigate('/favoritos')} title="Favoritos">
               <FavoriteIcon color="error" />
             </IconButton>
@@ -64,6 +72,7 @@ export default function Header() {
             </Button>
           </Box>
         </Toolbar>
+
       </AppBar>
 
       <Drawer anchor="left" open={openDrawer} onClose={toggleDrawer(false)}>
