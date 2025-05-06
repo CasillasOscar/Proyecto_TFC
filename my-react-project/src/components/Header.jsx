@@ -39,10 +39,11 @@ export default function Header() {
               transform: 'translateX(-50%)',
               cursor: 'pointer',
             }}
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/Home')}
           >
             <img src={logo} alt="ReUsa" style={{ height: '100px' }} />
           </Box>
+
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginLeft: 'auto', zIndex: 2 }}>
             <IconButton onClick={() => navigate('/favoritos')} title="Favoritos">
@@ -81,7 +82,7 @@ export default function Header() {
             <ListItem button onClick={() => navigate('/Perfil')}> <ListItemText primary="Perfil" /> </ListItem>
             <ListItem button onClick={() => navigate('/')}> <ListItemText primary="Productos" /> </ListItem>
             <ListItem button onClick={() => navigate('/Favoritos')}> <ListItemText primary="Favoritos" /> </ListItem>
-            <ListItem button onClick={() => navigate('/')}> <ListItemText primary="Valoraciones" /> </ListItem>
+            <ListItem button onClick={() => navigate('/Valoraciones')}> <ListItemText primary="Valoraciones" /> </ListItem>
             <ListItem button onClick={() => navigate('/AcercaDe')}> <ListItemText primary="Acerca de nosotros" /> </ListItem>
           </List>
         </Box>
