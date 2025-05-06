@@ -44,7 +44,6 @@ export default function Header() {
             <img src={logo} alt="ReUsa" style={{ height: '100px' }} />
           </Box>
 
-          {/* Botones de la derecha */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginLeft: 'auto', zIndex: 2 }}>
             <IconButton onClick={() => navigate('/favoritos')} title="Favoritos">
               <FavoriteIcon color="error" />
@@ -78,10 +77,12 @@ export default function Header() {
       <Drawer anchor="left" open={openDrawer} onClose={toggleDrawer(false)}>
         <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
           <List>
-            <ListItem button onClick={() => navigate('/')}> <ListItemText primary="Inicio" /> </ListItem>
-            <ListItem button onClick={() => navigate('/categorias')}> <ListItemText primary="Categorías" /> </ListItem>
-            <ListItem button onClick={() => navigate('/mensajes')}> <ListItemText primary="Mensajes" /> </ListItem>
-            <ListItem button onClick={() => navigate('/configuracion')}> <ListItemText primary="Configuración" /> </ListItem>
+            <ListItem button onClick={() => navigate('/Home')}> <ListItemText primary="Inicio" /> </ListItem>
+            <ListItem button onClick={() => navigate('/Perfil')}> <ListItemText primary="Perfil" /> </ListItem>
+            <ListItem button onClick={() => navigate('/')}> <ListItemText primary="Productos" /> </ListItem>
+            <ListItem button onClick={() => navigate('/Favoritos')}> <ListItemText primary="Favoritos" /> </ListItem>
+            <ListItem button onClick={() => navigate('/')}> <ListItemText primary="Valoraciones" /> </ListItem>
+            <ListItem button onClick={() => navigate('/AcercaDe')}> <ListItemText primary="Acerca de nosotros" /> </ListItem>
           </List>
         </Box>
       </Drawer>
