@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/users")
@@ -43,6 +44,15 @@ public class Controller_User {
             @RequestBody UpdateUserDTO user
     ) throws CustomException{
         return ResponseEntity.ok(serviceUser.updateUser(user, nickname));
+    }
+
+    //Endpoint para actualizar datos de un usuario
+    @PostMapping("updateProfilePhoto/{nickname}")
+    public ResponseEntity<?> updateProfilePhoto(
+            @PathVariable String nickname,
+            @RequestParam("imagen") MultipartFile image
+    ) throws CustomException{
+        return ResponseEntity.ok(serviceUser.updateProfilePhoto(nickname, image));
     }
 
     //Endpoint para listar los favoritos de un usuario

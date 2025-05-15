@@ -57,11 +57,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        final Optional<Token> token = tokenRepository.getTokenByToken(jwtToken);
-        if(token.isEmpty() || token.get().getExpired() || token.get().getRevoked()){
-            filterChain.doFilter(request,response);
-            return;
-        }
+//        final Optional<Token> token = tokenRepository.getTokenByToken(jwtToken);
+//        if(token.isEmpty() || token.get().getExpired() || token.get().getRevoked()){
+//            filterChain.doFilter(request,response);
+//            return;
+//        }
 
         final UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
         final Optional<Usuario> user = userRepository.getUsuarioByEmail(userDetails.getUsername());

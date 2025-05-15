@@ -15,9 +15,16 @@ import com.proyecto.reusa.services.users.serializers.UpdatePwdDTO;
 import com.proyecto.reusa.services.users.serializers.UpdateUserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,6 +44,9 @@ public class Service_user {
     private UserRepository userRepository;
     @Autowired
     private FavoritosRepository favoritosRepository;
+
+    @Value("${ruta.imagenes.perfil}")
+    private String filePathProfilePhoto;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -135,6 +145,55 @@ public class Service_user {
         return new UserResponses(true).responseRemoveFavorite200();
     }
 
+    public Map<String, String> updateProfilePhoto(
+            String nickname,
+            MultipartFile image
+    ) throws CustomException{
+
+        if (image.isEmpty()) {
+            throw new CustomException("Por favor, selecciona una imagen.");
+        }
+
+        Usuario user = findNickname(nickname);
+
+        // 1. Validate file format in the backend
+        String fileExtension = getFileExtension(image.getOriginalFilename());
+        if (!fileExtension.equalsIgnoreCase("jpg") && !fileExtension.equalsIgnoreCase("jpeg") && !fileExtension.equalsIgnoreCase("png")) {
+            throw new CustomException("Solo se permiten archivos con formato JPG o PNG.");
+        }
+        try {
+            // 2. Generate the filename according to the convention
+            String nombreArchivoUnico = nickname + "_profilePhoto." + (fileExtension.equalsIgnoreCase("jpeg") ? "jpg" : fileExtension.toLowerCase());
+
+            // 3. Construct the absolute path to save the image
+            Path rutaAbsoluta = Paths.get(filePathProfilePhoto).resolve(nombreArchivoUnico).toAbsolutePath();
+
+            // 4. Save the image to the filesystem
+            Files.copy(image.getInputStream(), rutaAbsoluta);
+
+            // 5. Construct the relative path to store in the database
+            String rutaRelativa = "/profilePhotos/" + nombreArchivoUnico;
+
+            user.setImagenPerfil(rutaRelativa);
+            userRepository.save(user);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Imagen de perfil actualizada correctamente.");
+            response.put("pathImage", rutaRelativa);
+            return response;
+
+        } catch (IOException e) {
+            throw new CustomException("Error al guardar la imagen: " + e.getMessage());
+        }
+    }
+
+    private String getFileExtension(String filename) {
+        if (filename == null || !filename.contains(".")) {
+            return "";
+        }
+        return filename.substring(filename.lastIndexOf(".") + 1);
+    }
+
 
     private Usuario findNickname(
             String nickname
@@ -147,5 +206,7 @@ public class Service_user {
         }
         return user.get();
     }
+
+
 
 }
