@@ -36,10 +36,9 @@ public class ProductController {
 
     @PostMapping("/buy/{buyer_nickname}/{id_product}")
     public ResponseEntity<?> buyProduct (
-            @RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader,
             @PathVariable String buyer_nickname,
             @PathVariable Integer id_product
     ) throws CustomException {
-        return ResponseEntity.ok(serviceProduct.buyProduct(buyer_nickname,id_product,authHeader));
+        return ResponseEntity.ok(serviceProduct.buyProduct(buyer_nickname,id_product));
     }
 }

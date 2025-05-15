@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,11 +41,10 @@ public class Service_user {
     private final PasswordEncoder passwordEncoder;
 
     public SerializerUser getUserByNickname(
-            String nickname,
-            String authHeader
+            String nickname
     ) throws CustomException {
 
-        Usuario user = findOutNickAndToken(nickname, authHeader);
+        Usuario user = findNickname(nickname);
 
         return new SerializerUser(
                 user.getNickname(),
@@ -65,11 +63,10 @@ public class Service_user {
 
     public Map<String, String> updatePassword(
             String nickname,
-            UpdatePwdDTO request,
-            String authHeader
+            UpdatePwdDTO request
     ) throws CustomException {
 
-        Usuario user = findOutNickAndToken(nickname, authHeader);
+        Usuario user = findNickname(nickname);
 
         if(!passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
             throw new CustomException("Las contraseñas no coinciden");
@@ -88,11 +85,10 @@ public class Service_user {
 
     public Map<String, Object> updateUser(
             UpdateUserDTO userDTO,
-            String authHeader,
             String nickname
     ) throws CustomException {
 
-        Usuario userFound = findOutNickAndToken(nickname, authHeader);
+        Usuario userFound = findNickname(nickname);
 
         Optional<Usuario> userNicknameExist = repositoryUser.getUsuarioByNickname(userDTO.getNickname());
         if(userNicknameExist.isPresent() && !userNicknameExist.get().getEmail().equals(userFound.getEmail())){
@@ -116,10 +112,9 @@ public class Service_user {
     }
 
     public Map<String, Object> getFavoritesProducts(
-            String nickname,
-            String authHeader
+            String nickname
     ) throws CustomException {
-        Usuario userFound = findOutNickAndToken(nickname, authHeader);
+        Usuario userFound = findNickname(nickname);
         List<Favorito> favoritos = favoritosRepository.getFavoritosByIdUsuarioComprador_Nickname(nickname);
 
         return new UserResponses(favoritos, true).responseFavoritos200();
@@ -127,10 +122,9 @@ public class Service_user {
 
     public Map<String, String> removeFavoriteProduct(
             String nickname,
-            Integer id_product,
-            String authHeader
+            Integer id_product
     ) throws CustomException {
-        Usuario userFound = findOutNickAndToken(nickname, authHeader);
+        Usuario userFound = findNickname(nickname);
 
         Optional<Favorito> favorite_product = favoritosRepository.getFavoritoByIdProducto_IdAndIdUsuarioComprador_Nickname(id_product, userFound.getNickname());
         if(favorite_product.isEmpty()){
@@ -142,9 +136,8 @@ public class Service_user {
     }
 
 
-    private Usuario findOutNickAndToken(
-            String nickname,
-            String authHeader
+    private Usuario findNickname(
+            String nickname
     ) throws CustomException {
 
         Optional<Usuario> user = repositoryUser.getUsuarioByNickname(nickname);
@@ -152,18 +145,6 @@ public class Service_user {
         if(user.isEmpty()) {
             throw new CustomException("No existe un usuario con el nickname: " + nickname);
         }
-
-        String requestToken = authHeader.substring(7);
-        Optional<Token> token = tokenRepository.getTokenByTokenAndUsuario_Id(requestToken, user.get().getId());
-
-        if(token.isEmpty()){
-            throw new CustomException("Token no válido para el usuario " + user.get().getNickname());
-        }
-
-        if(!token.get().getToken().equals(requestToken)){
-            throw new CustomException("Token no válido");
-        }
-
         return user.get();
     }
 

@@ -22,48 +22,43 @@ public class Controller_User {
     //Endpoint destinado a abrir la información del perfil
     @GetMapping("/{nickname}")
     public ResponseEntity<?> getUserByNickname(
-            @PathVariable String nickname,
-            @RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader
+            @PathVariable String nickname
     ) throws CustomException{
-        return ResponseEntity.ok(serviceUser.getUserByNickname(nickname, authHeader));
+        return ResponseEntity.ok(serviceUser.getUserByNickname(nickname));
     }
 
     //Endpoint para reestablecer contraseña de usuario (getPassword)
     @PostMapping("updatePassword/{nickname}")
     public ResponseEntity<?> updatePassword(
             @PathVariable String nickname,
-            @RequestBody UpdatePwdDTO request,
-            @RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader
+            @RequestBody UpdatePwdDTO request
     ) throws CustomException{
-    return ResponseEntity.ok(serviceUser.updatePassword(nickname, request, authHeader));
+    return ResponseEntity.ok(serviceUser.updatePassword(nickname, request));
     }
 
     //Endpoint para actualizar datos de un usuario
     @PostMapping("updateUser/{nickname}")
     public ResponseEntity<?> updateUser(
             @PathVariable String nickname,
-            @RequestBody UpdateUserDTO user,
-            @RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader
+            @RequestBody UpdateUserDTO user
     ) throws CustomException{
-        return ResponseEntity.ok(serviceUser.updateUser(user, authHeader, nickname));
+        return ResponseEntity.ok(serviceUser.updateUser(user, nickname));
     }
 
     //Endpoint para listar los favoritos de un usuario
     @GetMapping("/{nickname}/favorites")
     public ResponseEntity<?> getFavoritesProducts(
-            @PathVariable String nickname,
-            @RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader
+            @PathVariable String nickname
     ) throws CustomException {
-        return ResponseEntity.ok(serviceUser.getFavoritesProducts(nickname,authHeader));
+        return ResponseEntity.ok(serviceUser.getFavoritesProducts(nickname));
     }
 
     //Enpoint para eliminar un favorito
     @GetMapping("/{nickname}/removeFavorite/{id_product}")
     public ResponseEntity<?> deleteFavoriteProduct(
             @PathVariable String nickname,
-            @PathVariable Integer id_product,
-            @RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader
+            @PathVariable Integer id_product
     ) throws CustomException {
-        return ResponseEntity.ok(serviceUser.removeFavoriteProduct(nickname, id_product, authHeader));
+        return ResponseEntity.ok(serviceUser.removeFavoriteProduct(nickname, id_product));
     }
 }
