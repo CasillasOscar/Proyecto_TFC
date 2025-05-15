@@ -155,6 +155,18 @@ public class Service_user {
         }
 
         Usuario user = findNickname(nickname);
+        // 1. Obtener la ruta de la imagen anterior
+        String rutaImagenAnterior = user.getImagenPerfil();
+
+        if (!rutaImagenAnterior.isEmpty()){
+            Path rutaAbsolutaImagenAnterior = Paths.get(filePathProfilePhoto).resolve(rutaImagenAnterior).toAbsolutePath();
+            try {
+                Files.deleteIfExists(rutaAbsolutaImagenAnterior);
+            } catch (IOException e) {
+                System.err.println("Error al borrar la imagen anterior: " + e.getMessage());
+                throw new CustomException("Error al actualizar la foto.");
+            }
+        }
 
         // 1. Validate file format in the backend
         String fileExtension = getFileExtension(image.getOriginalFilename());
@@ -172,7 +184,7 @@ public class Service_user {
             Files.copy(image.getInputStream(), rutaAbsoluta);
 
             // 5. Construct the relative path to store in the database
-            String rutaRelativa = "/profilePhotos/" + nombreArchivoUnico;
+            String rutaRelativa = nombreArchivoUnico;
 
             user.setImagenPerfil(rutaRelativa);
             userRepository.save(user);
