@@ -45,9 +45,14 @@ public class Service_auth {
             var jwtToken = jwtService.generateToken(userFind.get());
             var refreshToken = jwtService.generateRefreshToken(userFind.get());
             revokeAllUserTokens(userFind.get());
-            saveUserToken(userFind.get(), jwtToken);
+            Token token_saved = saveUserToken(userFind.get(), refreshToken);
 
-            return new AuthResponses(userFind.get(), jwtToken, refreshToken).responseLogin200();
+            return new AuthResponses(
+                    userFind.get(),
+                    jwtToken,
+                    jwtService.extractLocalDateTimeExpiration(jwtToken),
+                    refreshToken,
+                    token_saved.getDateExpired()).responseLogin200();
         } else {
             throw new CustomException("Usuario y contraseña no coinciden");
         }
@@ -89,24 +94,28 @@ public class Service_auth {
         Usuario savedUser = repositoryUser.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(savedUser, jwtToken);
+        System.out.println(jwtToken);
+        System.out.println(refreshToken);
+        Token token_saved = saveUserToken(savedUser, refreshToken);
 
-        if(Optional.of(savedUser).isPresent()){
-            return new AuthResponses(savedUser, jwtToken, refreshToken).responseSignin200();
-        } else {
-            throw new CustomException("El usuario no ha podido ser creado");
-        }
+        return new AuthResponses(
+                savedUser,
+                jwtToken,
+                jwtService.extractLocalDateTimeExpiration(jwtToken),
+                refreshToken,
+                token_saved.getDateExpired()).responseSignin200();
     }
 
-    private void saveUserToken(Usuario user, String jwtToken){
+    private Token saveUserToken(Usuario user, String jwtToken){
         var token = Token.builder()
                 .usuario(user)
                 .token(jwtToken)
                 .tokenType(Token.TokenType.BEARER)
+                .dateExpired(jwtService.extractLocalDateTimeExpiration(jwtToken))
                 .expired(false)
                 .revoked(false)
                 .build();
-        tokenRepository.save(token);
+        return tokenRepository.save(token);
     }
 
     public Map<String, Object> refreshToken(final String authHeader) throws CustomException{
@@ -114,6 +123,13 @@ public class Service_auth {
             throw new CustomException("Token no válido");
         } else {
             final String refreshToken = authHeader.substring(7);
+
+            Optional<Token> refresh_token_find = tokenRepository.getTokenByTokenAndRevokedAndExpired(refreshToken, false, false);
+
+            if(refresh_token_find.isEmpty()){
+                throw new CustomException("RefreshToken no válido o expirado");
+            }
+
             final String userEmail = jwtService.extractUsername(refreshToken);
 
             if(userEmail == null){
@@ -125,9 +141,14 @@ public class Service_auth {
             if(user.isPresent()){
                 if(jwtService.isTokenValid(refreshToken, user.get())){
                     final String accessToken = jwtService.generateToken(user.get());
-                    revokeAllUserTokens(user.get());
-                    saveUserToken(user.get(), accessToken);
-                    return new AuthResponses(user.get(), accessToken, refreshToken).responseLogin200();
+                    //revokeAllUserTokens(user.get());
+                    //saveUserToken(user.get(), accessToken);
+                    return new AuthResponses(
+                            user.get(),
+                            accessToken,
+                            jwtService.extractLocalDateTimeExpiration(accessToken),
+                            refresh_token_find.get().getToken(),
+                            refresh_token_find.get().getDateExpired()).responseLogin200();
 
                 } else {
                     throw new CustomException("RefreshToken no válido");

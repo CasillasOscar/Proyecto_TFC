@@ -55,8 +55,8 @@ public class Service_Product {
         return new ProductResponses(filteredProducts, true).responseProductFilters200();
     }
 
-    public Map<String, Object> buyProduct(String buyer_nickname, Integer id_product, String authHeader) throws CustomException {
-        Usuario user = findOutNickAndToken(buyer_nickname, authHeader);
+    public Map<String, Object> buyProduct(String buyer_nickname, Integer id_product) throws CustomException {
+        Usuario user = findNickname(buyer_nickname);
 
         Optional<Producto> producto = productoRepository.getProductoByIdAndEtapa(id_product, "activo");
 
@@ -80,9 +80,8 @@ public class Service_Product {
         return new ProductResponses(newVenta, true).responseProductBought200();
     }
 
-    private Usuario findOutNickAndToken(
-            String nickname,
-            String authHeader
+    private Usuario findNickname(
+            String nickname
     ) throws CustomException {
 
         Optional<Usuario> user = userRepository.getUsuarioByNickname(nickname);
@@ -91,16 +90,6 @@ public class Service_Product {
             throw new CustomException("No existe un usuario con el nickname: " + nickname);
         }
 
-        String requestToken = authHeader.substring(7);
-        Optional<Token> token = tokenRepository.getTokenByTokenAndUsuario_Id(requestToken, user.get().getId());
-
-        if(token.isEmpty()){
-            throw new CustomException("Token no válido para el usuario " + user.get().getNickname());
-        }
-
-        if(!token.get().getToken().equals(requestToken)){
-            throw new CustomException("Token no válido");
-        }
 
         return user.get();
     }

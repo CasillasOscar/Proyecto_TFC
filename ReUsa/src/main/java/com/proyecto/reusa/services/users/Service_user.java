@@ -15,10 +15,16 @@ import com.proyecto.reusa.services.users.serializers.UpdatePwdDTO;
 import com.proyecto.reusa.services.users.serializers.UpdateUserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Iterator;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,14 +45,16 @@ public class Service_user {
     @Autowired
     private FavoritosRepository favoritosRepository;
 
+    @Value("${ruta.imagenes.perfil}")
+    private String filePathProfilePhoto;
+
     private final PasswordEncoder passwordEncoder;
 
     public SerializerUser getUserByNickname(
-            String nickname,
-            String authHeader
+            String nickname
     ) throws CustomException {
 
-        Usuario user = findOutNickAndToken(nickname, authHeader);
+        Usuario user = findNickname(nickname);
 
         return new SerializerUser(
                 user.getNickname(),
@@ -65,11 +73,10 @@ public class Service_user {
 
     public Map<String, String> updatePassword(
             String nickname,
-            UpdatePwdDTO request,
-            String authHeader
+            UpdatePwdDTO request
     ) throws CustomException {
 
-        Usuario user = findOutNickAndToken(nickname, authHeader);
+        Usuario user = findNickname(nickname);
 
         if(!passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
             throw new CustomException("Las contraseñas no coinciden");
@@ -88,11 +95,10 @@ public class Service_user {
 
     public Map<String, Object> updateUser(
             UpdateUserDTO userDTO,
-            String authHeader,
             String nickname
     ) throws CustomException {
 
-        Usuario userFound = findOutNickAndToken(nickname, authHeader);
+        Usuario userFound = findNickname(nickname);
 
         Optional<Usuario> userNicknameExist = repositoryUser.getUsuarioByNickname(userDTO.getNickname());
         if(userNicknameExist.isPresent() && !userNicknameExist.get().getEmail().equals(userFound.getEmail())){
@@ -116,10 +122,9 @@ public class Service_user {
     }
 
     public Map<String, Object> getFavoritesProducts(
-            String nickname,
-            String authHeader
+            String nickname
     ) throws CustomException {
-        Usuario userFound = findOutNickAndToken(nickname, authHeader);
+        Usuario userFound = findNickname(nickname);
         List<Favorito> favoritos = favoritosRepository.getFavoritosByIdUsuarioComprador_Nickname(nickname);
 
         return new UserResponses(favoritos, true).responseFavoritos200();
@@ -127,10 +132,9 @@ public class Service_user {
 
     public Map<String, String> removeFavoriteProduct(
             String nickname,
-            Integer id_product,
-            String authHeader
+            Integer id_product
     ) throws CustomException {
-        Usuario userFound = findOutNickAndToken(nickname, authHeader);
+        Usuario userFound = findNickname(nickname);
 
         Optional<Favorito> favorite_product = favoritosRepository.getFavoritoByIdProducto_IdAndIdUsuarioComprador_Nickname(id_product, userFound.getNickname());
         if(favorite_product.isEmpty()){
@@ -141,10 +145,70 @@ public class Service_user {
         return new UserResponses(true).responseRemoveFavorite200();
     }
 
-
-    private Usuario findOutNickAndToken(
+    public Map<String, String> updateProfilePhoto(
             String nickname,
-            String authHeader
+            MultipartFile image
+    ) throws CustomException{
+
+        if (image.isEmpty()) {
+            throw new CustomException("Por favor, selecciona una imagen.");
+        }
+
+        Usuario user = findNickname(nickname);
+        // 1. Obtener la ruta de la imagen anterior
+        String rutaImagenAnterior = user.getImagenPerfil();
+
+        if (!rutaImagenAnterior.isEmpty()){
+            Path rutaAbsolutaImagenAnterior = Paths.get(filePathProfilePhoto).resolve(rutaImagenAnterior).toAbsolutePath();
+            try {
+                Files.deleteIfExists(rutaAbsolutaImagenAnterior);
+            } catch (IOException e) {
+                System.err.println("Error al borrar la imagen anterior: " + e.getMessage());
+                throw new CustomException("Error al actualizar la foto.");
+            }
+        }
+
+        // 1. Validate file format in the backend
+        String fileExtension = getFileExtension(image.getOriginalFilename());
+        if (!fileExtension.equalsIgnoreCase("jpg") && !fileExtension.equalsIgnoreCase("jpeg") && !fileExtension.equalsIgnoreCase("png")) {
+            throw new CustomException("Solo se permiten archivos con formato JPG o PNG.");
+        }
+        try {
+            // 2. Generate the filename according to the convention
+            String nombreArchivoUnico = nickname + "_profilePhoto." + (fileExtension.equalsIgnoreCase("jpeg") ? "jpg" : fileExtension.toLowerCase());
+
+            // 3. Construct the absolute path to save the image
+            Path rutaAbsoluta = Paths.get(filePathProfilePhoto).resolve(nombreArchivoUnico).toAbsolutePath();
+
+            // 4. Save the image to the filesystem
+            Files.copy(image.getInputStream(), rutaAbsoluta);
+
+            // 5. Construct the relative path to store in the database
+            String rutaRelativa = nombreArchivoUnico;
+
+            user.setImagenPerfil(rutaRelativa);
+            userRepository.save(user);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Imagen de perfil actualizada correctamente.");
+            response.put("pathImage", rutaRelativa);
+            return response;
+
+        } catch (IOException e) {
+            throw new CustomException("Error al guardar la imagen: " + e.getMessage());
+        }
+    }
+
+    private String getFileExtension(String filename) {
+        if (filename == null || !filename.contains(".")) {
+            return "";
+        }
+        return filename.substring(filename.lastIndexOf(".") + 1);
+    }
+
+
+    private Usuario findNickname(
+            String nickname
     ) throws CustomException {
 
         Optional<Usuario> user = repositoryUser.getUsuarioByNickname(nickname);
@@ -152,19 +216,9 @@ public class Service_user {
         if(user.isEmpty()) {
             throw new CustomException("No existe un usuario con el nickname: " + nickname);
         }
-
-        String requestToken = authHeader.substring(7);
-        Optional<Token> token = tokenRepository.getTokenByTokenAndUsuario_Id(requestToken, user.get().getId());
-
-        if(token.isEmpty()){
-            throw new CustomException("Token no válido para el usuario " + user.get().getNickname());
-        }
-
-        if(!token.get().getToken().equals(requestToken)){
-            throw new CustomException("Token no válido");
-        }
-
         return user.get();
     }
+
+
 
 }
