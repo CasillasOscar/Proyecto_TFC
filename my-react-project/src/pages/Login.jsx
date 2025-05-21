@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Paper, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { axiosPublic } from '../backend/axios';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -10,6 +11,11 @@ export default function LoginPage() {
   const handleLogin = (e) => {
     e.preventDefault();
     console.log({ email, password });
+    const response = axiosPublic.post('auth/login', {
+      email,
+      password,
+    });
+    
   };
 
   return (
