@@ -15,11 +15,9 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
 
     List<Token> getTokensByExpiredAndRevokedAndUsuario(@NotNull Boolean expired, @NotNull Boolean revoked, Usuario usuario);
 
-
-    Optional<Token> getTokenByToken(@Size(min = 1) @NotNull String token);
-
-    Optional<Token> getTokenByTokenAndUsuario_Id(@Size(min = 1) @NotNull String token, Integer usuarioId);
-
-
     Optional<Token> getTokenByTokenAndRevokedAndExpired(String refreshToken, boolean b, boolean b1);
+
+    Optional<Token> getTokenByUsuario(Usuario usuario);
+
+    Optional<Token> getTokenByUsuarioAndExpiredAndRevoked(Usuario usuario, @NotNull Boolean expired, @NotNull Boolean revoked);
 }

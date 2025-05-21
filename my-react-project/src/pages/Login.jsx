@@ -1,34 +1,48 @@
-import React, { useState } from 'react';
-import { TextField, Button, Box, Typography, Paper, Stack } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { axiosPublic } from '../backend/axios';
+import React, { useState } from "react";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Paper,
+  Stack,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { login } from "../backend/Auth/Auth"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log({ email, password });
-    const response = axiosPublic.post('auth/login', {
-      email,
-      password,
-    });
-    
+    console.log(e)
+    const response = await login(email, password);
+    console.log(response);
+    if (response.status === 200) {
+      const { token, refreshToken, user } = response.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("user", JSON.stringify(user));
+      navigate("/");
+    } else {
+      console.error("Error al iniciar sesión:", response.data.message);
+      alert("Error al iniciar sesión. Por favor, verifica tus credenciales.");
+    }
   };
 
   return (
     <Box
       sx={{
-        minHeight: '80vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f5f5f5',
+        minHeight: "80vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#f5f5f5",
       }}
     >
-      <Paper elevation={6} sx={{ padding: 4, width: '100%', maxWidth: 400 }}>
+      <Paper elevation={6} sx={{ padding: 4, width: "100%", maxWidth: 400 }}>
         <Typography variant="h5" mb={3} textAlign="center">
           Iniciar Sesión
         </Typography>
@@ -51,12 +65,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              fullWidth
-            >
+            <Button type="submit" variant="contained" color="primary" fullWidth>
               Entrar
             </Button>
 
@@ -64,7 +73,7 @@ export default function LoginPage() {
               variant="text"
               color="error"
               fullWidth
-              onClick={() => navigate('/recuperar')}
+              onClick={() => navigate("/recuperar")}
             >
               ¿Has olvidado tu contraseña?
             </Button>
@@ -73,7 +82,7 @@ export default function LoginPage() {
               variant="outlined"
               color="secondary"
               fullWidth
-              onClick={() => navigate('/register')}
+              onClick={() => navigate("/register")}
             >
               ¿No tienes cuenta? Regístrate
             </Button>

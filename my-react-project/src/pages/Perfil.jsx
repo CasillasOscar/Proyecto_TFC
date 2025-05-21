@@ -9,6 +9,8 @@ import StarIcon from '@mui/icons-material/Star';
 
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+import { logout } from '../backend/Auth/Auth';
+import { useNavigate } from 'react-router-dom';
 
 // Icono personalizado para Leaflet
 const icon = L.icon({
@@ -32,6 +34,8 @@ function Mapa() {
     );
   }, []);
 
+
+
   if (!posicion) return <Typography color="text.secondary">Obteniendo ubicación...</Typography>;
 
   return (
@@ -48,14 +52,31 @@ function Mapa() {
 }
 
 export default function Perfil() {
+
+  const navigate = useNavigate();
+  
   const usuario = {
-    nombre: "Christian Mengibar",
-    email: "christian_lega99@hotmail.com",
+    nombre: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).nombre +" "+ JSON.parse(localStorage.getItem('user')).apellido : "Sin definir",
+    email: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).email : "Sin definir",
     telefono: "+34 629 964 320",
     direccion: "Avenida Fuenlabrada 103 2A, Leganés, Madrid",
     avatar: "/src/assets/chr.jpeg",
     valoracion: 4.5,
   };
+
+  const handleLogout = async () => {
+    const response = await logout();
+    console.log(response);
+    if (response.status === 200) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+      navigate('/login');
+    } else {
+      console.error("Error al cerrar sesión:", response.data.message);
+    }
+    
+  }
 
   return (
     <Box sx={{ p: 4 }}>
@@ -141,7 +162,7 @@ export default function Perfil() {
 
       {/* Cerrar Sesión */}
       <Box sx={{ mt: 4, textAlign: 'center' }}>
-        <Button variant="outlined" color="error" startIcon={<LogoutIcon />}>
+        <Button variant="outlined" color="error" startIcon={<LogoutIcon />} onClick={handleLogout}>
           Cerrar sesión
         </Button>
       </Box>

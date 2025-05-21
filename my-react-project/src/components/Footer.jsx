@@ -9,7 +9,7 @@ export default function Footer() {
   const navigate = useNavigate();
 
   const links = [
-    { label: 'Inicio', path: '/home' },
+    { label: 'Inicio', path: '/' },
     { label: 'Favoritos', path: '/favoritos' },
     { label: 'Perfil', path: '/perfil' },
     { label: 'Valoraciones', path: '/valoraciones' },

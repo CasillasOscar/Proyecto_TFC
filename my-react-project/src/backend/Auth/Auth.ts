@@ -17,7 +17,7 @@ export const signIn = async (
       telefono: telefono,
       email: email,
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error during sign-in:", error);
   }
@@ -29,8 +29,18 @@ export const login = async (email: string, password: string) => {
       email: email,
       password: password,
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error during login:", error);
   }
 }
+
+export const logout = async () => {
+  try {
+    const response = await axiosPrivate.get("auth/logout");
+    return response;
+  } catch (error) {
+    console.error("Error during logout:", error);
+  }
+};
+

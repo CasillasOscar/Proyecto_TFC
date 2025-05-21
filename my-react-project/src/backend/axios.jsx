@@ -1,13 +1,14 @@
 import axios from "axios";
-import {URL} from "../utils/URL";
+import { URL } from "./utils.jsx"; 
 
+//axiosPrivate es para las peticiones que requieren autenticacion
 export const axiosPrivate = axios.create({
   baseURL: URL,
 });
 
  axiosPrivate.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token_access");
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
@@ -31,7 +32,7 @@ axiosPrivate.interceptors.response.use(
         const response = await axios.post(`${URL}auth/refresh`, {
           token: localStorage.getItem("token_refresh"),
         });
-        localStorage.setItem("token_access", response.data.access_token);
+        localStorage.setItem("token", response.data.access_token);
         originalRequest.headers.Authorization = `Bearer ${response.data.access_token}`;
         return axiosPrivate(originalRequest);
       } catch (err) {
@@ -42,7 +43,8 @@ axiosPrivate.interceptors.response.use(
   }
 );
 
-export const axiosPublic = axios.Public = axios.create({
+//Axios public es para las peticiones que no requieren autenticacion
+export const axiosPublic = axios.create({
   baseURL: URL,
   withCredentials: false,
 });
