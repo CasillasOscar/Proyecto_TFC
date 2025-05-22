@@ -8,39 +8,26 @@ export const signIn = async (
   telefono: number,
   email: string
 ) => {
-  try {
-    const response = await axiosPublic.post("auth/signin", {
-      nickname: nickname,
-      nombre: nombre,
-      apellido: apellido,
-      password: password,
-      telefono: telefono,
-      email: email,
-    });
-    return response;
-  } catch (error) {
-    console.error("Error during sign-in:", error);
-  }
+  const response = await axiosPublic.post("auth/signin", {
+    nickname: nickname,
+    nombre: nombre,
+    apellido: apellido,
+    password: password,
+    telefono: telefono,
+    email: email,
+  });
+  return response;
 };
 
 export const login = async (email: string, password: string) => {
-  try {
-    const response = await axiosPublic.post("auth/login", {
-      email: email,
-      password: password,
-    });
-    return response;
-  } catch (error) {
-    console.error("Error during login:", error);
-  }
-}
-
-export const logout = async () => {
-  try {
-    const response = await axiosPrivate.get("auth/logout");
-    return response;
-  } catch (error) {
-    console.error("Error during logout:", error);
-  }
+  const response = await axiosPublic.post("auth/login", {
+    email: email,
+    password: password,
+  });
+  return response;
 };
 
+export const logout = async () => {
+  const response = await axiosPrivate.get("auth/logout");
+  return response;
+};

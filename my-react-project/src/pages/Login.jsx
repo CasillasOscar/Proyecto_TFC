@@ -8,7 +8,7 @@ import {
   Stack,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { login } from "../backend/Auth/Auth"
+import { login } from "../backend/Auth/Auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -17,18 +17,22 @@ export default function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(e)
-    const response = await login(email, password);
-    console.log(response);
-    if (response.status === 200) {
-      const { token, refreshToken, user } = response.data;
-      localStorage.setItem("token", token);
-      localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("user", JSON.stringify(user));
-      navigate("/");
-    } else {
-      console.error("Error al iniciar sesión:", response.data.message);
-      alert("Error al iniciar sesión. Por favor, verifica tus credenciales.");
+    try {
+      const response = await login(email, password);
+
+      if (response.status === 200) {
+        const { token, refreshToken, user } = response.data;
+        localStorage.setItem("token", token);
+        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("user", JSON.stringify(user));
+        navigate("/");
+      }
+    } catch (error) {
+      if (error.status === 400) {
+        console.log(error);
+        console.log("Error al iniciar sesión:", error.response.data.error);
+        alert("Error al iniciar sesión: " + error.response.data.error);
+      }
     }
   };
 
