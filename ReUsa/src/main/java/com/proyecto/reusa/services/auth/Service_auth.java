@@ -33,13 +33,6 @@ public class Service_auth {
     private final AuthenticationManager authenticationManager;
 
     public Map<String, Object> login(UserLoginDTO user) throws CustomException {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        user.email(),
-                        user.password()
-                )
-        );
-
         Optional<Usuario> userFind = repositoryUser.findByEmail(user.email());
         if(userFind.isPresent()){
             var jwtToken = jwtService.generateToken(userFind.get());
