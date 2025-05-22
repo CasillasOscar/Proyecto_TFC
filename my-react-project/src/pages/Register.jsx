@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Paper } from '@mui/material';
+import { signIn } from '../backend/Auth/Auth';
+import { useNavigate } from 'react-router-dom';
 
 export default function RegisterPage() {
+
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     nickname: '',
     nombre: '',
@@ -15,9 +20,22 @@ export default function RegisterPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    try {
+      console.log(formData);
+      const response = await signIn(formData.nickname, formData.nombre, formData.apellido, formData.password, formData.telefono, formData.email);
+
+      if (response.status === 200) {
+        navigate("/login");
+      }
+
+    } catch (error) {
+      if (error.status === 400) {
+        console.log(error);
+        toast.error("Error al iniciar sesión: " + error.response.data.error);
+      }
+    }
   };
 
   return (

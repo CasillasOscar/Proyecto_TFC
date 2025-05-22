@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { login } from "../backend/Auth/Auth";
+import { toast } from "material-react-toastify";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -22,6 +23,7 @@ export default function LoginPage() {
 
       if (response.status === 200) {
         const { token, refreshToken, user } = response.data;
+        toast.success("Bienvenido ");
         localStorage.setItem("token", token);
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("user", JSON.stringify(user));
@@ -31,7 +33,7 @@ export default function LoginPage() {
       if (error.status === 400) {
         console.log(error);
         console.log("Error al iniciar sesión:", error.response.data.error);
-        alert("Error al iniciar sesión: " + error.response.data.error);
+        toast.error("Error al iniciar sesión: " + error.response.data.error);
       }
     }
   };
