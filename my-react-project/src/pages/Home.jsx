@@ -1,30 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
-  Box, Typography, Grid, Card, CardMedia, CardContent, IconButton,
+  Box, Typography, CardMedia,
   Dialog, DialogTitle, DialogContent, DialogContentText, Button
 } from '@mui/material';
-import { Favorite, FavoriteBorder } from '@mui/icons-material';
-import { useFavoritos } from '../components/FavoritosContext.jsx';
 
-const productos = Array.from({ length: 20 }, (_, i) => ({
-  id: i + 1,
-  nombre: `Producto ${i + 1}`,
-  precio: `${(10 + i * 2).toFixed(2)} €`,
-  imagen: `https://picsum.photos/300/200?random=${i + 1}`,
-  descripcion: `Este es un producto de ejemplo con id ${i + 1}.`,
-}));
 
 export default function Home() {
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
-  const { favoritos, toggleFavorito } = useFavoritos();
+
 
   return (
     <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Typography variant="h5" gutterBottom textAlign="center">
-        🛍️ Productos disponibles
+        Comienza con nosotros a reutilizar productos y cuidar el medio ambiente
       </Typography>
 
-      <Grid container spacing={2} justifyContent="center">
+      {/* <Grid container spacing={2} justifyContent="center">
         {productos.map((producto) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={producto.id}>
             <Card sx={{ position: 'relative' }}>
@@ -55,7 +46,7 @@ export default function Home() {
             </Card>
           </Grid>
         ))}
-      </Grid>
+      </Grid> */}
 
       <Dialog open={Boolean(productoSeleccionado)} onClose={() => setProductoSeleccionado(null)} maxWidth="sm" fullWidth>
         {productoSeleccionado && (

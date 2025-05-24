@@ -51,17 +51,17 @@ function Mapa() {
   );
 }
 
-export default function Perfil() {
+export default function Perfil({user, handleUserChange}) {
 
   const navigate = useNavigate();
   
   const usuario = {
-    nombre: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).nombre +" "+ JSON.parse(localStorage.getItem('user')).apellido : "Sin definir",
-    email: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).email : "Sin definir",
-    telefono: "+34 629 964 320",
+    nombre: user.nombre,
+    email: user.email,
+    telefono: user.telefono,
     direccion: "Avenida Fuenlabrada 103 2A, Leganés, Madrid",
     avatar: "/src/assets/chr.jpeg",
-    valoracion: 4.5,
+    valoracion: user.valoracion,
   };
 
   const handleLogout = async () => {
@@ -71,6 +71,7 @@ export default function Perfil() {
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
+      handleUserChange();
       navigate('/login');
     } else {
       console.error("Error al cerrar sesión:", response.data.message);

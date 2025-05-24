@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   TextField,
   Button,
@@ -9,8 +9,9 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { login } from "../backend/Auth/Auth";
+import { toast } from "react-toastify";
 
-export default function LoginPage() {
+export default function LoginPage({handleUserChange}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -19,20 +20,24 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       const response = await login(email, password);
-
-      if (response.status === 200) {
+      console.log("Respuesta del servidor:", response);
+      if (response && response.status === 200) {
         const { token, refreshToken, user } = response.data;
         localStorage.setItem("token", token);
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("user", JSON.stringify(user));
+        handleUserChange()
+        toast.success(`Bienvenido ${user.nombre} ${user.apellido}!`);
         navigate("/");
+      } else if (response.status === 400) {
+        toast.error(response.data.error);
+      } else {
+        toast.error("Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.");
+        console.error("Respuesta inesperada del servidor:", response);
       }
     } catch (error) {
-      if (error.status === 400) {
-        console.log(error);
-        console.log("Error al iniciar sesión:", error.response.data.error);
-        alert("Error al iniciar sesión: " + error.response.data.error);
-      }
+      console.error("Error durante el inicio de sesión (red/conexión):", error);
+      toast.error("Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.");
     }
   };
 

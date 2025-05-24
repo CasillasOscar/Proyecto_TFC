@@ -35,6 +35,10 @@ public class AuthResponses {
         userData.put("email", user.getEmail());
         userData.put("nombre", user.getNombre());
         userData.put("apellido", user.getApellido());
+        userData.put("telefono", user.getTelefono().toString());
+        userData.put("valoracion", user.getValoracion().toString());
+        userData.put("ventas", user.getNVentas().toString());
+        userData.put("compras", user.getNCompras().toString());
 
         response.put("user", userData);
         response.put("token", accessToken);
