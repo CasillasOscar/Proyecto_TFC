@@ -8,7 +8,7 @@ import {
   Stack,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { login } from "../backend/Auth/Auth";
+import { login } from "../../backend/Auth/Auth";
 import { toast } from "react-toastify";
 
 export default function LoginPage({handleUserChange}) {
@@ -23,11 +23,9 @@ export default function LoginPage({handleUserChange}) {
       console.log("Respuesta del servidor:", response);
       if (response && response.status === 200) {
         const { token, refreshToken, user } = response.data;
-        localStorage.setItem("token", token);
-        localStorage.setItem("refreshToken", refreshToken);
-        localStorage.setItem("user", JSON.stringify(user));
+        saveInfoInLocalStorage(token, refreshToken, user);
         handleUserChange()
-        toast.success(`Bienvenido ${user.nombre} ${user.apellido}!`);
+        toast.success(`Bienvenido ${user.nickname}!`);
         navigate("/");
       } else if (response.status === 400) {
         toast.error(response.data.error);
@@ -40,6 +38,12 @@ export default function LoginPage({handleUserChange}) {
       toast.error("Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.");
     }
   };
+
+  const saveInfoInLocalStorage = (token, refreshToken, user) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("refreshToken", refreshToken); 
+    localStorage.setItem("user", JSON.stringify(user));
+  }
 
   return (
     <Box

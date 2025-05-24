@@ -29,16 +29,18 @@ public class AuthResponses {
     }
 
     public Map<String, Object> responseLogin200() {
-        Map<String, Object> response = new HashMap<>();
 
         Map<String, String> userData = new HashMap<>();
         userData.put("email", user.getEmail());
+        userData.put("nickname", user.getNickname());
         userData.put("nombre", user.getNombre());
         userData.put("apellido", user.getApellido());
         userData.put("telefono", user.getTelefono().toString());
         userData.put("valoracion", user.getValoracion().toString());
         userData.put("ventas", user.getNVentas().toString());
         userData.put("compras", user.getNCompras().toString());
+
+        Map<String, Object> response = new HashMap<>();
 
         response.put("user", userData);
         response.put("token", accessToken);
@@ -50,13 +52,18 @@ public class AuthResponses {
     }
 
     public Map<String, Object> responseSignin200() {
-        Map<String, Object> response = new HashMap<>();
 
         Map<String, String> userData = new HashMap<>();
         userData.put("email", user.getEmail());
+        userData.put("nickname", user.getNickname());
         userData.put("nombre", user.getNombre());
         userData.put("apellido", user.getApellido());
+        userData.put("telefono", user.getTelefono().toString());
+        userData.put("valoracion", user.getValoracion().toString());
+        userData.put("ventas", user.getNVentas().toString());
+        userData.put("compras", user.getNCompras().toString());
 
+        Map<String, Object> response = new HashMap<>();
         response.put("user", userData);
         response.put("token", accessToken);
         response.put("token_expired", token_expired);

@@ -1,8 +1,8 @@
 
 import {
-  Box, Grid, Card, CardMedia, CardContent, Typography, IconButton
+  Box, Typography,
 } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+
 
 
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -8,12 +8,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter } from 'react-router-dom';
 
 import Home from './pages/Home';
-import Favoritos from './pages/Favoritos';
-import Perfil from './pages/Perfil';
+import Favoritos from './pages/Usuario/Favoritos';
+import Perfil from './pages/Usuario/Perfil';
 import NuevoProducto from './pages/NuevoProducto';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Recuperar from './pages/Recuperar';
+import Login from './pages/Auth/Login';
+import Register from './pages/Auth/Register';
+import Recuperar from './pages/Auth/Recuperar';
 import AcercaDe from './pages/AcercaDe';
 import Valoraciones from './pages/Valoraciones';
 
@@ -27,13 +27,17 @@ export default function App() {
     }
     setUser(JSON.parse(localStorage.getItem('user')));
   }
+
+  useEffect(() => {
+    handleUserChange();
+  }, []);
   
 
   return (
     <BrowserRouter>
       <ToastContainer
         position="top-right" 
-        autoClose={2000}    
+        autoClose={2500}    
         hideProgressBar={true} 
         newestOnTop={false}
         closeOnClick
@@ -52,7 +56,7 @@ export default function App() {
         <Route path="/perfil" element={<Perfil user={user} handleUserChange={handleUserChange}/>} />
         <Route path="/nuevo" element={<NuevoProducto />} />
         <Route path="/login" element={<Login handleUserChange={handleUserChange}/>} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<Register handleUserChange={handleUserChange}/>} />
         <Route path="/recuperar" element={<Recuperar />} />
         <Route path="/AcercaDe" element={<AcercaDe />} />
         <Route path="/Valoraciones" element={<Valoraciones />} />

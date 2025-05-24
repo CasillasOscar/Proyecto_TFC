@@ -89,7 +89,6 @@ public class Service_auth {
                 .password(passwordEncoder.encode(userDTO.password()))
                 .telefono(userDTO.telefono())
                 .build();
-
         Usuario savedUser = repositoryUser.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);

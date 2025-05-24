@@ -71,14 +71,17 @@ public class Usuario {
     @Column(name = "email", nullable = false, length = 50)
     private String email;
 
+    @Builder.Default
     @Column(name = "valoracion", nullable = false)
-    private Float valoracion;
+    private Float valoracion = 5f;
 
+    @Builder.Default
     @Column(name = "n_ventas", nullable = false)
-    private Integer nVentas;
+    private Integer nVentas = 0;
 
+    @Builder.Default
     @Column(name = "n_compras", nullable = false)
-    private Integer nCompras;
+    private Integer nCompras = 0;
 
     public String getPassword() {
         return password;
