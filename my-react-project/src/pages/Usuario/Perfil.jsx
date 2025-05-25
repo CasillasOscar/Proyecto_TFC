@@ -79,7 +79,12 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default function Perfil({ user, handleUserChange }) {
+export default function Perfil({
+  user,
+  handleUserChange,
+  avatarUrl,
+  getAvatarUrl,
+}) {
   const navigate = useNavigate();
 
   const usuario = {
@@ -87,7 +92,6 @@ export default function Perfil({ user, handleUserChange }) {
     email: user ? user.email : "Email no disponible",
     telefono: user ? user.telefono : "Teléfono no disponible",
     direccion: "Avenida Fuenlabrada 103 2A, Leganés, Madrid",
-    avatar: "/src/assets/chr.jpeg",
     valoracion: user ? user.valoracion : 0,
   };
 
@@ -112,30 +116,31 @@ export default function Perfil({ user, handleUserChange }) {
       toast.error("No se ha seleccionado ningún archivo");
       return;
     }
-    try{
-    const response = await updateAvatar(user.nickname, file);
-    if(response.status === 200) {
-      console.log("Avatar actualizado correctamente:", response.data);
-      toast.success("Avatar actualizado correctamente");
-    } else {
-      console.error("Error al actualizar el avatar:", response.data.message);
-      toast.error("Error al actualizar el avatar. Por favor, inténtalo de nuevo más tarde.");
-    }
-    }catch (error) {
+    try {
+      const response = await updateAvatar(user.nickname, file);
+      if (response.status === 200) {
+        toast.success("Avatar actualizado correctamente");
+        getAvatarUrl();
+      } else {
+        console.error("Error al actualizar el avatar:", response.data.message);
+        toast.error(
+          "Error al actualizar el avatar. Por favor, inténtalo de nuevo más tarde."
+        );
+      }
+    } catch (error) {
       console.error("Error al actualizar el avatar:", error);
-      toast.error("Error al actualizar el avatar. Por favor, inténtalo de nuevo más tarde.");
+      toast.error(
+        "Error al actualizar el avatar. Por favor, inténtalo de nuevo más tarde."
+      );
     }
-    
-  }
+  };
 
   return (
     <Box sx={{ p: 4 }}>
       {/* Encabezado */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 4 }}>
-        <Button
-          component="label"
-        >
-          <Avatar src={usuario.avatar} sx={{ width: 100, height: 100 }} />
+        <Button component="label">
+          <Avatar src={avatarUrl} sx={{ width: 100, height: 100 }} />
           <VisuallyHiddenInput
             type="file"
             onChange={(event) => handleUpdateAvatar(event.target.files[0])}

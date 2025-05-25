@@ -3,8 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import 'leaflet/dist/leaflet.css';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';  
 import { BrowserRouter } from 'react-router-dom';
 
 import Home from './pages/Home';
@@ -16,11 +16,14 @@ import Register from './pages/Auth/Register';
 import Recuperar from './pages/Auth/Recuperar';
 import AcercaDe from './pages/AcercaDe';
 import Valoraciones from './pages/Valoraciones';
+import { getAvatar } from './backend/User/user';
+
 
 export default function App() {
   const[user, setUser] = useState();
+  const [avatarUrl, setAvatarUrl] = useState("");
 
-  const handleUserChange = () => {
+  const handleUserChange = async () => {
     if (!localStorage.getItem('user')) {
       setUser(null)
       return
@@ -28,9 +31,26 @@ export default function App() {
     setUser(JSON.parse(localStorage.getItem('user')));
   }
 
+  const getAvatarUrl = async () => {
+    try {
+      const imgUrl = await getAvatar(user.nickname);
+      if (imgUrl) {
+        setAvatarUrl(imgUrl);
+      } else {
+        console.error(
+          "Error al obtener el avatar: No se ha podido recuperar la imagen"
+        );
+      }
+    } catch (error) {
+      console.error("Error al obtener el avatar:", error);
+    }
+  };
+
   useEffect(() => {
-    handleUserChange();
-  }, []);
+    if (user) {
+      getAvatarUrl();
+    }
+  }, [user]);
   
 
   return (
@@ -53,9 +73,9 @@ export default function App() {
         <Route path="/" element={<Home />} />
 
         <Route path="/favoritos" element={<Favoritos/>} />
-        <Route path="/perfil" element={<Perfil user={user} handleUserChange={handleUserChange}/>} />
+        <Route path="/perfil" element={<Perfil user={user} handleUserChange={handleUserChange} getAvatarUrl={getAvatarUrl} avatarUrl={avatarUrl}/>} />
         <Route path="/nuevo" element={<NuevoProducto />} />
-        <Route path="/login" element={<Login handleUserChange={handleUserChange}/>} />
+        <Route path="/login" element={<Login handleUserChange={handleUserChange} getAvatar={getAvatar}/>} />
         <Route path="/register" element={<Register handleUserChange={handleUserChange}/>} />
         <Route path="/recuperar" element={<Recuperar />} />
         <Route path="/AcercaDe" element={<AcercaDe />} />

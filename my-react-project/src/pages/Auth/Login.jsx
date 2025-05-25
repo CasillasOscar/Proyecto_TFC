@@ -20,7 +20,6 @@ export default function LoginPage({handleUserChange}) {
     e.preventDefault();
     try {
       const response = await login(email, password);
-      console.log("Respuesta del servidor:", response);
       if (response && response.status === 200) {
         const { token, refreshToken, user } = response.data;
         saveInfoInLocalStorage(token, refreshToken, user);

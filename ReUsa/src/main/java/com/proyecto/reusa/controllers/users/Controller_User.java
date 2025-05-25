@@ -2,11 +2,13 @@ package com.proyecto.reusa.controllers.users;
 
 import com.proyecto.reusa.exceptions.CustomException;
 import com.proyecto.reusa.services.users.Service_user;
+import com.proyecto.reusa.services.users.serializers.ProfilePhotoDTO;
 import com.proyecto.reusa.services.users.serializers.UpdatePwdDTO;
 import com.proyecto.reusa.services.users.serializers.UpdateUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,6 +55,41 @@ public class Controller_User {
             @RequestParam("imagen") MultipartFile image
     ) throws CustomException{
         return ResponseEntity.ok(serviceUser.updateProfilePhoto(nickname, image));
+    }
+
+    //Endpoint para actualizar datos de un usuario
+    @GetMapping("profilePhoto/{nickname}")
+    public ResponseEntity<byte[]> getProfilePhoto(
+            @PathVariable String nickname
+    ) throws CustomException{
+        try {
+            ProfilePhotoDTO photoDTO = serviceUser.getProfilePhoto(nickname);
+
+            byte[] imageData = photoDTO.getPhoto();
+            String fileName = photoDTO.getPath();
+
+            MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
+            if (fileName != null) {
+                String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+                switch (fileExtension) {
+                    case "jpg":
+                    case "jpeg":
+                        mediaType = MediaType.IMAGE_JPEG;
+                        break;
+                    case "png":
+                        mediaType = MediaType.IMAGE_PNG;
+                        break;
+                }
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(mediaType)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+                    .body(imageData);
+
+        } catch (CustomException e) {
+            throw new CustomException("Ha habido un problema en la obtencion de la imagen de perfil");
+        }
     }
 
     //Endpoint para listar los favoritos de un usuario

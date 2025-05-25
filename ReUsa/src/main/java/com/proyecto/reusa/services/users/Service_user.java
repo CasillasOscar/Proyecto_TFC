@@ -10,6 +10,7 @@ import com.proyecto.reusa.models.repositories.ProvinciaRepository;
 import com.proyecto.reusa.models.repositories.TokenRepository;
 import com.proyecto.reusa.models.repositories.UserRepository;
 import com.proyecto.reusa.services.users.responses.UserResponses;
+import com.proyecto.reusa.services.users.serializers.ProfilePhotoDTO;
 import com.proyecto.reusa.services.users.serializers.SerializerUser;
 import com.proyecto.reusa.services.users.serializers.UpdatePwdDTO;
 import com.proyecto.reusa.services.users.serializers.UpdateUserDTO;
@@ -158,7 +159,7 @@ public class Service_user {
         // 1. Obtener la ruta de la imagen anterior
         String rutaImagenAnterior = user.getImagenPerfil();
 
-        if (rutaImagenAnterior != null){
+        if (rutaImagenAnterior != null && !rutaImagenAnterior.isEmpty()){
             Path rutaAbsolutaImagenAnterior = Paths.get(filePathProfilePhoto).resolve(rutaImagenAnterior).toAbsolutePath();
             try {
                 Files.deleteIfExists(rutaAbsolutaImagenAnterior);
@@ -198,6 +199,31 @@ public class Service_user {
             throw new CustomException("Error al guardar la imagen: " + e.getMessage());
         }
     }
+
+    public ProfilePhotoDTO getProfilePhoto(
+            String nickname
+    ) throws CustomException{
+        Usuario user = findNickname(nickname);
+        String rutaImagen = user.getImagenPerfil();
+
+        if(rutaImagen == null){throw new CustomException("No hay ninguna imagen guardada");}
+
+        Path rutaAbsolutaImagen = Paths.get(filePathProfilePhoto).resolve(rutaImagen).toAbsolutePath();
+
+        if (!Files.exists(rutaAbsolutaImagen) || !Files.isReadable(rutaAbsolutaImagen)) {
+            throw new CustomException("La foto de perfil no se encontró o no se puede leer");
+        }
+
+        try {
+            byte[] photoBytes = Files.readAllBytes(rutaAbsolutaImagen);
+
+
+            return new ProfilePhotoDTO(rutaImagen, photoBytes);
+        } catch (IOException e) {
+            throw new CustomException("Error al leer la foto de perfil: " + e.getMessage());
+        }
+    }
+
 
     private String getFileExtension(String filename) {
         if (filename == null || !filename.contains(".")) {
