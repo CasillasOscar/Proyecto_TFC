@@ -106,15 +106,12 @@ public class Service_user {
             throw new CustomException("El nickname " + userDTO.getNickname() + " no disponible");
         }
 
-        Optional<Provincia> provinciaFound = provinciaRepository.getProvinciaByNombre(userDTO.getProvincia());
-        if(provinciaFound.isEmpty()){
-            throw new CustomException("La provincia " + userDTO.getProvincia() + " no existe en nuestra base de datos");
-        }
+        Provincia provinciaFound = provinciaRepository.getProvinciaByNombre(userDTO.getProvincia());
 
         userFound.setNombre(userDTO.getNombre());
         userFound.setApellido(userDTO.getApellido());
         userFound.setNickname(userDTO.getNickname());
-        userFound.setIdProvincia(provinciaFound.get());
+        userFound.setIdProvincia(provinciaFound);
         userFound.setTelefono(userDTO.getTelefono());
 
         userRepository.save(userFound);
@@ -224,6 +221,25 @@ public class Service_user {
         }
     }
 
+    public Map<String, Object> getListProvincias(){
+        List<Provincia> provincias = provinciaRepository.findAll();
+
+        return new UserResponses(provincias, true, 1).responseListProvincias200();
+    }
+
+    public Map<String, String> updateProvincia(String nombrePorvincia, String nickname) throws CustomException{
+        Optional <Usuario> usuario= repositoryUser.getUsuarioByNickname(nickname);
+        if(usuario.isEmpty()){
+            throw new CustomException("El usuario no existe");
+        }
+        Provincia provincia = provinciaRepository.getProvinciaByNombre(nombrePorvincia);
+        usuario.get().setIdProvincia(provincia);
+        repositoryUser.save(usuario.get());
+        return new UserResponses(usuario.get(), true).responseProvinciaUpdated200();
+
+    }
+
+
 
     private String getFileExtension(String filename) {
         if (filename == null || !filename.contains(".")) {
@@ -231,7 +247,6 @@ public class Service_user {
         }
         return filename.substring(filename.lastIndexOf(".") + 1);
     }
-
 
     private Usuario findNickname(
             String nickname

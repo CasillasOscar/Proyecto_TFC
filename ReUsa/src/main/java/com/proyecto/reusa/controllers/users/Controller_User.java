@@ -108,4 +108,19 @@ public class Controller_User {
     ) throws CustomException {
         return ResponseEntity.ok(serviceUser.removeFavoriteProduct(nickname, id_product));
     }
+
+    @GetMapping("/listProvincias")
+    public ResponseEntity<?> getProvincias(){
+        return ResponseEntity.ok(serviceUser.getListProvincias());
+    }
+
+    @PostMapping("/updateProvincia/{nickname}")
+    public ResponseEntity<?> updateProvincia(
+            @RequestBody String nombreProvincia,
+            @PathVariable String nickname
+    ) throws CustomException{
+        return ResponseEntity.ok(serviceUser.updateProvincia(nombreProvincia, nickname));
+    }
+
+
 }

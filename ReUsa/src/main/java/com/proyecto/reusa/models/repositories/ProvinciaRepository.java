@@ -10,5 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface ProvinciaRepository extends JpaRepository<Provincia, Integer> {
-    Optional<Provincia> getProvinciaByNombre(@Size(max = 50) @NotNull String nombre);
+
+    Provincia getProvinciaByNombre(@Size(max = 50) @NotNull String nombre);
 }

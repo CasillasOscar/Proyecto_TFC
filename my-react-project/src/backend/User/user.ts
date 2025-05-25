@@ -24,3 +24,18 @@ export const getAvatar = async (nickname: string) => {
     const imageUrl = URL.createObjectURL(response.data);
     return imageUrl;
     }
+
+    export const getListProvincias = async () => {
+        const response = await axiosPrivate.get(
+            `${CONTROLLER}listProvincias`
+        );
+        return response;
+    }
+
+    export const updateProvincia = async (nickname: string, provincia: string) => {
+        const response = await axiosPrivate.post(
+            `${CONTROLLER}updateProvincia/${nickname}`,
+            { provincia }
+        );
+        return response;
+    }

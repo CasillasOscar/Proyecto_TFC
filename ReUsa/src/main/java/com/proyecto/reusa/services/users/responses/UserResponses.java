@@ -2,6 +2,7 @@ package com.proyecto.reusa.services.users.responses;
 
 import com.proyecto.reusa.models.Favorito;
 import com.proyecto.reusa.models.Producto;
+import com.proyecto.reusa.models.Provincia;
 import com.proyecto.reusa.models.Usuario;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class UserResponses {
     private Usuario user;
     private Boolean responseBoolean;
     private List<Favorito> listaFavoritos;
+    private List<Provincia> listaProvincias;
 
     public UserResponses(Boolean responseBoolean) {
         this.responseBoolean = responseBoolean;
@@ -25,6 +27,11 @@ public class UserResponses {
 
     public UserResponses(List<Favorito> listaFavoritos, Boolean responseBoolean) {
         this.listaFavoritos = listaFavoritos;
+        this.responseBoolean = responseBoolean;
+    }
+
+    public UserResponses(List<Provincia> listaProvincias, Boolean responseBoolean, int dummy) {
+        this.listaProvincias = listaProvincias;
         this.responseBoolean = responseBoolean;
     }
 
@@ -93,6 +100,32 @@ public class UserResponses {
         productData.put("etapa", p.getEtapa());
 
         return productData;
+    }
+
+    public Map<String, Object> responseListProvincias200() {
+        Map<String, Object> response = new HashMap<>();
+        List<Map<String, String>> provinciasList = new ArrayList<>();
+
+        for (Provincia prov: listaProvincias){
+            Map<String, String> provinciaData = new HashMap<>();
+            provinciaData.put("id",prov.getId().toString());
+            provinciaData.put("nombre", prov.getNombre());
+
+            provinciasList.add(provinciaData);
+        }
+
+        response.put("provincias", provinciasList);
+        response.put("response_successfully", responseBoolean.toString());
+        return response;
+    }
+
+    public Map<String, String> responseProvinciaUpdated200(){
+        Map<String, String> response = new HashMap<>();
+
+        response.put("provinciaUpdated", user.getProvincia());
+        response.put("response_successfully", responseBoolean.toString());
+
+        return response;
     }
 
 }
