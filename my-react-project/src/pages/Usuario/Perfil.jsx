@@ -186,20 +186,6 @@ export default function Perfil({
           </Card>
         </Grid>
 
-        {/* Favoritos */}
-        <Grid item xs={12} md={8} sx={{ display: "flex" }}>
-          <Card sx={{ flex: 1 }}>
-            <CardContent sx={{ textAlign: "justify" }}>
-              <Typography variant="h6" gutterBottom>
-                Favoritos recientes
-              </Typography>
-              <Box sx={{ display: "flex", gap: 2 }}>
-                <FavoriteIcon color="error" />
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
         {/* Productos */}
         <Grid item xs={12} md={8} sx={{ display: "flex" }}>
           <Card sx={{ flex: 1 }}>
