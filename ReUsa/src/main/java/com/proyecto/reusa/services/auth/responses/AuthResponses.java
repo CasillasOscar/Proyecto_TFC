@@ -39,6 +39,13 @@ public class AuthResponses {
         userData.put("valoracion", user.getValoracion().toString());
         userData.put("ventas", user.getNVentas().toString());
         userData.put("compras", user.getNCompras().toString());
+        String provincia = user.getProvincia();
+        if(provincia == null){
+            userData.put("provincia", "empty");
+        } else {
+            userData.put("provincia", user.getProvincia());
+        }
+
 
         Map<String, Object> response = new HashMap<>();
 

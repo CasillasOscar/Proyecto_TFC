@@ -90,7 +90,7 @@ export default function Perfil({
     nombre: user ? user.nombre : "Usuario Anónimo",
     email: user ? user.email : "Email no disponible",
     telefono: user ? user.telefono : "Teléfono no disponible",
-    direccion: "Avenida Fuenlabrada 103 2A, Leganés, Madrid",
+    provincia: user ? user.provincia : "Dirección no disponible",
     valoracion: user ? user.valoracion : 0,
   };
 
@@ -167,7 +167,7 @@ export default function Perfil({
             <CardContent sx={{ textAlign: "justify" }}>
               <Typography variant="h6">Información de contacto</Typography>
               <Typography>Teléfono: {usuario.telefono}</Typography>
-              <Typography>Dirección: {usuario.direccion}</Typography>
+              <Typography>Provincia: {usuario.provincia == "empty" ? "No definida": usuario.provincia}</Typography>
             </CardContent>
           </Card>
         </Grid>
