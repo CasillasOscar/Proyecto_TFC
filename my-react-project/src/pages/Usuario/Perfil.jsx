@@ -21,6 +21,7 @@ import L from "leaflet";
 import { logout } from "../../backend/Auth/Auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { updateAvatar } from "../../backend/User/user";
 
 // Icono personalizado para Leaflet
 const icon = L.icon({
@@ -105,6 +106,28 @@ export default function Perfil({ user, handleUserChange }) {
     }
   };
 
+  const handleUpdateAvatar = async (file) => {
+    console.log(file);
+    if (!file) {
+      toast.error("No se ha seleccionado ningún archivo");
+      return;
+    }
+    try{
+    const response = await updateAvatar(user.nickname, file);
+    if(response.status === 200) {
+      console.log("Avatar actualizado correctamente:", response.data);
+      toast.success("Avatar actualizado correctamente");
+    } else {
+      console.error("Error al actualizar el avatar:", response.data.message);
+      toast.error("Error al actualizar el avatar. Por favor, inténtalo de nuevo más tarde.");
+    }
+    }catch (error) {
+      console.error("Error al actualizar el avatar:", error);
+      toast.error("Error al actualizar el avatar. Por favor, inténtalo de nuevo más tarde.");
+    }
+    
+  }
+
   return (
     <Box sx={{ p: 4 }}>
       {/* Encabezado */}
@@ -115,7 +138,7 @@ export default function Perfil({ user, handleUserChange }) {
           <Avatar src={usuario.avatar} sx={{ width: 100, height: 100 }} />
           <VisuallyHiddenInput
             type="file"
-            onChange={(event) => console.log(event.target.files)}
+            onChange={(event) => handleUpdateAvatar(event.target.files[0])}
             multiple={false}
             accept="image/jpg, image/jpeg, image/png"
           />

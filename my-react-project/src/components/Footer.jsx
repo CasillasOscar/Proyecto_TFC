@@ -21,7 +21,7 @@ export default function Footer({ user }) {
       }}
     >
       {/* Navegación */}
-      <Grid container spacing={2} justifyContent="center" fullWidth>
+      <Grid container spacing={2} justifyContent="center">
         <Link
           onClick={() => navigate("/")}
           underline="hover"

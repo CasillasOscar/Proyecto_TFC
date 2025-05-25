@@ -1,5 +1,7 @@
 import { axiosPrivate, axiosPublic } from "../axios";
 
+const CONTROLLER = "auth/";
+
 export const signIn = async (
   nickname: string,
   nombre: string,
@@ -8,7 +10,7 @@ export const signIn = async (
   telefono: number,
   email: string
 ) => {
-  const response = await axiosPublic.post("auth/signin", {
+  const response = await axiosPublic.post(`${CONTROLLER}signin`, {
     nickname: nickname,
     nombre: nombre,
     apellido: apellido,
@@ -20,7 +22,7 @@ export const signIn = async (
 };
 
 export const login = async (email: string, password: string) => {
-  const response = await axiosPublic.post("auth/login", {
+  const response = await axiosPublic.post(`${CONTROLLER}login`, {
     email: email,
     password: password,
   });
@@ -28,6 +30,6 @@ export const login = async (email: string, password: string) => {
 };
 
 export const logout = async () => {
-  const response = await axiosPrivate.get("auth/logout");
+  const response = await axiosPrivate.get(`${CONTROLLER}logout`);
   return response;
 };

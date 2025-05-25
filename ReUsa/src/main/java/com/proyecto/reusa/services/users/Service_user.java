@@ -158,7 +158,7 @@ public class Service_user {
         // 1. Obtener la ruta de la imagen anterior
         String rutaImagenAnterior = user.getImagenPerfil();
 
-        if (!rutaImagenAnterior.isEmpty()){
+        if (rutaImagenAnterior != null){
             Path rutaAbsolutaImagenAnterior = Paths.get(filePathProfilePhoto).resolve(rutaImagenAnterior).toAbsolutePath();
             try {
                 Files.deleteIfExists(rutaAbsolutaImagenAnterior);
