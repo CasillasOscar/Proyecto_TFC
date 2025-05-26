@@ -2,6 +2,14 @@ import { axiosPrivate } from "../axios";
 
 const CONTROLLER = 'users/'
 
+export const updateUser = async (nickname: string, userData: any) => {
+  const response = await axiosPrivate.post(
+    `${CONTROLLER}updateUser/${nickname}`,
+    userData
+  );
+  return response;
+}
+
 export const updateAvatar = async (nickname: string, file: File) => {
   const formData = new FormData();
   formData.append("imagen", file);

@@ -54,6 +54,7 @@ public class UserResponses {
         userData.put("nickname", user.getNickname());
         userData.put("provincia", user.getProvincia());
         userData.put("comunidadAutonoma", user.getCCAA());
+        userData.put("telefono", user.getTelefono().toString());
 
         response.put("user", userData);
         response.put("response_successfully", responseBoolean.toString());

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Box,
   Typography,
@@ -21,6 +21,7 @@ import { logout } from "../../backend/Auth/Auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { updateAvatar } from "../../backend/User/user";
+import { UpdateUserPopup } from "../../components/Popups/UpdateUserPopup";
 
 // Icono personalizado para Leaflet
 const icon = L.icon({
@@ -85,6 +86,7 @@ export default function Perfil({
   getAvatarUrl,
 }) {
   const navigate = useNavigate();
+  const [openUpdateUserPopup, setOpenUpdateUserPopup] = useState(false);
 
   const usuario = {
     nombre: user ? user.nombre : "Usuario Anónimo",
@@ -134,6 +136,11 @@ export default function Perfil({
     }
   };
 
+   const handleUserUpdatedInPopup = useCallback((updatedUserData) => {
+    localStorage.setItem("user", JSON.stringify(updatedUserData));
+    handleUserChange();
+  }, [handleUserChange]); 
+
   return (
     <Box sx={{ p: 4 }}>
       {/* Encabezado */}
@@ -153,8 +160,8 @@ export default function Perfil({
             {usuario.email}
           </Typography>
         </Box>
-        <IconButton color="primary" sx={{ ml: "auto" }}>
-          <EditIcon />
+        <IconButton onClick={()=>setOpenUpdateUserPopup(true)} color="primary" sx={{ ml: "auto" }}>
+          <EditIcon/>
         </IconButton>
       </Box>
 
@@ -167,7 +174,12 @@ export default function Perfil({
             <CardContent sx={{ textAlign: "justify" }}>
               <Typography variant="h6">Información de contacto</Typography>
               <Typography>Teléfono: {usuario.telefono}</Typography>
-              <Typography>Provincia: {usuario.provincia == "empty" ? "No definida": usuario.provincia}</Typography>
+              <Typography>
+                Provincia:{" "}
+                {usuario.provincia == "empty"
+                  ? "No definida"
+                  : usuario.provincia}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -228,6 +240,14 @@ export default function Perfil({
           Cerrar sesión
         </Button>
       </Box>
+
+      {openUpdateUserPopup && (
+        <UpdateUserPopup
+          isOpen={openUpdateUserPopup}
+          onClose={() => setOpenUpdateUserPopup(false)}
+          onUserUpdated={handleUserUpdatedInPopup}
+        />
+      )}
     </Box>
   );
 }

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react'; // ¡Importa useCallback!
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import 'leaflet/dist/leaflet.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';  
+import { ToastContainer } from 'react-toastify'; 
 import { BrowserRouter } from 'react-router-dom';
 
 import Home from './pages/Home';
@@ -20,44 +20,54 @@ import { getAvatar } from './backend/User/user';
 
 
 export default function App() {
-  const[user, setUser] = useState();
+  const [user, setUser] = useState(null); 
   const [avatarUrl, setAvatarUrl] = useState("");
 
-  const handleUserChange = async () => {
-    if (!localStorage.getItem('user')) {
-      setUser(null)
-      return
+  const handleUserChange = useCallback(async () => { 
+    const userInStorage = localStorage.getItem('user');
+    if (!userInStorage) {
+      setUser(null);
+      return;
     }
-    setUser(JSON.parse(localStorage.getItem('user')));
-  }
+    setUser(JSON.parse(userInStorage));
+  }, []); 
 
-  const getAvatarUrl = async () => {
-    try {
-      const imgUrl = await getAvatar(user.nickname);
-      if (imgUrl) {
-        setAvatarUrl(imgUrl);
-      } else {
-        console.error(
-          "Error al obtener el avatar: No se ha podido recuperar la imagen"
-        );
+ 
+  const getAvatarUrl = useCallback(async () => {
+    if (user && user.nickname) {
+      try {
+        const imgUrl = await getAvatar(user.nickname);
+        if (imgUrl) {
+          setAvatarUrl(imgUrl);
+        } else {
+          console.error(
+            "Error al obtener el avatar: No se ha podido recuperar la imagen"
+          );
+        }
+      } catch (error) {
+        console.error("Error al obtener el avatar:", error);
       }
-    } catch (error) {
-      console.error("Error al obtener el avatar:", error);
     }
-  };
+  }, [user]); 
 
+  
   useEffect(() => {
-    if (user) {
+    if (user) { 
       getAvatarUrl();
     }
-  }, [user]);
-  
+  }, [user, getAvatarUrl]); 
+
+ 
+  useEffect(() => {
+    handleUserChange(); 
+  }, [handleUserChange]); 
+
 
   return (
     <BrowserRouter>
       <ToastContainer
         position="top-right" 
-        autoClose={2500}    
+        autoClose={2500}
         hideProgressBar={true} 
         newestOnTop={false}
         closeOnClick
@@ -68,14 +78,13 @@ export default function App() {
         theme="light" 
       />
 
-      <Header user={user}/>
+      <Header user={user} avatarUrl={avatarUrl}/>
       <Routes>
         <Route path="/" element={<Home />} />
-
         <Route path="/favoritos" element={<Favoritos/>} />
         <Route path="/perfil" element={<Perfil user={user} handleUserChange={handleUserChange} getAvatarUrl={getAvatarUrl} avatarUrl={avatarUrl}/>} />
         <Route path="/nuevo" element={<NuevoProducto />} />
-        <Route path="/login" element={<Login handleUserChange={handleUserChange} getAvatar={getAvatar}/>} />
+        <Route path="/login" element={<Login handleUserChange={handleUserChange} getAvatarFn={getAvatar}/>} /> 
         <Route path="/register" element={<Register handleUserChange={handleUserChange}/>} />
         <Route path="/recuperar" element={<Recuperar />} />
         <Route path="/AcercaDe" element={<AcercaDe />} />
