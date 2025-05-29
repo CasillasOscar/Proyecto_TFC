@@ -55,7 +55,7 @@ export const ImageProduct = ({ producto }) => {
     <CardMedia
       component="img"
       height="200"
-      image={imageUrl}
+      image={IMG_DEFAULT}
       alt={producto.nombre}
       sx={{ objectFit: "cover" }}
     />
@@ -63,7 +63,7 @@ export const ImageProduct = ({ producto }) => {
     <CardMedia
       component="img"
       height="200"
-      image={IMG_DEFAULT}
+      image={imageUrl}
       alt="Imagen por defecto"
       sx={{ objectFit: "cover" }}
     />
