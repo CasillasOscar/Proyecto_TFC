@@ -5,10 +5,14 @@ import com.proyecto.reusa.models.*;
 import com.proyecto.reusa.models.repositories.*;
 import com.proyecto.reusa.services.products.responses.ProductResponses;
 import com.proyecto.reusa.services.products.serializers.FiltersDTO;
+import com.proyecto.reusa.services.products.serializers.ImageProductDTO;
+import com.proyecto.reusa.services.products.serializers.ProductDTO;
 import com.proyecto.reusa.services.products.serializers.SellProductDTO;
+import com.proyecto.reusa.services.users.serializers.ProfilePhotoDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -31,16 +36,64 @@ public class Service_Product {
     @Autowired
     private ProductoRepository productoRepository;
     @Autowired
-    private TokenRepository tokenRepository;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private VentaRepository ventaRepository;
     @Autowired
     private SubacategoriaRepository subcategoriaRepository;
 
-    public List<Producto> getAllProductsActive(){
-        return productoRepository.getProductosByEtapa("activo");
+    public List<ProductDTO> getAllProductsActive(){
+        List<Producto> listProducts = productoRepository.getProductosByEtapa("activo");
+
+        return listProducts.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+    private ProductDTO convertToDto(Producto producto) {
+        ProductDTO dto = new ProductDTO();
+
+        dto.setId(producto.getId());
+        dto.setPrecio(producto.getPrecio());
+        dto.setNombre(producto.getNombre());
+        dto.setDescripcion(producto.getDescripcion());
+        dto.setEstado(producto.getEstado());
+        dto.setSubcategoria(producto.getSubcategoria());
+        dto.setCategoria(producto.getCategoria());
+        dto.setImagen1(producto.getImagen1());
+        dto.setImagen2(producto.getImagen2());
+
+        return dto;
+    }
+
+    public ImageProductDTO getProductImageBytes(String path) throws CustomException {
+
+        Path rutaAbsolutaImagen = Paths.get(filePathProductPhotos).resolve(path).toAbsolutePath();
+        if (!Files.exists(rutaAbsolutaImagen) || !Files.isReadable(rutaAbsolutaImagen)) {
+            throw new CustomException("La foto de perfil no se encontró o no se puede leer");
+        }
+        try {
+            byte[] photoBytes = Files.readAllBytes(rutaAbsolutaImagen);
+
+            return new ImageProductDTO(path, photoBytes);
+        } catch (IOException e) {
+            throw new CustomException("Error al leer la foto de perfil: " + e.getMessage());
+        }
+    }
+
+    public MediaType getMediaTypeForFileName(String filename) {
+        if (filename == null || !filename.contains(".")) {
+            return MediaType.APPLICATION_OCTET_STREAM;
+        }
+        String fileExtension = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
+        switch (fileExtension) {
+            case "jpg":
+            case "jpeg":
+                return MediaType.IMAGE_JPEG;
+            case "png":
+                return MediaType.IMAGE_PNG;
+            default:
+                return MediaType.APPLICATION_OCTET_STREAM;
+        }
     }
 
     public Producto setSellProduct(String nickname, SellProductDTO productDTO, MultipartFile image1, MultipartFile image2) throws CustomException{

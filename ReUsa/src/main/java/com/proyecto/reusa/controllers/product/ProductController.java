@@ -6,12 +6,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proyecto.reusa.exceptions.CustomException;
 import com.proyecto.reusa.services.products.Service_Product;
 import com.proyecto.reusa.services.products.serializers.FiltersDTO;
+import com.proyecto.reusa.services.products.serializers.ImageProductDTO;
 import com.proyecto.reusa.services.products.serializers.SellProductDTO;
+import com.proyecto.reusa.services.users.serializers.ProfilePhotoDTO;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/products")
@@ -21,10 +29,47 @@ public class ProductController {
     @Autowired
     private Service_Product serviceProduct;
 
-    @GetMapping()
+    @GetMapping("/")
     public ResponseEntity<?> getAllProductsActive(){
         return ResponseEntity.ok(serviceProduct.getAllProductsActive());
     }
+
+    @PostMapping("/imageProduct")
+    public ResponseEntity<byte[]> getProductImage(
+            @RequestParam String path
+    ) throws CustomException{
+        try {
+            ImageProductDTO imageProductDTO = serviceProduct.getProductImageBytes(path);
+
+            byte[] imageData = imageProductDTO.getPhoto();
+            String fileName = imageProductDTO.getPath();
+
+            MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
+            if (fileName != null) {
+                String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+                switch (fileExtension) {
+                    case "jpg":
+                    case "jpeg":
+                        mediaType = MediaType.IMAGE_JPEG;
+                        break;
+                    case "png":
+                        mediaType = MediaType.IMAGE_PNG;
+                        break;
+                }
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(mediaType)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+                    .body(imageData);
+
+        } catch (CustomException e) {
+            throw new CustomException("Ha habido un problema en la obtencion de la imagen del producto");
+        }
+
+
+    }
+
 
     @PostMapping("/{nickname}/sellProduct")
     public ResponseEntity<?> userSellProduct(

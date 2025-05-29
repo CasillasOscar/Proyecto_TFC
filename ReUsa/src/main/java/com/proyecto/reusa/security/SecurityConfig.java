@@ -55,6 +55,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests ->
                         requests.requestMatchers("/auth/**")
                                 .permitAll()
+                                .requestMatchers(HttpMethod.GET, "/products/")
+                                .permitAll()
+                                .requestMatchers(HttpMethod.POST, "/products/imageProduct")
+                                .permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
