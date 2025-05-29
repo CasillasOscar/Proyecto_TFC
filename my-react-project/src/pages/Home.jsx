@@ -13,6 +13,7 @@ import {
   Grid,
   CardContent,
 } from "@mui/material";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { toast } from "react-toastify";
 import { ImageProduct } from "../components/Products/ImageProduct";
 import { listProducts } from "../backend/Product/product";
@@ -72,7 +73,7 @@ export default function Home() {
                     "&:hover": { backgroundColor: "#eee" },
                   }}
                 >
-                  {/* {favoritos.includes(producto.id) ? <Favorite color="error" /> : <FavoriteBorder />} */}
+                  <FavoriteBorderIcon />
                 </IconButton>
 
                 <ImageProduct producto={producto}/>
@@ -80,7 +81,7 @@ export default function Home() {
                 <CardContent>
                   <Typography variant="subtitle1">{producto.nombre}</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {producto.precio}
+                    Precio: {producto.precio} €
                   </Typography>
                   <Box sx={{ mt: 2, textAlign: "center" }}>
                     <Button
