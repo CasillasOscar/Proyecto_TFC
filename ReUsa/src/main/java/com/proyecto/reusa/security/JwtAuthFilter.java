@@ -1,8 +1,6 @@
 package com.proyecto.reusa.security;
 
-import com.proyecto.reusa.models.Token;
 import com.proyecto.reusa.models.Usuario;
-import com.proyecto.reusa.models.repositories.TokenRepository;
 import com.proyecto.reusa.models.repositories.UserRepository;
 import com.proyecto.reusa.services.auth.JwtService;
 import jakarta.servlet.FilterChain;
@@ -30,7 +28,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
 
     @Override
@@ -83,26 +80,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
         }
 
-        final UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-        final Optional<Usuario> user = userRepository.getUsuarioByEmail(userDetails.getUsername());
-        if(user.isEmpty()){
-            filterChain.doFilter(request,response);
-            return;
-        }
-
-        final boolean isTokenValid = jwtService.isTokenValid(jwtToken, user.get());
-        if(!isTokenValid){
-            return;
-        }
-
-        final var authToken = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities()
-        );
-
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authToken);
         filterChain.doFilter(request,response);
     }
 

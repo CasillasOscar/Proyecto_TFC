@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class UserResponses {
     private Usuario user;
-    private Boolean responseBoolean;
+    private final Boolean responseBoolean;
     private List<Favorito> listaFavoritos;
     private List<Provincia> listaProvincias;
 
@@ -96,8 +96,6 @@ public class UserResponses {
         productData.put("subcategoria", p.getSubcategoria());
         productData.put("imagen_1", p.getImagen1());
         productData.put("imagen_2", p.getImagen2());
-        productData.put("imagen_3", p.getImagen3());
-        productData.put("imagen_4", p.getImagen4());
         productData.put("etapa", p.getEtapa());
 
         return productData;
