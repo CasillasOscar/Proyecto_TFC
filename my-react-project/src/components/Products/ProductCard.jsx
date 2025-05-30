@@ -15,6 +15,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { ImageProduct } from "./ImageProduct";
 import EditIcon from "@mui/icons-material/Edit";
+import { limitText } from "../../utils/textUtils";
 
 export const ProductCard = ({ user, producto, favoritos, setFavoritos }) => {
 
@@ -109,9 +110,9 @@ export const ProductCard = ({ user, producto, favoritos, setFavoritos }) => {
         <ImageProduct producto={producto} />
 
         <CardContent>
-          <Typography variant="subtitle1">{producto.nombre}</Typography>
+          <Typography variant="subtitle1" >{limitText(producto.nombre, 13)}</Typography>
           <Typography variant="body2" color="text.secondary">
-            Precio: {producto.precio} €
+            {limitText(String(producto.precio), 4)} €
           </Typography>
           <Box sx={{ mt: 2, textAlign: "center" }}>
             <Button

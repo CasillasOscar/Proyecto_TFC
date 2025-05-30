@@ -42,7 +42,7 @@ export default function Home({ user, favoritos, setFavoritos }) {
         alignItems: "center",
       }}
     >
-      <Typography variant="h5" gutterBottom textAlign="center">
+      <Typography variant="h5" gutterBottom textAlign="center" mb={3}>
         Comienza con nosotros a reutilizar productos y cuidar el medio ambiente
       </Typography>
 
