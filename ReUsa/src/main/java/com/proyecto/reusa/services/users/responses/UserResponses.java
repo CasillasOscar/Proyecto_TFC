@@ -2,6 +2,7 @@ package com.proyecto.reusa.services.users.responses;
 
 import com.proyecto.reusa.models.Favorito;
 import com.proyecto.reusa.models.Producto;
+import com.proyecto.reusa.models.Provincia;
 import com.proyecto.reusa.models.Usuario;
 
 import java.util.ArrayList;
@@ -11,8 +12,9 @@ import java.util.Map;
 
 public class UserResponses {
     private Usuario user;
-    private Boolean responseBoolean;
+    private final Boolean responseBoolean;
     private List<Favorito> listaFavoritos;
+    private List<Provincia> listaProvincias;
 
     public UserResponses(Boolean responseBoolean) {
         this.responseBoolean = responseBoolean;
@@ -25,6 +27,11 @@ public class UserResponses {
 
     public UserResponses(List<Favorito> listaFavoritos, Boolean responseBoolean) {
         this.listaFavoritos = listaFavoritos;
+        this.responseBoolean = responseBoolean;
+    }
+
+    public UserResponses(List<Provincia> listaProvincias, Boolean responseBoolean, int dummy) {
+        this.listaProvincias = listaProvincias;
         this.responseBoolean = responseBoolean;
     }
 
@@ -47,6 +54,7 @@ public class UserResponses {
         userData.put("nickname", user.getNickname());
         userData.put("provincia", user.getProvincia());
         userData.put("comunidadAutonoma", user.getCCAA());
+        userData.put("telefono", user.getTelefono().toString());
 
         response.put("user", userData);
         response.put("response_successfully", responseBoolean.toString());
@@ -56,11 +64,25 @@ public class UserResponses {
 
     public Map<String, Object> responseFavoritos200() {
         Map<String, Object> response = new HashMap<>();
+        List<Integer> productList = new ArrayList<>();
+
+        for (Favorito fav: listaFavoritos){
+            Integer id = fav.getIdProducto().getId();
+            productList.add(id);
+        }
+
+        response.put("favorites_products", productList);
+        response.put("response_successfully", responseBoolean.toString());
+        return response;
+    }
+
+    public Map<String, Object> responseListProductsFavoritos200() {
+        Map<String, Object> response = new HashMap<>();
         List<Map<String, String>> productList = new ArrayList<>();
 
         for (Favorito fav: listaFavoritos){
-            Map<String, String> productData = extractProductData(fav.getIdProducto());
-            productList.add(productData);
+            Map<String, String> listP = extractProductData(fav.getIdProducto());
+            productList.add(listP);
         }
 
         response.put("favorites_products", productList);
@@ -83,16 +105,38 @@ public class UserResponses {
         productData.put("precio", p.getPrecio().toString());
         productData.put("descripcion", p.getDescripcion());
         productData.put("estado", p.getEstado());
-        productData.put("fecha_publicacion", p.getFechaPublicacion().toString());
         productData.put("categoria", p.getCategoria());
         productData.put("subcategoria", p.getSubcategoria());
-        productData.put("imagen_1", p.getImagen1());
-        productData.put("imagen_2", p.getImagen2());
-        productData.put("imagen_3", p.getImagen3());
-        productData.put("imagen_4", p.getImagen4());
-        productData.put("etapa", p.getEtapa());
+        productData.put("imagen1", p.getImagen1());
+        productData.put("imagen2", p.getImagen2());
 
         return productData;
+    }
+
+    public Map<String, Object> responseListProvincias200() {
+        Map<String, Object> response = new HashMap<>();
+        List<Map<String, String>> provinciasList = new ArrayList<>();
+
+        for (Provincia prov: listaProvincias){
+            Map<String, String> provinciaData = new HashMap<>();
+            provinciaData.put("id",prov.getId().toString());
+            provinciaData.put("nombre", prov.getNombre());
+
+            provinciasList.add(provinciaData);
+        }
+
+        response.put("provincias", provinciasList);
+        response.put("response_successfully", responseBoolean.toString());
+        return response;
+    }
+
+    public Map<String, String> responseProvinciaUpdated200(){
+        Map<String, String> response = new HashMap<>();
+
+        response.put("provinciaUpdated", user.getProvincia());
+        response.put("response_successfully", responseBoolean.toString());
+
+        return response;
     }
 
 }

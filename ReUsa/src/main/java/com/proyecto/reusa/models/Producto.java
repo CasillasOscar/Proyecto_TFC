@@ -80,16 +80,6 @@ public class Producto {
     @Column(name = "imagen_2", nullable = false, length = 250)
     private String imagen2;
 
-    @Size(max = 250)
-    @NotNull
-    @Column(name = "imagen_3", nullable = false, length = 250)
-    private String imagen3;
-
-    @Size(max = 250)
-    @NotNull
-    @Column(name = "imagen_4", nullable = false, length = 250)
-    private String imagen4;
-
     @NotNull
     @Lob
     @Column(name = "etapa", nullable = false)
@@ -178,22 +168,6 @@ public class Producto {
 
     public void setImagen2(String imagen2) {
         this.imagen2 = imagen2;
-    }
-
-    public String getImagen3() {
-        return imagen3;
-    }
-
-    public void setImagen3(String imagen3) {
-        this.imagen3 = imagen3;
-    }
-
-    public String getImagen4() {
-        return imagen4;
-    }
-
-    public void setImagen4(String imagen4) {
-        this.imagen4 = imagen4;
     }
 
     public String getEtapa() {

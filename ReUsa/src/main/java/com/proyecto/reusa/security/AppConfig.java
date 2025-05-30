@@ -14,12 +14,14 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
+import java.util.Collections;
 import java.util.Optional;
 
 
@@ -43,6 +45,7 @@ public class AppConfig {
                 return org.springframework.security.core.userdetails.User.builder()
                         .username(user.get().getEmail())
                         .password(user.get().getPassword())
+                        .authorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")))
                         .build();
 
             } else {
