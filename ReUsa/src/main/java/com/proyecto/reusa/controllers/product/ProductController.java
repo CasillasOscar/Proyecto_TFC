@@ -102,7 +102,6 @@ public class ProductController {
         return ResponseEntity.ok(serviceProduct.listSubcategorias());
     }
 
-
     @PostMapping("/filters")
     public ResponseEntity<?> getProductsFilter(@RequestBody FiltersDTO filters){
         return ResponseEntity.ok(serviceProduct.getProductsWithFilters(filters));

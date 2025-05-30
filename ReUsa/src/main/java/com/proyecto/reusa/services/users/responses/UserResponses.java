@@ -76,6 +76,20 @@ public class UserResponses {
         return response;
     }
 
+    public Map<String, Object> responseListProductsFavoritos200() {
+        Map<String, Object> response = new HashMap<>();
+        List<Map<String, String>> productList = new ArrayList<>();
+
+        for (Favorito fav: listaFavoritos){
+            Map<String, String> listP = extractProductData(fav.getIdProducto());
+            productList.add(listP);
+        }
+
+        response.put("favorites_products", productList);
+        response.put("response_successfully", responseBoolean.toString());
+        return response;
+    }
+
     public Map<String, String> responseRemoveFavorite200() {
         Map<String, String> response = new HashMap<>();
         response.put("response_successfully", responseBoolean.toString());
@@ -91,12 +105,10 @@ public class UserResponses {
         productData.put("precio", p.getPrecio().toString());
         productData.put("descripcion", p.getDescripcion());
         productData.put("estado", p.getEstado());
-        productData.put("fecha_publicacion", p.getFechaPublicacion().toString());
         productData.put("categoria", p.getCategoria());
         productData.put("subcategoria", p.getSubcategoria());
-        productData.put("imagen_1", p.getImagen1());
-        productData.put("imagen_2", p.getImagen2());
-        productData.put("etapa", p.getEtapa());
+        productData.put("imagen1", p.getImagen1());
+        productData.put("imagen2", p.getImagen2());
 
         return productData;
     }

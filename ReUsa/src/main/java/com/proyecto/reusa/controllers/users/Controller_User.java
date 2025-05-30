@@ -100,6 +100,13 @@ public class Controller_User {
         return ResponseEntity.ok(serviceUser.getFavoritesProducts(nickname));
     }
 
+    @GetMapping("/{nickname}/listProductsFavorites")
+    public ResponseEntity<?> getListProductsFavorites(
+            @PathVariable String nickname
+    ) throws CustomException {
+        return ResponseEntity.ok(serviceUser.getListProductsFavorites(nickname));
+    }
+
     //Enpoint para eliminar un favorito
     @GetMapping("/{nickname}/removeFavorite/{id_product}")
     public ResponseEntity<?> deleteFavoriteProduct(

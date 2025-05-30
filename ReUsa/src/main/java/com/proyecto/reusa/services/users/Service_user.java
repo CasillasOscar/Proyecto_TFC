@@ -128,6 +128,15 @@ public class Service_user {
         return new UserResponses(favoritos, true).responseFavoritos200();
     }
 
+    public Map<String, Object> getListProductsFavorites(
+            String nickname
+    ) throws CustomException {
+        Usuario userFound = findNickname(nickname);
+        List<Favorito> favoritos = favoritosRepository.getFavoritosByIdUsuarioComprador_Nickname(userFound.getNickname());
+
+        return new UserResponses(favoritos,true).responseListProductsFavoritos200();
+    }
+
     public Map<String, String> removeFavoriteProduct(
             String nickname,
             Integer id_product

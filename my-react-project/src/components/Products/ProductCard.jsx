@@ -17,17 +17,25 @@ import { ImageProduct } from "./ImageProduct";
 import EditIcon from "@mui/icons-material/Edit";
 
 export const ProductCard = ({ user, producto, favoritos, setFavoritos }) => {
+
+  const ensureIdIsNumber = (productoId)=>{
+    let idToCompare = productoId;
+    if(typeof productoId === "string"){
+       idToCompare = Number(productoId);
+    }
+    return idToCompare
+  }
   const isFavorite = (productoId) => {
-    return Array.isArray(favoritos) && favoritos.includes(productoId);
+    return Array.isArray(favoritos) && favoritos.includes(ensureIdIsNumber(productoId));
   };
-  const handleToggleFavorite = async (productId) => {
-    if (isFavorite(productId)) {
+  const handleToggleFavorite = async (productoId) => {
+    if (isFavorite(productoId)) {
       try {
-        const response = await removeFavorite(user.nickname, productId);
+        const response = await removeFavorite(user.nickname, productoId);
         if (response.status === 200) {
           toast.success("Favorito eliminado");
           const updatedFavorites = favoritos.filter(
-            (favId) => favId !== productId
+            (favId) => favId !== ensureIdIsNumber(productoId)
           );
           setFavoritos(updatedFavorites);
         } else {
@@ -39,10 +47,10 @@ export const ProductCard = ({ user, producto, favoritos, setFavoritos }) => {
       }
     } else {
       try {
-        const response = await saveFavorite(user.nickname, productId);
+        const response = await saveFavorite(user.nickname, productoId);
         if (response.status === 200) {
           toast.success("Guardado en favoritos");
-          const updatedFavorites = [...favoritos, productId];
+          const updatedFavorites = [...favoritos, productoId];
           setFavoritos(updatedFavorites);
         } else {
           toast.error("Error al guardar en favoritos.");

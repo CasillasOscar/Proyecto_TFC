@@ -55,7 +55,6 @@ export default function App() {
     try{
     const response = await listFavorites(user.nickname)
     if(response.status === 200){
-      console.log(response)
       setFavoritos(response.data.favorites_products)
     }
     } catch (error){
@@ -64,13 +63,11 @@ export default function App() {
   }, [user])
 
   useEffect(() => {
-  if (favoritos !== null) {
     try {
       localStorage.setItem("favoritos", JSON.stringify(favoritos));
     } catch (e) {
       console.error("Error al guardar favoritos en localStorage:", e);
     }
-  }
 }, [favoritos]);
 
   
@@ -105,7 +102,7 @@ export default function App() {
       <Header user={user} avatarUrl={avatarUrl}/>
       <Routes>
         <Route path="/" element={<Home user={user} favoritos={favoritos} setFavoritos={setFavoritos}/>} />
-        <Route path="/favoritos" element={<Favoritos/>} />
+        <Route path="/favoritos" element={<Favoritos user={user} favoritos={favoritos} setFavoritos={setFavoritos}/>} />
         <Route path="/perfil" element={<Perfil user={user} handleUserChange={handleUserChange} getAvatarUrl={getAvatarUrl} avatarUrl={avatarUrl}/>} />
         <Route path="/nuevo" element={<NuevoProducto />} />
         <Route path="/login" element={<Login handleUserChange={handleUserChange} getAvatarFn={getAvatar}/>} /> 

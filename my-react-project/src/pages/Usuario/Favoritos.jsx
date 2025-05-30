@@ -1,46 +1,55 @@
+import { Box, Typography, Grid } from "@mui/material";
+import { listProductsFavorites } from "../../backend/User/User";
+import { useCallback, useEffect, useState } from "react";
+import { ProductCard } from "../../components/Products/ProductCard";
 
-import {
-  Box, Typography,
-} from '@mui/material';
+export default function Favoritos({ user, favoritos, setFavoritos }) {
+  const [listFavorites, setListFavoritos] = useState([]);
 
+  const fetchFavoritos = useCallback(async () => {
+    try {
+      const response = await listProductsFavorites(user.nickname);
+      if (response.status === 200) {
+        if (response.data.favorites_products.length > 0) {
+          setListFavoritos(response.data.favorites_products);
+        } else {
+          setListFavoritos([]);
+        }
+      } else {
+        console.log("Error al cargar los favoritos");
+      }
+    } catch (error) {
+      console.log("Error al cargar los favoritos", error);
+    }
+  }, [user]);
 
-
-
-export default function Favoritos() {
-
-
+  useEffect(() => {
+    fetchFavoritos();
+  }, [fetchFavoritos, favoritos]);
 
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" gutterBottom textAlign="center">
-        ❤️ Productos guardados
+        ❤️ Favoritos
       </Typography>
 
+      {listFavorites.length < 1 && (
         <Typography textAlign="center" sx={{ mt: 4 }} color="text.secondary">
           No has guardado ningún producto como favorito todavía.
         </Typography>
-      
-        {/* <Grid container spacing={3} justifyContent="center">
-        
-            <Grid item xs={12} sm={6} md={4} lg={3} key={'3'}>
-              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                <CardMedia component="img" height="200" image={} alt={'loro'} />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="h6">Nombre</Typography>
-                    <IconButton color="error" onClick={() => {}}>
-                      <FavoriteIcon />
-                    </IconButton>
-                  </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    Precio
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-         
-        </Grid> */}
-      
+      )}
+
+      <Grid container spacing={2} justifyContent="center">
+        {listFavorites &&
+          listFavorites.map((producto) => (
+            <ProductCard
+              producto={producto}
+              user={user}
+              favoritos={favoritos}
+              setFavoritos={setFavoritos}
+            />
+          ))}
+      </Grid>
     </Box>
   );
 }
