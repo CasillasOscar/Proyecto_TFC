@@ -12,23 +12,25 @@ import {
   IconButton,
   Grid,
   CardContent,
+  Tooltip,
 } from "@mui/material";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import { toast } from "react-toastify";
 import { ImageProduct } from "../components/Products/ImageProduct";
-import { listProducts } from "../backend/Product/product";
+import { listProducts, saveFavorite } from "../backend/Product/product";
+import EditIcon from "@mui/icons-material/Edit";
+import { removeFavorite } from "../backend/User/User";
 
-export default function Home() {
+export default function Home({ user, favoritos, setFavoritos }) {
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [productos, setProductos] = useState([]);
- 
+
   useEffect(() => {
     fetchProductos();
   }, []);
 
-  useEffect(() => {
-    console.log("Productos actualizados:", productos);
-  }, [productos]);
+  useEffect(() => {}, [productos]);
 
   const fetchProductos = async () => {
     try {
@@ -44,7 +46,47 @@ export default function Home() {
     }
   };
 
+  const isFavorite = (productoId) => {
+    return Array.isArray(favoritos) && favoritos.includes(productoId);
+  };
+  const handleToggleFavorite = async (productId) => {
+    
+    if (isFavorite(productId)) {
+      try {
+        const response = await removeFavorite(user.nickname, productId);
+        if (response.status === 200) {
+          toast.success("Favorito eliminado");
+          const updatedFavorites = favoritos.filter(
+            (favId) => favId !== productId
+          );
+          setFavoritos(updatedFavorites);
+        } else {
+          toast.error("Error al eliminar el favorito del servidor.");
+        }
+      } catch (error) {
+        console.error("Error al eliminar favorito:", error);
+        toast.error("Error de conexión al eliminar favorito.");
+      }
+    } else {
+      try {
+        const response = await saveFavorite(user.nickname, productId); 
+        if (response.status === 200) {
+          toast.success("Guardado en favoritos");
+          const updatedFavorites = [...favoritos, productId];
+          setFavoritos(updatedFavorites);
+        } else {
+          toast.error("Error al guardar en favoritos.");
+        }
+      } catch (error) {
+        toast.error("Error al guardar en favoritos");
+        console.error("Error al guardar en favoritos:", error);
+      }
+    }
+  };
 
+  const handleEditProduct = (productId) => {
+    console.log("Acción: Editar producto", productId);
+  };
   return (
     <Box
       sx={{
@@ -62,21 +104,41 @@ export default function Home() {
         {productos &&
           productos.map((producto) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={producto.id}>
-              <Card sx={{ position: "relative" }}>
-                <IconButton
-                  onClick={() => console.log("Favorito clicked")}
-                  sx={{
-                    position: "absolute",
-                    top: 8,
-                    right: 8,
-                    backgroundColor: "white",
-                    "&:hover": { backgroundColor: "#eee" },
-                  }}
-                >
-                  <FavoriteBorderIcon />
-                </IconButton>
+              <Card sx={{ position: "relative", width: "200px" }}>
+                {user && (
+                  <IconButton
+                    onClick={() => {
+                      if (user.nickname !== producto.usuario) {
+                        handleToggleFavorite(producto.id);
+                      } else {
+                        handleEditProduct(producto.id);
+                      }
+                    }}
+                    sx={{
+                      position: "absolute",
+                      top: 8,
+                      right: 8,
+                      backgroundColor: "white",
+                      "&:hover": { backgroundColor: "#eee" },
+                    }}
+                  >
+                    {user && user.nickname !== producto.usuario ? (
+                      <Tooltip title="Agregar a favoritos">
+                        {isFavorite(producto.id) ? (
+                          <FavoriteIcon color="error" />
+                        ) : (
+                          <FavoriteBorderIcon />
+                        )}
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title="Editar producto">
+                        <EditIcon />
+                      </Tooltip>
+                    )}
+                  </IconButton>
+                )}
 
-                <ImageProduct producto={producto}/>
+                <ImageProduct producto={producto} />
 
                 <CardContent>
                   <Typography variant="subtitle1">{producto.nombre}</Typography>

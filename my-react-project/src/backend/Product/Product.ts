@@ -51,3 +51,9 @@ export const userSellProduct = async (
   );
   return response;
 };
+
+export const saveFavorite = async (nickname: string, idProdcuto: number)=>{
+  const response = await axiosPrivate.get(`${CONTROLLER}addFavorite/${nickname}/${idProdcuto}`)
+
+  return response
+}

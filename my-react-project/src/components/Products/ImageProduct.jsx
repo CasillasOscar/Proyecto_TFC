@@ -22,7 +22,6 @@ export const ImageProduct = ({ producto }) => {
 
     const fetchImage = async () => {
       try {
-        console.log(producto.imagen1)
         const url = await getImageProduct(producto.imagen1);
         
         if (url && url.startsWith("blob:")) {

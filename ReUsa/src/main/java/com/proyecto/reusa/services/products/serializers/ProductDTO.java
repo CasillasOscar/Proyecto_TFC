@@ -12,8 +12,9 @@ public class ProductDTO {
     private String categoria;
     private String imagen1;
     private String imagen2;
+    private String usuario;
 
-    public ProductDTO(Integer id, BigDecimal precio, String descripcion, String nombre, String estado, String subcategoria, String categoria, String imagen1, String imagen2) {
+    public ProductDTO(Integer id, BigDecimal precio, String descripcion, String nombre, String estado, String subcategoria, String categoria, String imagen1, String imagen2, String usuario) {
         this.id = id;
         this.precio = precio;
         this.descripcion = descripcion;
@@ -23,6 +24,7 @@ public class ProductDTO {
         this.categoria = categoria;
         this.imagen1 = imagen1;
         this.imagen2 = imagen2;
+        this.usuario = usuario;
     }
 
     public ProductDTO(){}
@@ -85,6 +87,14 @@ public class ProductDTO {
 
     public String getImagen1() {
         return imagen1;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public void setImagen1(String imagen1) {

@@ -41,6 +41,8 @@ public class Service_Product {
     private VentaRepository ventaRepository;
     @Autowired
     private SubacategoriaRepository subcategoriaRepository;
+    @Autowired
+    private FavoritosRepository favoritosRepository;
 
     public List<ProductDTO> getAllProductsActive(){
         List<Producto> listProducts = productoRepository.getProductosByEtapa("activo");
@@ -61,6 +63,7 @@ public class Service_Product {
         dto.setCategoria(producto.getCategoria());
         dto.setImagen1(producto.getImagen1());
         dto.setImagen2(producto.getImagen2());
+        dto.setUsuario(producto.getIdUsuario().getNickname());
 
         return dto;
     }
@@ -77,22 +80,6 @@ public class Service_Product {
             return new ImageProductDTO(path, photoBytes);
         } catch (IOException e) {
             throw new CustomException("Error al leer la foto de perfil: " + e.getMessage());
-        }
-    }
-
-    public MediaType getMediaTypeForFileName(String filename) {
-        if (filename == null || !filename.contains(".")) {
-            return MediaType.APPLICATION_OCTET_STREAM;
-        }
-        String fileExtension = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
-        switch (fileExtension) {
-            case "jpg":
-            case "jpeg":
-                return MediaType.IMAGE_JPEG;
-            case "png":
-                return MediaType.IMAGE_PNG;
-            default:
-                return MediaType.APPLICATION_OCTET_STREAM;
         }
     }
 
@@ -171,6 +158,18 @@ public class Service_Product {
            productoRepository.save(producto.get());
 
         return new ProductResponses(newVenta, true).responseProductBought200();
+    }
+
+    public boolean saveFavorite(String nickname, Integer idProduct) throws CustomException {
+        Usuario userFound = findNickname(nickname);
+        Producto productoFound = productoRepository.getProductoById(idProduct);
+
+        Favorito favorito = new Favorito();
+        favorito.setIdProducto(productoFound);
+        favorito.setIdUsuarioComprador(userFound);
+
+        favoritosRepository.save(favorito);
+        return true;
     }
 
     private String getFileExtension(String filename) {

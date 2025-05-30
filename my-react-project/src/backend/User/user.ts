@@ -47,3 +47,13 @@ export const getAvatar = async (nickname: string) => {
         );
         return response;
     }
+
+    export const listFavorites = async (nickname:string)=>{
+      const response = await axiosPrivate.get(`${CONTROLLER}${nickname}/favorites`)
+      return response;
+    }
+
+    export const removeFavorite =  async (nickname:string, productId: number)=>{
+      const response = await axiosPrivate.get(`${CONTROLLER}${nickname}/removeFavorite/${productId}`)
+      return response;
+    }

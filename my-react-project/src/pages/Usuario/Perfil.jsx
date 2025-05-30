@@ -103,6 +103,7 @@ export default function Perfil({
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
+      localStorage.removeItem('favoritos')
       handleUserChange();
       toast.success(`${user.nombre} has cerrado sesión correctamente`);
       navigate("/login");

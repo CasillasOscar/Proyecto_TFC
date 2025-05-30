@@ -64,11 +64,11 @@ public class UserResponses {
 
     public Map<String, Object> responseFavoritos200() {
         Map<String, Object> response = new HashMap<>();
-        List<Map<String, String>> productList = new ArrayList<>();
+        List<Integer> productList = new ArrayList<>();
 
         for (Favorito fav: listaFavoritos){
-            Map<String, String> productData = extractProductData(fav.getIdProducto());
-            productList.add(productData);
+            Integer id = fav.getIdProducto().getId();
+            productList.add(id);
         }
 
         response.put("favorites_products", productList);

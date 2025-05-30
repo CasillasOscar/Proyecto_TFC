@@ -16,11 +16,12 @@ import Register from './pages/Auth/Register';
 import Recuperar from './pages/Auth/Recuperar';
 import AcercaDe from './pages/AcercaDe';
 import Valoraciones from './pages/Valoraciones';
-import { getAvatar } from './backend/User/User';
+import { getAvatar, listFavorites } from './backend/User/User';
 
 
 export default function App() {
   const [user, setUser] = useState(null); 
+  const [favoritos, setFavoritos] = useState(null)
   const [avatarUrl, setAvatarUrl] = useState("");
 
   const handleUserChange = useCallback(async () => { 
@@ -50,12 +51,35 @@ export default function App() {
     }
   }, [user]); 
 
+  const fetchFavoritesUser = useCallback(async () => {
+    try{
+    const response = await listFavorites(user.nickname)
+    if(response.status === 200){
+      console.log(response)
+      setFavoritos(response.data.favorites_products)
+    }
+    } catch (error){
+       console.error("Error al obtener los favoritos:", error);
+    }
+  }, [user])
+
+  useEffect(() => {
+  if (favoritos !== null) {
+    try {
+      localStorage.setItem("favoritos", JSON.stringify(favoritos));
+    } catch (e) {
+      console.error("Error al guardar favoritos en localStorage:", e);
+    }
+  }
+}, [favoritos]);
+
   
   useEffect(() => {
     if (user) { 
       getAvatarUrl();
+      fetchFavoritesUser();
     }
-  }, [user, getAvatarUrl]); 
+  }, [user, getAvatarUrl, fetchFavoritesUser]); 
 
  
   useEffect(() => {
@@ -80,7 +104,7 @@ export default function App() {
 
       <Header user={user} avatarUrl={avatarUrl}/>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home user={user} favoritos={favoritos} setFavoritos={setFavoritos}/>} />
         <Route path="/favoritos" element={<Favoritos/>} />
         <Route path="/perfil" element={<Perfil user={user} handleUserChange={handleUserChange} getAvatarUrl={getAvatarUrl} avatarUrl={avatarUrl}/>} />
         <Route path="/nuevo" element={<NuevoProducto />} />

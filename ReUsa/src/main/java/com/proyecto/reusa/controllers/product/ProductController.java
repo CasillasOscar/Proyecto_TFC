@@ -89,6 +89,14 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/addFavorite/{nickname}/{idProduct}")
+    public ResponseEntity<?> saveFavorite(
+            @PathVariable String nickname,
+            @PathVariable Integer idProduct
+    ) throws CustomException{
+        return ResponseEntity.ok(serviceProduct.saveFavorite(nickname, idProduct));
+    }
+
     @GetMapping("/listSubcategorias")
     public ResponseEntity<?> listSubcategorias(){
         return ResponseEntity.ok(serviceProduct.listSubcategorias());
