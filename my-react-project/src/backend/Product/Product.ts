@@ -22,8 +22,8 @@ export const getImageProduct = async (path: string) => {
   return imageUrl;
 };
 
-export const getProduct = async (id: string) => {
-  const response = await axiosPrivate.get(`${CONTROLLER}${id}`);
+export const getProduct = async (id: number) => {
+  const response = await axiosPublic.get(`${CONTROLLER}${id}`);
   return response;
 };
 
@@ -56,4 +56,10 @@ export const saveFavorite = async (nickname: string, idProdcuto: number)=>{
   const response = await axiosPrivate.get(`${CONTROLLER}addFavorite/${nickname}/${idProdcuto}`)
 
   return response
+}
+
+export const updateProduct = async (dataToSend: object)=>{
+  console.log(dataToSend)
+const response = axiosPrivate.post(`${CONTROLLER}updateProduct`, dataToSend)
+return response;
 }

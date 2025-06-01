@@ -7,6 +7,7 @@ import com.proyecto.reusa.exceptions.CustomException;
 import com.proyecto.reusa.services.products.Service_Product;
 import com.proyecto.reusa.services.products.serializers.FiltersDTO;
 import com.proyecto.reusa.services.products.serializers.ImageProductDTO;
+import com.proyecto.reusa.services.products.serializers.ProductDTO;
 import com.proyecto.reusa.services.products.serializers.SellProductDTO;
 import com.proyecto.reusa.services.users.serializers.ProfilePhotoDTO;
 import jakarta.annotation.Resource;
@@ -32,6 +33,13 @@ public class ProductController {
     @GetMapping("/")
     public ResponseEntity<?> getAllProductsActive(){
         return ResponseEntity.ok(serviceProduct.getAllProductsActive());
+    }
+
+    @PostMapping("/updateProduct")
+    public ResponseEntity<Boolean> updateProduct(
+            @RequestBody ProductDTO product
+            ) throws CustomException{
+        return ResponseEntity.ok(serviceProduct.updateProduct(product));
     }
 
     @PostMapping("/imageProduct")

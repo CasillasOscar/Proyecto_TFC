@@ -27,6 +27,15 @@ public class ProductDTO {
         this.usuario = usuario;
     }
 
+    public ProductDTO(Integer id, BigDecimal precio, String descripcion, String nombre, String estado, String subcategoria) {
+        this.id = id;
+        this.precio = precio;
+        this.descripcion = descripcion;
+        this.nombre = nombre;
+        this.estado = estado;
+        this.subcategoria = subcategoria;
+    }
+
     public ProductDTO(){}
 
     public Integer getId() {

@@ -16,18 +16,25 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { ImageProduct } from "./ImageProduct";
 import EditIcon from "@mui/icons-material/Edit";
 import { limitText } from "../../utils/textUtils";
+import { useState } from "react";
+import { UpdateProductPopup } from "../Popups/UpdateProductPopup";
 
 export const ProductCard = ({ user, producto, favoritos, setFavoritos }) => {
+  const [editProductIsOpen, setEditProductIsOpen] = useState(false);
+  const [idProductEdit, setProductEdit] = useState();
 
-  const ensureIdIsNumber = (productoId)=>{
+  const ensureIdIsNumber = (productoId) => {
     let idToCompare = productoId;
-    if(typeof productoId === "string"){
-       idToCompare = Number(productoId);
+    if (typeof productoId === "string") {
+      idToCompare = Number(productoId);
     }
-    return idToCompare
-  }
+    return idToCompare;
+  };
   const isFavorite = (productoId) => {
-    return Array.isArray(favoritos) && favoritos.includes(ensureIdIsNumber(productoId));
+    return (
+      Array.isArray(favoritos) &&
+      favoritos.includes(ensureIdIsNumber(productoId))
+    );
   };
   const handleToggleFavorite = async (productoId) => {
     if (isFavorite(productoId)) {
@@ -64,12 +71,13 @@ export const ProductCard = ({ user, producto, favoritos, setFavoritos }) => {
   };
 
   const handleEditProduct = (productId) => {
-    console.log("Acción: Editar producto", productId);
+    setProductEdit(productId);
+    setEditProductIsOpen(true);
   };
 
-  const handleProductSelect = (productId) =>{
-    console.log(productId)
-  }
+  const handleProductSelect = (productId) => {
+    console.log(productId);
+  };
 
   return (
     <Grid item xs={12} sm={6} md={4} lg={3} key={producto.id}>
@@ -110,7 +118,9 @@ export const ProductCard = ({ user, producto, favoritos, setFavoritos }) => {
         <ImageProduct producto={producto} />
 
         <CardContent>
-          <Typography variant="subtitle1" >{limitText(producto.nombre, 13)}</Typography>
+          <Typography variant="subtitle1">
+            {limitText(producto.nombre, 13)}
+          </Typography>
           <Typography variant="body2" color="text.secondary">
             {limitText(String(producto.precio), 4)} €
           </Typography>
@@ -125,6 +135,13 @@ export const ProductCard = ({ user, producto, favoritos, setFavoritos }) => {
           </Box>
         </CardContent>
       </Card>
+      {editProductIsOpen && (
+        <UpdateProductPopup
+          idProduct={idProductEdit}
+          isOpen={editProductIsOpen}
+          onCancel={() => setEditProductIsOpen(false)}
+        />
+      )}
     </Grid>
   );
 };
