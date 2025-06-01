@@ -51,7 +51,7 @@ export const UpdateProductPopup = ({ idProduct, isOpen, onCancel }) => {
     return item ? item.nombre : "";
   }, []);
 
-  const fetchProduct = async () => {
+ const fetchProduct = useCallback(async () => {
     if (!idProduct || !isOpen) {
       setProductData(null);
       setFormData({
@@ -71,6 +71,7 @@ export const UpdateProductPopup = ({ idProduct, isOpen, onCancel }) => {
         setProductData(fetchedProduct);
 
         let initialSubcategoryId = "";
+        // Estas dependencias están dentro de la función y deben ser parte del array de useCallback
         if (subcategorias?.length > 0 && fetchedProduct.subcategoria) {
           initialSubcategoryId = getIdFromName(
             fetchedProduct.subcategoria,
@@ -108,9 +109,9 @@ export const UpdateProductPopup = ({ idProduct, isOpen, onCancel }) => {
       });
       console.error("Error al cargar el producto: ", error);
     }
-  };
+  }, [idProduct, isOpen, subcategorias, getIdFromName]);
 
-  const fetchSubcategorias = async () => {
+  const fetchSubcategorias = useCallback(async () => {
     try {
       const response = await getSubcategories();
       if (response.status === 200) {
@@ -126,11 +127,11 @@ export const UpdateProductPopup = ({ idProduct, isOpen, onCancel }) => {
       toast.error("Error al obtener las subcategorías");
       console.error("Error al obtener las subcategorías:", error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchSubcategorias();
-  }, []);
+  }, [fetchSubcategorias]);
 
   useEffect(() => {
     if (isOpen && idProduct && subcategorias?.length > 0) {
@@ -145,7 +146,7 @@ export const UpdateProductPopup = ({ idProduct, isOpen, onCancel }) => {
         estado: "",
       });
     }
-  }, [idProduct, isOpen, subcategorias]);
+  }, [idProduct, isOpen, subcategorias, fetchProduct]);
 
   useEffect(() => {
     if (!productData || !isOpen) {
