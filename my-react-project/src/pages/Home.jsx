@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
-  Dialog,
   Grid,
 } from "@mui/material";
 import { toast } from "react-toastify";
-import { listProducts } from "../backend/Product/product";
+import { listProducts } from "../backend/Product/Product";
 import { ProductCard } from "../components/Products/ProductCard";
 
 export default function Home({ user, favoritos, setFavoritos }) {
