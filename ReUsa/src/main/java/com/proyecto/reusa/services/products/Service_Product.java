@@ -172,6 +172,21 @@ public class Service_Product {
         return true;
     }
 
+    public boolean updateProduct(ProductDTO product)throws CustomException{
+        Producto productFound = productoRepository.getProductoById(product.getId());
+        Subcategoria subcategoriaToSave = subcategoriaRepository.getSubcategoriaByNombre(product.getSubcategoria());
+
+        productFound.setNombre(product.getNombre());
+        productFound.setDescripcion(product.getDescripcion());
+        productFound.setPrecio(product.getPrecio());
+        productFound.setEstado(product.getEstado());
+        productFound.setIdSubcategoria(subcategoriaToSave);
+
+        productoRepository.save(productFound);
+
+        return true;
+    }
+
     private String getFileExtension(String filename) {
         if (filename == null || !filename.contains(".")) {
             return "";
