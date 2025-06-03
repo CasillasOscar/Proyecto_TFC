@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { removeFavorite } from "../../backend/User/user";
-import { saveFavorite } from "../../backend/Product/product";
+import { saveFavorite } from "../../backend/Product/Product";
 import {
   Box,
   Typography,

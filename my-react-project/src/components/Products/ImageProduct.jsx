@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CardMedia } from "@mui/material";
 import { toast } from "react-toastify";
-import { getImageProduct } from "../../backend/Product/product";
+import { getImageProduct } from "../../backend/Product/Product";
 
 export const ImageProduct = ({ producto }) => {
   const [imageUrl, setImageUrl] = useState(null);
