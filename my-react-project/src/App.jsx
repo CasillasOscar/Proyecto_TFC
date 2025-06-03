@@ -16,7 +16,7 @@ import Register from './pages/Auth/Register';
 import Recuperar from './pages/Auth/Recuperar';
 import AcercaDe from './pages/AcercaDe';
 import Valoraciones from './pages/Valoraciones';
-import { getAvatar, listFavorites } from './backend/User/User';
+import { getAvatar, listFavorites } from './backend/User/user';
 
 
 export default function App() {
