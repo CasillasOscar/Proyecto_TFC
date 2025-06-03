@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -16,18 +16,12 @@ import LoginIcon from "@mui/icons-material/Login";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import logo from "../assets/logo.png";
 
-export default function Header() {
+export default function Header({user}) {
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [sellDisabled, setSellDisabled] = useState(true);
-  const user = JSON.parse(localStorage.getItem("user"));
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if(user){
-      setSellDisabled(false)
-    }
-  },[user])
-
+ 
   const toggleDrawer = (open) => () => {
     setOpenDrawer(open);
   };
@@ -68,16 +62,20 @@ export default function Header() {
               zIndex: 2,
             }}
           >
-            <IconButton
-              onClick={() => navigate("/favoritos")}
-              title="Favoritos"
-            >
-              <FavoriteIcon color="error" />
-            </IconButton>
+            {user && (
+              <>
+                <IconButton
+                  onClick={() => navigate("/favoritos")}
+                  title="Favoritos"
+                >
+                  <FavoriteIcon color="error" />
+                </IconButton>
 
-            <IconButton onClick={() => navigate("/perfil")} title="Perfil">
-              <AccountCircleIcon />
-            </IconButton>
+                <IconButton onClick={() => navigate("/perfil")} title="Perfil">
+                  <AccountCircleIcon />
+                </IconButton>
+              </>
+            )}
 
             {!localStorage.getItem("user") && (
               <Button
@@ -94,7 +92,7 @@ export default function Header() {
               color="success"
               startIcon={<AddCircleIcon />}
               onClick={() => navigate("/nuevo")}
-              disabled={sellDisabled}
+              disabled={!user}
             >
               Vender
             </Button>
@@ -113,18 +111,18 @@ export default function Header() {
               {" "}
               <ListItemText primary="Inicio" />{" "}
             </ListItem>
+           {user && ( 
+            <>
             <ListItem button onClick={() => navigate("/Perfil")}>
               {" "}
               <ListItemText primary="Perfil" />{" "}
-            </ListItem>
-            <ListItem button onClick={() => navigate("/")}>
-              {" "}
-              <ListItemText primary="Productos" />{" "}
             </ListItem>
             <ListItem button onClick={() => navigate("/Favoritos")}>
               {" "}
               <ListItemText primary="Favoritos" />{" "}
             </ListItem>
+            </>
+            )}
             <ListItem button onClick={() => navigate("/Valoraciones")}>
               {" "}
               <ListItemText primary="Valoraciones" />{" "}

@@ -1,8 +1,6 @@
 package com.proyecto.reusa.security;
 
-import com.proyecto.reusa.models.Token;
 import com.proyecto.reusa.models.Usuario;
-import com.proyecto.reusa.models.repositories.TokenRepository;
 import com.proyecto.reusa.models.repositories.UserRepository;
 import com.proyecto.reusa.services.auth.JwtService;
 import jakarta.servlet.FilterChain;
@@ -30,7 +28,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
 
     @Override
@@ -53,36 +50,36 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         final String jwtToken = authHeader.substring(7);
         final String userEmail = jwtService.extractUsername(jwtToken);
-        if(userEmail == null || SecurityContextHolder.getContext().getAuthentication() != null){
-            return;
+        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            final UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+
+            // Si userDetails es nulo o el token no es válido, no autenticamos
+            if (userDetails == null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            final Optional<Usuario> user = userRepository.getUsuarioByEmail(userDetails.getUsername());
+            if (user.isEmpty()) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            final boolean isTokenValid = jwtService.isTokenValid(jwtToken, user.get());
+
+            if (isTokenValid) {
+                final var authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
         }
 
-//        final Optional<Token> token = tokenRepository.getTokenByToken(jwtToken);
-//        if(token.isEmpty() || token.get().getExpired() || token.get().getRevoked()){
-//            filterChain.doFilter(request,response);
-//            return;
-//        }
-
-        final UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-        final Optional<Usuario> user = userRepository.getUsuarioByEmail(userDetails.getUsername());
-        if(user.isEmpty()){
-            filterChain.doFilter(request,response);
-            return;
-        }
-
-        final boolean isTokenValid = jwtService.isTokenValid(jwtToken, user.get());
-        if(!isTokenValid){
-            return;
-        }
-
-        final var authToken = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities()
-        );
-
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authToken);
         filterChain.doFilter(request,response);
     }
 

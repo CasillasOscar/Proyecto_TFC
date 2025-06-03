@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   TextField,
   Button,
@@ -8,29 +8,41 @@ import {
   Stack,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { login } from "../backend/Auth/Auth"
+import { login } from "../../backend/Auth/Auth";
+import { toast } from "react-toastify";
 
-export default function LoginPage() {
+export default function LoginPage({handleUserChange}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(e)
-    const response = await login(email, password);
-    console.log(response);
-    if (response.status === 200) {
-      const { token, refreshToken, user } = response.data;
-      localStorage.setItem("token", token);
-      localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("user", JSON.stringify(user));
-      navigate("/");
-    } else {
-      console.error("Error al iniciar sesión:", response.data.message);
-      alert("Error al iniciar sesión. Por favor, verifica tus credenciales.");
+    try {
+      const response = await login(email, password);
+      if (response && response.status === 200) {
+        const { token, refreshToken, user } = response.data;
+        saveInfoInLocalStorage(token, refreshToken, user);
+        handleUserChange()
+        toast.success(`Bienvenido ${user.nickname}!`);
+        navigate("/");
+      } else if (response.status === 400) {
+        toast.error(response.data.error);
+      } else {
+        toast.error("Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.");
+        console.error("Respuesta inesperada del servidor:", response);
+      }
+    } catch (error) {
+      console.error("Error durante el inicio de sesión (red/conexión):", error);
+      toast.error("Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.");
     }
   };
+
+  const saveInfoInLocalStorage = (token, refreshToken, user) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("refreshToken", refreshToken); 
+    localStorage.setItem("user", JSON.stringify(user));
+  }
 
   return (
     <Box

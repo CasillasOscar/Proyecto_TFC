@@ -1,6 +1,8 @@
 package com.proyecto.reusa.services.products.responses;
 
 import com.proyecto.reusa.models.Producto;
+import com.proyecto.reusa.models.Provincia;
+import com.proyecto.reusa.models.Subcategoria;
 import com.proyecto.reusa.models.Venta;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ public class ProductResponses {
         private Venta venta;
         private Boolean responseBoolean;
         private List<Producto> products;
+        private List<Subcategoria> subcategorias;
         private Producto product;
 
     public ProductResponses(Producto product, Boolean responseBoolean) {
@@ -28,6 +31,11 @@ public class ProductResponses {
         this.responseBoolean = responseBoolean;
         this.products = products;
     }
+    public ProductResponses(List<Subcategoria> subcategorias, Boolean responseBoolean, Integer dummy) {
+        this.responseBoolean = responseBoolean;
+        this.subcategorias = subcategorias;
+    }
+
 
     public Map<String, Object> responseProductBought200() {
             Map<String, Object> response = new HashMap<>();
@@ -82,11 +90,27 @@ public class ProductResponses {
         productData.put("subcategoria", p.getSubcategoria());
         productData.put("imagen_1", p.getImagen1());
         productData.put("imagen_2", p.getImagen2());
-        productData.put("imagen_3", p.getImagen3());
-        productData.put("imagen_4", p.getImagen4());
 
         return productData;
     }
+
+    public Map<String, Object> responseListSubcategorias200() {
+        Map<String, Object> response = new HashMap<>();
+        List<Map<String, String>> subcategoriasList = new ArrayList<>();
+
+        for (Subcategoria sub: subcategorias){
+            Map<String, String> subcategoriaData = new HashMap<>();
+            subcategoriaData.put("id",sub.getId().toString());
+            subcategoriaData.put("nombre", sub.getNombre());
+
+            subcategoriasList.add(subcategoriaData);
+        }
+
+        response.put("subcategorias", subcategoriasList);
+        response.put("response_successfully", responseBoolean.toString());
+        return response;
+    }
+
 
 
 }

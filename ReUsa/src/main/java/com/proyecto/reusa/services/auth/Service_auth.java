@@ -30,32 +30,31 @@ public class Service_auth {
     private TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
 
     public Map<String, Object> login(UserLoginDTO user) throws CustomException {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        user.email(),
-                        user.password()
-                )
-        );
 
         Optional<Usuario> userFind = repositoryUser.findByEmail(user.email());
-        if(userFind.isPresent()){
-            var jwtToken = jwtService.generateToken(userFind.get());
-            var refreshToken = jwtService.generateRefreshToken(userFind.get());
-            revokeAllUserTokens(userFind.get());
-            Token token_saved = saveUserToken(userFind.get(), refreshToken);
-
-            return new AuthResponses(
-                    userFind.get(),
-                    jwtToken,
-                    jwtService.extractLocalDateTimeExpiration(jwtToken),
-                    refreshToken,
-                    token_saved.getDateExpired()).responseLogin200();
-        } else {
-            throw new CustomException("Usuario y contraseña no coinciden");
+        if (userFind.isEmpty()){
+            throw new CustomException("El email es incorrecto");
         }
+
+        if (!passwordEncoder.matches(user.password(), userFind.get().getPassword())) {
+            throw new CustomException("La contraseña es incorrecta");
+        }
+
+
+        var jwtToken = jwtService.generateToken(userFind.get());
+        var refreshToken = jwtService.generateRefreshToken(userFind.get());
+        revokeAllUserTokens(userFind.get());
+        Token token_saved = saveUserToken(userFind.get(), refreshToken);
+
+        return new AuthResponses(
+                userFind.get(),
+                jwtToken,
+                jwtService.extractLocalDateTimeExpiration(jwtToken),
+                refreshToken,
+                token_saved.getDateExpired()).responseLogin200();
+
     }
 
     private void revokeAllUserTokens(final Usuario user){
@@ -90,7 +89,6 @@ public class Service_auth {
                 .password(passwordEncoder.encode(userDTO.password()))
                 .telefono(userDTO.telefono())
                 .build();
-
         Usuario savedUser = repositoryUser.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
