@@ -11,7 +11,7 @@ import {
   InputLabel,
   OutlinedInput,
 } from "@mui/material";
-import { getSubcategories, userSellProduct } from "../backend/Product/product";
+import { getSubcategories, userSellProduct } from "../backend/Product/Product";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 

@@ -16,7 +16,7 @@ import {
   getProduct,
   getSubcategories,
   updateProduct,
-} from "../../backend/Product/product"; // Asegúrate de importar updateProductBackend
+} from "../../backend/Product/Product"; // Asegúrate de importar updateProductBackend
 import { toast } from "react-toastify";
 import { useCallback, useEffect, useState } from "react";
 
