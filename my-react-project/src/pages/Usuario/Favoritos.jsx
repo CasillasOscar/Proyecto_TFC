@@ -1,5 +1,5 @@
 import { Box, Typography, Grid } from "@mui/material";
-import { listProductsFavorites } from "../../backend/User/User";
+import { listProductsFavorites } from "../../backend/User/user";
 import { useCallback, useEffect, useState } from "react";
 import { ProductCard } from "../../components/Products/ProductCard";
 

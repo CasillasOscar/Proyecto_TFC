@@ -20,7 +20,7 @@ import L from "leaflet";
 import { logout } from "../../backend/Auth/Auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { updateAvatar } from "../../backend/User/User";
+import { updateAvatar } from "../../backend/User/user";
 import { UpdateUserPopup } from "../../components/Popups/UpdateUserPopup";
 
 // Icono personalizado para Leaflet

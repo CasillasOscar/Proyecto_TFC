@@ -13,7 +13,7 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import { toast } from "react-toastify";
-import { getListProvincias, updateUser } from "../../backend/User/User";
+import { getListProvincias, updateUser } from "../../backend/User/user";
 import { useEffect, useState, useRef, useCallback } from "react";
 
 export const UpdateUserPopup = ({ isOpen, onClose, onUserUpdated }) => {

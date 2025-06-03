@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { removeFavorite } from "../../backend/User/User";
+import { removeFavorite } from "../../backend/User/user";
 import { saveFavorite } from "../../backend/Product/product";
 import {
   Box,
