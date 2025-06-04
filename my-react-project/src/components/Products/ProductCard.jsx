@@ -19,10 +19,12 @@ import { limitText } from "../../utils/textUtils";
 import { useState } from "react";
 import { UpdateProductPopup } from "../Popups/UpdateProductPopup";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from "react-router-dom";
 
 export const ProductCard = ({ user, producto, favoritos, setFavoritos, fetchProductos }) => {
   const [editProductIsOpen, setEditProductIsOpen] = useState(false);
   const [idProductEdit, setProductEdit] = useState();
+  const navigate = useNavigate()
 
   const ensureIdIsNumber = (productoId) => {
     let idToCompare = productoId;
@@ -77,7 +79,7 @@ export const ProductCard = ({ user, producto, favoritos, setFavoritos, fetchProd
   };
 
   const handleProductSelect = (productId) => {
-    console.log(productId);
+    navigate(`/producto/${productId}`);
   };
 
   const handleDeleteProduct = async (productId) => {
@@ -148,7 +150,7 @@ export const ProductCard = ({ user, producto, favoritos, setFavoritos, fetchProd
           </>
         )}
 
-        <ImageProduct producto={producto} />
+        <ImageProduct producto={producto} num={1} />
 
         <CardContent>
           <Typography variant="subtitle1">

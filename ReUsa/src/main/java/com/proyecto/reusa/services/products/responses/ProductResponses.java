@@ -88,8 +88,8 @@ public class ProductResponses {
         productData.put("fecha_publicacion", p.getFechaPublicacion().toString());
         productData.put("categoria", p.getCategoria());
         productData.put("subcategoria", p.getSubcategoria());
-        productData.put("imagen_1", p.getImagen1());
-        productData.put("imagen_2", p.getImagen2());
+        productData.put("imagen1", p.getImagen1());
+        productData.put("imagen2", p.getImagen2());
 
         return productData;
     }
