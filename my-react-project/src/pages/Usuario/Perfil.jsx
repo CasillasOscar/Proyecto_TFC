@@ -170,7 +170,7 @@ export default function Perfil({
 
       {/* Informacion de contacto */}
       <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={12} md={6} sx={{ display: "flex" }}>
+        <Grid item sx={{ display: "flex" }}>
           <Card sx={{ flex: 1 }}>
             <CardContent sx={{ textAlign: "justify" }}>
               <Typography variant="h6">Información de contacto</Typography>
@@ -186,7 +186,7 @@ export default function Perfil({
         </Grid>
 
         {/* Valoración */}
-        <Grid item xs={12} md={6} sx={{ display: "flex" }}>
+        <Grid item sx={{ display: "flex" }}>
           <Card sx={{ flex: 1 }}>
             <CardContent sx={{ textAlign: "justify" }}>
               <Typography variant="h6">Valoración</Typography>
@@ -199,7 +199,7 @@ export default function Perfil({
         </Grid>
 
         {/* Productos */}
-        <Grid item xs={12} md={8} sx={{ display: "flex" }}>
+        <Grid item sx={{ display: "flex" }}>
           <Card sx={{ flex: 1 }}>
             <CardContent sx={{ textAlign: "justify" }}>
               <Typography variant="h6">Mis productos publicados</Typography>
