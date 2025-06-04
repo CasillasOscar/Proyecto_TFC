@@ -187,6 +187,17 @@ public class Service_Product {
         return true;
     }
 
+    public boolean deleteProduct(Integer id_product){
+        Optional<Producto> productOptional = productoRepository.findById(id_product);
+
+        if (productOptional.isPresent()) {
+            productoRepository.deleteById(id_product);
+            return !productoRepository.existsById(id_product);
+        } else {
+            return false;
+        }
+    }
+
     private String getFileExtension(String filename) {
         if (filename == null || !filename.contains(".")) {
             return "";

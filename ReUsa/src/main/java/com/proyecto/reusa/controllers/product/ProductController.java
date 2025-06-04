@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -127,5 +128,13 @@ public class ProductController {
             @PathVariable Integer id_product
     ) throws CustomException {
         return ResponseEntity.ok(serviceProduct.buyProduct(buyer_nickname,id_product));
+    }
+
+    @Transactional
+    @DeleteMapping("/delete/{id_product}")
+    public ResponseEntity<?> deleteProduct(
+            @PathVariable Integer id_product
+    ){
+        return ResponseEntity.ok(serviceProduct.deleteProduct(id_product));
     }
 }

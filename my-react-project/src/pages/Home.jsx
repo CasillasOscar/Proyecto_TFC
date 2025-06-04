@@ -48,7 +48,7 @@ export default function Home({ user, favoritos, setFavoritos }) {
       <Grid container spacing={2} justifyContent="center">
         {productos &&
           productos.map((producto) => (
-            <ProductCard producto={producto} user={user} favoritos={favoritos} setFavoritos={setFavoritos}/>
+            <ProductCard producto={producto} user={user} favoritos={favoritos} setFavoritos={setFavoritos} fetchProductos={fetchProductos}/>
           ))}
       </Grid>
     </Box>

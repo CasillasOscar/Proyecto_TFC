@@ -20,7 +20,7 @@ import {
 import { toast } from "react-toastify";
 import { useCallback, useEffect, useState } from "react";
 
-export const UpdateProductPopup = ({ idProduct, isOpen, onCancel }) => {
+export const UpdateProductPopup = ({ idProduct, isOpen, onCancel, fetchProductos }) => {
   const [productData, setProductData] = useState(null);
   const [subcategorias, setSubcategorias] = useState([]);
 
@@ -213,6 +213,7 @@ export const UpdateProductPopup = ({ idProduct, isOpen, onCancel }) => {
       const response = await updateProduct(dataToSend);
       if (response.status === 200) {
         toast.success("Producto actualizado correctamente.");
+        fetchProductos()
         onCancel();
       } else {
         toast.error("Error al actualizar el producto.");

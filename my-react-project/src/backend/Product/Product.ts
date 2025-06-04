@@ -63,3 +63,8 @@ export const updateProduct = async (dataToSend: object)=>{
 const response = axiosPrivate.post(`${CONTROLLER}updateProduct`, dataToSend)
 return response;
 }
+
+export const deleteProduct = async(idProducto: number)=>{
+  const response = await axiosPrivate.delete(`${CONTROLLER}delete/${idProducto}`)
+  return response
+}
