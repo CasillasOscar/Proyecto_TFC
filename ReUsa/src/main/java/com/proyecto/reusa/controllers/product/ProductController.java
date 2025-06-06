@@ -121,6 +121,12 @@ public class ProductController {
         return ResponseEntity.ok(serviceProduct.getProductById(id_product));
     }
 
+    @GetMapping("/myProducts/{nickname}")
+    public ResponseEntity<?> getProductsUser(
+            @PathVariable String nickname
+    ) throws CustomException {
+        return ResponseEntity.ok(serviceProduct.getProductsUser(nickname));
+    }
 
     @PostMapping("/buy/{buyer_nickname}/{id_product}")
     public ResponseEntity<?> buyProduct (

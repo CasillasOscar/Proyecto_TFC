@@ -1,6 +1,7 @@
 package com.proyecto.reusa.models.repositories;
 
 import com.proyecto.reusa.models.Producto;
+import com.proyecto.reusa.models.Usuario;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -46,4 +47,6 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     Producto getProductoById(Integer id);
 
     Integer id(Integer id);
+
+    List<Producto> getProductosByIdUsuarioAndEtapa(@NotNull Usuario idUsuario, @NotNull String etapa);
 }

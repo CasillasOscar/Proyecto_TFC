@@ -51,21 +51,15 @@ public class Service_Product {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
-    private ProductDTO convertToDto(Producto producto) {
-        ProductDTO dto = new ProductDTO();
 
-        dto.setId(producto.getId());
-        dto.setPrecio(producto.getPrecio());
-        dto.setNombre(producto.getNombre());
-        dto.setDescripcion(producto.getDescripcion());
-        dto.setEstado(producto.getEstado());
-        dto.setSubcategoria(producto.getSubcategoria());
-        dto.setCategoria(producto.getCategoria());
-        dto.setImagen1(producto.getImagen1());
-        dto.setImagen2(producto.getImagen2());
-        dto.setUsuario(producto.getIdUsuario().getNickname());
+    public List<ProductDTO> getProductsUser(String nickname) throws CustomException {
+        Usuario user = findNickname(nickname);
 
-        return dto;
+        List<Producto> listProducts = productoRepository.getProductosByIdUsuarioAndEtapa(user, "activo");
+
+        return listProducts.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     public ImageProductDTO getProductImageBytes(String path) throws CustomException {
@@ -227,6 +221,23 @@ public class Service_Product {
             throw new CustomException("Error al guardar la imagen: " + e.getMessage());
         }
 
+    }
+
+    private ProductDTO convertToDto(Producto producto) {
+        ProductDTO dto = new ProductDTO();
+
+        dto.setId(producto.getId());
+        dto.setPrecio(producto.getPrecio());
+        dto.setNombre(producto.getNombre());
+        dto.setDescripcion(producto.getDescripcion());
+        dto.setEstado(producto.getEstado());
+        dto.setSubcategoria(producto.getSubcategoria());
+        dto.setCategoria(producto.getCategoria());
+        dto.setImagen1(producto.getImagen1());
+        dto.setImagen2(producto.getImagen2());
+        dto.setUsuario(producto.getIdUsuario().getNickname());
+
+        return dto;
     }
 
     private Usuario findNickname(

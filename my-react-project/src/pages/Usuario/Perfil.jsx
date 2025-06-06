@@ -200,10 +200,10 @@ export default function Perfil({
 
         {/* Productos */}
         <Grid item sx={{ display: "flex" }}>
-          <Card sx={{ flex: 1 }}>
+          <Card sx={{ flex: 1 }} onClick={()=>{navigate(`misProductos/${user.nickname}`)}}>
             <CardContent sx={{ textAlign: "justify" }}>
               <Typography variant="h6">Mis productos publicados</Typography>
-              <Typography color="text.secondary">Productos.</Typography>
+              <Typography color="text.secondary">Haz click para ver tus productos activos</Typography>
             </CardContent>
           </Card>
         </Grid>

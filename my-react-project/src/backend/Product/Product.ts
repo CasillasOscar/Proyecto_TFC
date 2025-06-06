@@ -7,6 +7,11 @@ export const listProducts = async () => {
   return response;
 };
 
+export const listProductsUser = async (nickname: string) => {
+  const response = await axiosPrivate.get(`${CONTROLLER}myProducts/${nickname}`);
+  return response;
+};
+
 export const getImageProduct = async (path: string) => {
   const response = await axiosPublic.post(
     `${CONTROLLER}imageProduct`,
