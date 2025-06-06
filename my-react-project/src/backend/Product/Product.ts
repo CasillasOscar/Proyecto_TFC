@@ -73,3 +73,8 @@ export const deleteProduct = async(idProducto: number)=>{
   const response = await axiosPrivate.delete(`${CONTROLLER}delete/${idProducto}`)
   return response
 }
+
+export const buyProduct = async(idProducto: number, nickname: string)=>{
+ const response = await axiosPrivate.post(`${CONTROLLER}buy/${nickname}/${idProducto}`)
+ return response
+}

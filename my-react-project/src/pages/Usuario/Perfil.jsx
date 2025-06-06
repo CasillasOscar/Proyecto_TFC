@@ -22,6 +22,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { updateAvatar } from "../../backend/User/user";
 import { UpdateUserPopup } from "../../components/Popups/UpdateUserPopup";
+import { UserVentasPopup } from "../../components/Popups/UserVentasPopup";
+import { UserComprasPopup } from "../../components/Popups/UserComprasPopup";
 
 // Icono personalizado para Leaflet
 const icon = L.icon({
@@ -87,6 +89,8 @@ export default function Perfil({
 }) {
   const navigate = useNavigate();
   const [openUpdateUserPopup, setOpenUpdateUserPopup] = useState(false);
+  const [openVentasPopup, setOpenVentasPopUp] = useState(false)
+  const [openComprasPopup, setOpenComprasPopUp] = useState(false)
 
   const usuario = {
     nombre: user ? user.nombre : "Usuario Anónimo",
@@ -189,8 +193,12 @@ export default function Perfil({
               }}
             >
               <Typography variant="h6">Información de contacto</Typography>
-              <Typography><strong>Nombre:</strong> {usuario.nombre} {usuario.apellido}</Typography>
-              <Typography><strong>Teléfono:</strong> {usuario.telefono}</Typography>
+              <Typography>
+                <strong>Nombre:</strong> {usuario.nombre} {usuario.apellido}
+              </Typography>
+              <Typography>
+                <strong>Teléfono:</strong> {usuario.telefono}
+              </Typography>
               <Typography>
                 <strong>Provincia:</strong>{" "}
                 {usuario.provincia == "empty"
@@ -201,8 +209,70 @@ export default function Perfil({
           </Card>
         </Grid>
 
-        {/* Productos */}
+        {/* Valoración */}
         <Grid item sx={{ display: "flex" }}>
+          <Card sx={{ flex: 1 }}>
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: 2,
+              }}
+            >
+              <Typography variant="h6">Valoración del usuario</Typography>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <StarIcon color="warning" fontSize="large" />
+                <Typography variant="h5">{usuario.valoracion} / 5</Typography>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      <Divider sx={{ mb: 4, mt: 4 }} />
+
+      {/* Informacion de ventas y compras */}
+      <Grid container spacing={2} justifyContent="center">
+           {/* Ventas */}
+        <Grid item sx={{ display: "flex"}}>
+          <Card
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "stretch",
+              textAlign: "justify",
+              cursor: "pointer",
+            }}
+          >
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 3,
+              }}
+            >
+              <Typography variant="h6">
+                Haz click para ver tus compras
+              </Typography>
+              <Button
+                variant="contained"
+                color="success"
+                sx={{ width: "70%" }}
+                onClick={() => setOpenComprasPopUp(true)}
+              >
+                Ver tus compras
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Productos */}
+        <Grid item sx={{ display: "flex"}}>
           <Card
             sx={{
               flex: 1,
@@ -234,28 +304,45 @@ export default function Perfil({
                   navigate(`misProductos/${user.nickname}`);
                 }}
               >
-                Ver Productos
+                Ver tus productos
               </Button>
             </CardContent>
           </Card>
         </Grid>
 
-        {/* Valoración */}
-        <Grid item sx={{ display: "flex" }}>
-          <Card sx={{ flex: 1 }}>
+         {/* Ventas */}
+        <Grid item sx={{ display: "flex"}}>
+          <Card
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "stretch",
+              textAlign: "justify",
+              cursor: "pointer",
+            }}
+          >
             <CardContent
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                gap: 2,
+                alignItems: "center",
+                gap: 3,
               }}
             >
-              <Typography variant="h6">Valoración del usuario</Typography>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <StarIcon color="warning" fontSize="large" />
-                <Typography variant="h5">{usuario.valoracion} / 5</Typography>
-              </Box>
+              <Typography variant="h6">
+                Haz click para ver tus ventas
+              </Typography>
+              <Button
+                variant="contained"
+                color="success"
+                sx={{ width: "70%" }}
+                onClick={() => setOpenVentasPopUp(true)}
+              >
+                Ver tus ventas
+              </Button>
             </CardContent>
           </Card>
         </Grid>
@@ -299,6 +386,20 @@ export default function Perfil({
           isOpen={openUpdateUserPopup}
           onClose={() => setOpenUpdateUserPopup(false)}
           onUserUpdated={handleUserUpdatedInPopup}
+        />
+      )}
+      {openVentasPopup && (
+        <UserVentasPopup
+        isOpen={openVentasPopup} 
+        onClose={()=> setOpenVentasPopUp(false)}
+        user={user}
+        />
+      )}
+      {openComprasPopup && (
+        <UserComprasPopup
+        isOpen={openComprasPopup} 
+        onClose={()=> setOpenComprasPopUp(false)}
+        user={user}
         />
       )}
     </Box>

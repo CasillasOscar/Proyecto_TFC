@@ -1,0 +1,31 @@
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+} from "@mui/material";
+
+
+export const UserVentasPopup = ({ isOpen, onClose, user}) => {
+  
+  return (
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      sx={{ display: "flex", flexDirection: "column" }}
+    >
+      <DialogTitle sx={{ textAlign: "center" }}>Estas son tus ventas {user.nickname}</DialogTitle>
+      <DialogContent>
+        
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="primary">
+          Salir
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
