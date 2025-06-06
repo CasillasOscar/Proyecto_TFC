@@ -22,7 +22,7 @@ export const UserComprasPopup = ({ isOpen, onClose, user}) => {
         
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={onClose} color="error" variant="outlined">
           Salir
         </Button>
       </DialogActions>
