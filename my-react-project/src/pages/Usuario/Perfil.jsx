@@ -90,6 +90,7 @@ export default function Perfil({
 
   const usuario = {
     nombre: user ? user.nombre : "Usuario Anónimo",
+    apellido: user ? user.apellido : "",
     email: user ? user.email : "Email no disponible",
     telefono: user ? user.telefono : "Teléfono no disponible",
     provincia: user ? user.provincia : "Dirección no disponible",
@@ -103,7 +104,7 @@ export default function Perfil({
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
-      localStorage.removeItem('favoritos')
+      localStorage.removeItem("favoritos");
       handleUserChange();
       toast.success(`${user.nombre} has cerrado sesión correctamente`);
       navigate("/login");
@@ -137,10 +138,13 @@ export default function Perfil({
     }
   };
 
-   const handleUserUpdatedInPopup = useCallback((updatedUserData) => {
-    localStorage.setItem("user", JSON.stringify(updatedUserData));
-    handleUserChange();
-  }, [handleUserChange]); 
+  const handleUserUpdatedInPopup = useCallback(
+    (updatedUserData) => {
+      localStorage.setItem("user", JSON.stringify(updatedUserData));
+      handleUserChange();
+    },
+    [handleUserChange]
+  );
 
   return (
     <Box sx={{ p: 4 }}>
@@ -161,8 +165,12 @@ export default function Perfil({
             {usuario.email}
           </Typography>
         </Box>
-        <IconButton onClick={()=>setOpenUpdateUserPopup(true)} color="primary" sx={{ ml: "auto" }}>
-          <EditIcon/>
+        <IconButton
+          onClick={() => setOpenUpdateUserPopup(true)}
+          color="primary"
+          sx={{ ml: "auto" }}
+        >
+          <EditIcon />
         </IconButton>
       </Box>
 
@@ -172,11 +180,19 @@ export default function Perfil({
       <Grid container spacing={2} justifyContent="center">
         <Grid item sx={{ display: "flex" }}>
           <Card sx={{ flex: 1 }}>
-            <CardContent sx={{ textAlign: "justify" }}>
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: 0.2,
+              }}
+            >
               <Typography variant="h6">Información de contacto</Typography>
-              <Typography>Teléfono: {usuario.telefono}</Typography>
+              <Typography><strong>Nombre:</strong> {usuario.nombre} {usuario.apellido}</Typography>
+              <Typography><strong>Teléfono:</strong> {usuario.telefono}</Typography>
               <Typography>
-                Provincia:{" "}
+                <strong>Provincia:</strong>{" "}
                 {usuario.provincia == "empty"
                   ? "No definida"
                   : usuario.provincia}
@@ -185,25 +201,61 @@ export default function Perfil({
           </Card>
         </Grid>
 
-        {/* Valoración */}
+        {/* Productos */}
         <Grid item sx={{ display: "flex" }}>
-          <Card sx={{ flex: 1 }}>
-            <CardContent sx={{ textAlign: "justify" }}>
-              <Typography variant="h6">Valoración</Typography>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <StarIcon color="warning" />
-                <Typography>{usuario.valoracion} / 5</Typography>
-              </Box>
+          <Card
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "stretch",
+              textAlign: "justify",
+              cursor: "pointer",
+            }}
+          >
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 3,
+              }}
+            >
+              <Typography variant="h6">
+                Haz click para ver tus productos activos
+              </Typography>
+              <Button
+                variant="contained"
+                color="success"
+                sx={{ width: "70%" }}
+                onClick={() => {
+                  navigate(`misProductos/${user.nickname}`);
+                }}
+              >
+                Ver Productos
+              </Button>
             </CardContent>
           </Card>
         </Grid>
 
-        {/* Productos */}
+        {/* Valoración */}
         <Grid item sx={{ display: "flex" }}>
-          <Card sx={{ flex: 1 }} onClick={()=>{navigate(`misProductos/${user.nickname}`)}}>
-            <CardContent sx={{ textAlign: "justify" }}>
-              <Typography variant="h6">Mis productos publicados</Typography>
-              <Typography color="text.secondary">Haz click para ver tus productos activos</Typography>
+          <Card sx={{ flex: 1 }}>
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: 2,
+              }}
+            >
+              <Typography variant="h6">Valoración del usuario</Typography>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <StarIcon color="warning" fontSize="large" />
+                <Typography variant="h5">{usuario.valoracion} / 5</Typography>
+              </Box>
             </CardContent>
           </Card>
         </Grid>
