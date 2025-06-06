@@ -137,10 +137,10 @@ export default function Perfil({
     }
   };
 
-   const handleUserUpdatedInPopup = useCallback((updatedUserData) => {
+  const handleUserUpdatedInPopup = useCallback((updatedUserData) => {
     localStorage.setItem("user", JSON.stringify(updatedUserData));
     handleUserChange();
-  }, [handleUserChange]); 
+  }, [handleUserChange]);
 
   return (
     <Box sx={{ p: 4 }}>
@@ -161,52 +161,62 @@ export default function Perfil({
             {usuario.email}
           </Typography>
         </Box>
-        <IconButton onClick={()=>setOpenUpdateUserPopup(true)} color="primary" sx={{ ml: "auto" }}>
-          <EditIcon/>
+        <IconButton onClick={() => setOpenUpdateUserPopup(true)} color="primary" sx={{ ml: "auto" }}>
+          <EditIcon />
         </IconButton>
       </Box>
 
       <Divider sx={{ mb: 4 }} />
 
-      {/* Informacion de contacto */}
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item sx={{ display: "flex" }}>
-          <Card sx={{ flex: 1 }}>
-            <CardContent sx={{ textAlign: "justify" }}>
+      <Grid
+        container
+        spacing={2}
+        justifyContent="center"
+        alignItems="stretch"
+      >
+        {/* Información de contacto */}
+        <Grid item xs={12} sm={5} md={4}>
+          <Card sx={{ height: "100%" }}>
+            <CardContent sx={{ textAlign: "center", height: "100%" }}>
               <Typography variant="h6">Información de contacto</Typography>
               <Typography>Teléfono: {usuario.telefono}</Typography>
               <Typography>
                 Provincia:{" "}
-                {usuario.provincia == "empty"
-                  ? "No definida"
-                  : usuario.provincia}
+                {usuario.provincia === "empty" ? "No definida" : usuario.provincia}
               </Typography>
             </CardContent>
           </Card>
         </Grid>
 
         {/* Valoración */}
-        <Grid item sx={{ display: "flex" }}>
-          <Card sx={{ flex: 1 }}>
-            <CardContent sx={{ textAlign: "justify" }}>
+        <Grid item xs={12} sm={5} md={4}>
+          <Card sx={{ height: "100%" }}>
+            <CardContent sx={{ textAlign: "center", height: "100%" }}>
               <Typography variant="h6">Valoración</Typography>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 1,
+                }}
+              >
                 <StarIcon color="warning" />
                 <Typography>{usuario.valoracion} / 5</Typography>
               </Box>
             </CardContent>
           </Card>
         </Grid>
+      </Grid>
 
-        {/* Productos */}
-        <Grid item sx={{ display: "flex" }}>
-          <Card sx={{ flex: 1 }}>
-            <CardContent sx={{ textAlign: "justify" }}>
-              <Typography variant="h6">Mis productos publicados</Typography>
-              <Typography color="text.secondary">Productos.</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+      {/* Mis productos publicados */}
+      <Grid item xs={12} sx={{ mt: 2 }}>
+        <Card>
+          <CardContent sx={{ textAlign: "justify" }}>
+            <Typography variant="h6">Mis productos publicados</Typography>
+            <Typography color="text.secondary">Productos.</Typography>
+          </CardContent>
+        </Card>
       </Grid>
 
       {/* Mapa */}
@@ -242,13 +252,15 @@ export default function Perfil({
         </Button>
       </Box>
 
-      {openUpdateUserPopup && (
-        <UpdateUserPopup
-          isOpen={openUpdateUserPopup}
-          onClose={() => setOpenUpdateUserPopup(false)}
-          onUserUpdated={handleUserUpdatedInPopup}
-        />
-      )}
-    </Box>
+      {
+        openUpdateUserPopup && (
+          <UpdateUserPopup
+            isOpen={openUpdateUserPopup}
+            onClose={() => setOpenUpdateUserPopup(false)}
+            onUserUpdated={handleUserUpdatedInPopup}
+          />
+        )
+      }
+    </Box >
   );
 }

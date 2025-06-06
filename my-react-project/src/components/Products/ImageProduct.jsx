@@ -68,13 +68,17 @@ export const ImageProduct = ({ producto, num }) => {
   ) : (
     <CardMedia
       component="img"
-      height="200"
       image={imageUrl}
-      alt="Imagen por defecto"
+      alt="Imagen del producto"
       sx={{
-        objectFit: "cover", 
+        width: "100%",
+        height: 200,
+        objectFit: "contain",
         objectPosition: "center",
+        borderRadius: 2,
       }}
     />
+
+
   );
 };

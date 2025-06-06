@@ -1,4 +1,4 @@
-import { Box, Button, Grid, LinearProgress, Typography } from "@mui/material";
+import { Box, Button, Grid, LinearProgress, Typography, Paper, Divider } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProduct } from "../../backend/Product/Product";
@@ -31,50 +31,115 @@ export const Producto = () => {
 
   return (
     <Box
-      display={"flex"}
-      justifyContent={"center"}
-      alignItems={"center"}
-      flexDirection={"column"}
-      sx={{ width: "100%" }}
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      flexDirection="column"
+      sx={{ width: "100%", minHeight: "100vh", backgroundColor: "#f0f2f5", py: 3 }}
     >
       {loading ? (
-        <Box>
+        <Box sx={{ width: "80%", maxWidth: 800 }}>
           <LinearProgress />
         </Box>
       ) : (
-        <Box
-          p={5}
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          flexDirection={"column"}
-          sx={{ width: "100%" }}
+        <Paper
+          elevation={6}
+          sx={{
+            p: 4,
+            width: "90%",
+            maxWidth: 1000,
+            backgroundColor: "#ffffff",
+            borderRadius: 6,
+          }}
         >
-          <Typography variant="h4" gutterBottom>
+          <Typography
+            variant="h3"
+            gutterBottom
+            sx={{ fontWeight: "bold", textAlign: "center", color: "#333", mb: 2 }}
+          >
             {producto.nombre}
           </Typography>
 
-          <Grid
-            container
-            spacing={2}
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid item width={"500px"}>
-              <ImageProduct producto={producto} num={1} />
-            </Grid>
-            <Grid item width={"500px"}>
-              <ImageProduct producto={producto} num={2} />
-            </Grid>
-          </Grid>
-          <Typography>{producto.descripcion}</Typography>
-          <Typography>{producto.precio}</Typography>
-          <Typography>{producto.estado}</Typography>
-          <Typography>{producto.categoria}</Typography>
+          <Divider sx={{ my: 2 }} />
 
-          <Typography>{producto.subcategoria}</Typography>
-          <Button color="primary">Comprar</Button>
-        </Box>
+          <Grid container spacing={3} justifyContent="center">
+            {[1, 2].map((num) => (
+              <Grid item xs={12} md={6} key={num}>
+                <Paper
+                  elevation={3}
+                  sx={{
+                    overflow: "hidden",
+                    borderRadius: 4,
+                    height: "350px", // más alto que antes
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transition: "transform 0.3s, box-shadow 0.3s",
+                    "&:hover": {
+                      transform: "scale(1.02)",
+                      boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
+                    },
+                  }}
+                >
+                  <ImageProduct producto={producto} num={num} />
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="h6" gutterBottom sx={{ color: "#555", fontWeight: "bold" }}>
+              Descripción
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2, color: "#666" }}>
+              {producto.descripcion}
+            </Typography>
+
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "#444" }}>
+                  Precio:
+                </Typography>
+                <Typography variant="body1" sx={{ color: "#2e7d32", fontSize: "1.1rem" }}>
+                  ${producto.precio}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "#444" }}>
+                  Estado:
+                </Typography>
+                <Typography variant="body1" sx={{ color: "#666" }}>
+                  {producto.estado}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "#444" }}>
+                  Categoría:
+                </Typography>
+                <Typography variant="body1" sx={{ color: "#666" }}>
+                  {producto.categoria}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "#444" }}>
+                  Subcategoría:
+                </Typography>
+                <Typography variant="body1" sx={{ color: "#666" }}>
+                  {producto.subcategoria}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Box display="flex" justifyContent="center" mt={4}>
+              <Button variant="contained" color="primary" size="large" sx={{ px: 5 }}>
+                Comprar
+              </Button>
+            </Box>
+          </Box>
+        </Paper>
       )}
     </Box>
   );
