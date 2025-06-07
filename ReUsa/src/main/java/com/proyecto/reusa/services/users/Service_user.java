@@ -1,14 +1,8 @@
 package com.proyecto.reusa.services.users;
 
 import com.proyecto.reusa.exceptions.CustomException;
-import com.proyecto.reusa.models.Favorito;
-import com.proyecto.reusa.models.Provincia;
-import com.proyecto.reusa.models.Token;
-import com.proyecto.reusa.models.Usuario;
-import com.proyecto.reusa.models.repositories.FavoritosRepository;
-import com.proyecto.reusa.models.repositories.ProvinciaRepository;
-import com.proyecto.reusa.models.repositories.TokenRepository;
-import com.proyecto.reusa.models.repositories.UserRepository;
+import com.proyecto.reusa.models.*;
+import com.proyecto.reusa.models.repositories.*;
 import com.proyecto.reusa.services.users.responses.UserResponses;
 import com.proyecto.reusa.services.users.serializers.ProfilePhotoDTO;
 import com.proyecto.reusa.services.users.serializers.SerializerUser;
@@ -50,6 +44,8 @@ public class Service_user {
     private String filePathProfilePhoto;
 
     private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private VentaRepository ventaRepository;
 
     public SerializerUser getUserByNickname(
             String nickname
@@ -246,6 +242,13 @@ public class Service_user {
         repositoryUser.save(usuario.get());
         return new UserResponses(usuario.get(), true).responseProvinciaUpdated200();
 
+    }
+
+    public List<Venta> getUserPurchases(String nickname) throws CustomException {
+        Usuario user = findNickname(nickname);
+
+        List<Venta> purchasesList = ventaRepository.getVentasByIdUsuarioComprador_Id(user.getId());
+        return purchasesList;
     }
 
 

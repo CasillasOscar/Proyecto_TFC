@@ -399,7 +399,7 @@ export default function Perfil({
         <UserComprasPopup
         isOpen={openComprasPopup} 
         onClose={()=> setOpenComprasPopUp(false)}
-        user={user}
+        nickname={user.nickname}
         />
       )}
     </Box>

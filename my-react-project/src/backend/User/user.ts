@@ -62,3 +62,8 @@ export const getAvatar = async (nickname: string) => {
       const response = await axiosPrivate.get(`${CONTROLLER}${nickname}/removeFavorite/${productId}`)
       return response;
     }
+
+    export const getPurchases = async (nickname:string)=>{
+        const response = await axiosPrivate.get(`${CONTROLLER}compras/${nickname}`)
+      return response;
+    }
