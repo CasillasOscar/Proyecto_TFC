@@ -151,6 +151,14 @@ public class Service_Product {
 
            producto.get().setEtapa("vendido");
            productoRepository.save(producto.get());
+
+           //Sumar venta y compra a los usuarios
+           user.setNCompras(user.getNCompras()+1);
+           producto.get().getIdUsuario().setNVentas(producto.get().getIdUsuario().getNVentas() + 1);
+
+           userRepository.save(user);
+           userRepository.save(producto.get().getIdUsuario());
+
            deleteProductImageFile(producto.get().getImagen1());
            deleteProductImageFile(producto.get().getImagen2());
 
