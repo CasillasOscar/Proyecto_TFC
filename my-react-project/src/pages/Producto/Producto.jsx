@@ -8,8 +8,12 @@ import {
   Divider,
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { deleteProduct, getProduct } from "../../backend/Product/Product";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  buyProduct,
+  deleteProduct,
+  getProduct,
+} from "../../backend/Product/Product";
 import { toast } from "react-toastify";
 import { ImageProductDetail } from "../../components/Products/ImageProductDetail";
 import { UpdateProductPopup } from "../../components/Popups/UpdateProductPopup";
@@ -19,6 +23,7 @@ export const Producto = ({ user }) => {
   const [producto, setProducto] = useState();
   const [loading, setLoading] = useState(true);
   const [editProductIsOpen, setEditProductIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const fetchProduct = useCallback(async () => {
     try {
@@ -35,24 +40,41 @@ export const Producto = ({ user }) => {
     }
   }, [id]);
 
-   const handleDeleteProduct = async () => {
-      try{
-        const response = await deleteProduct(id)
-        if(response.status == 200){
-          toast.success("Producto eliminado")
-          fetchProduct()
-        } else {
-          toast.error("Fallo al eliminar el producto")
-        }
-      } catch (error){
-        toast.error("Fallo al eliminar el producto")
-        console.error("Fallo al eliminar el producto", error)
+  const handleDeleteProduct = async () => {
+    try {
+      const response = await deleteProduct(id);
+      if (response.status == 200) {
+        toast.success("Producto eliminado");
+        fetchProduct();
+      } else {
+        toast.error("Fallo al eliminar el producto");
       }
+    } catch (error) {
+      toast.error("Fallo al eliminar el producto");
+      console.error("Fallo al eliminar el producto", error);
     }
+  };
 
   useEffect(() => {
     fetchProduct();
   }, [fetchProduct]);
+
+  const handleBuyProduct = async () => {
+    try {
+      const response = await buyProduct(Number(producto.id), user.nickname);
+      if (response.status === 200) {
+        toast.success(
+          "Enorabuena! revisa en tu perfil tu compras y ponte en contacto con el vendedor"
+        );
+        navigate("/perfil");
+      } else {
+        toast.error("Algo ha salido mal en la compra del producto");
+      }
+    } catch (error) {
+      toast.error("Algo ha salido mal en la compra del producto");
+      console.log("Error al comprar el producto", error);
+    }
+  };
 
   return (
     <Box
@@ -194,21 +216,24 @@ export const Producto = ({ user }) => {
                   color="success"
                   size="large"
                   sx={{ px: 5 }}
+                  onClick={() => handleBuyProduct()}
                 >
                   Comprar
                 </Button>
-              )} 
-              {user && user.nickname === producto.vendedor &&(
-                <Box sx={{
-                    display:"flex",
-                    gap:5
-                }}>
+              )}
+              {user && user.nickname === producto.vendedor && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 5,
+                  }}
+                >
                   <Button
                     variant="contained"
                     color="success"
                     size="large"
                     sx={{ px: 5 }}
-                    onClick={()=>setEditProductIsOpen(true)}
+                    onClick={() => setEditProductIsOpen(true)}
                   >
                     Editar
                   </Button>
@@ -217,7 +242,8 @@ export const Producto = ({ user }) => {
                     color="error"
                     size="large"
                     sx={{ px: 5 }}
-                    onClick={()=>handleDeleteProduct}>
+                    onClick={() => handleDeleteProduct()}
+                  >
                     Eliminar
                   </Button>
                 </Box>
@@ -226,14 +252,14 @@ export const Producto = ({ user }) => {
           </Box>
         </Paper>
       )}
-        {editProductIsOpen && (
-              <UpdateProductPopup
-                idProduct={producto.id}
-                isOpen={editProductIsOpen}
-                onCancel={() => setEditProductIsOpen(false)}
-                fetchProductos={()=> fetchProduct()}
-              />
-            )}
+      {editProductIsOpen && (
+        <UpdateProductPopup
+          idProduct={producto.id}
+          isOpen={editProductIsOpen}
+          onCancel={() => setEditProductIsOpen(false)}
+          fetchProductos={() => fetchProduct()}
+        />
+      )}
     </Box>
   );
 };

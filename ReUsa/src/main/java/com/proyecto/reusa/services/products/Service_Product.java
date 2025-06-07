@@ -151,6 +151,8 @@ public class Service_Product {
 
            producto.get().setEtapa("vendido");
            productoRepository.save(producto.get());
+           deleteProductImageFile(producto.get().getImagen1());
+           deleteProductImageFile(producto.get().getImagen2());
 
         return new ProductResponses(newVenta, true).responseProductBought200();
     }
