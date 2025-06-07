@@ -45,7 +45,7 @@ export default function Home({ user, favoritos, setFavoritos }) {
         Comienza con nosotros a reutilizar productos y cuidar el medio ambiente
       </Typography>
 
-      <Grid container spacing={2} justifyContent="center">
+      <Grid container spacing={2} justifyContent="center" gap={3}>
         {productos &&
           productos.map((producto) => (
             <ProductCard producto={producto} user={user} favoritos={favoritos} setFavoritos={setFavoritos} fetchProductos={fetchProductos}/>

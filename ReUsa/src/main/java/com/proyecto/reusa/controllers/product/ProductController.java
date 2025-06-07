@@ -140,7 +140,7 @@ public class ProductController {
     @DeleteMapping("/delete/{id_product}")
     public ResponseEntity<?> deleteProduct(
             @PathVariable Integer id_product
-    ){
+    ) {
         return ResponseEntity.ok(serviceProduct.deleteProduct(id_product));
     }
 }

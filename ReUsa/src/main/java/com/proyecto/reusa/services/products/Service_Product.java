@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -185,10 +186,28 @@ public class Service_Product {
         Optional<Producto> productOptional = productoRepository.findById(id_product);
 
         if (productOptional.isPresent()) {
+            deleteProductImageFile(productOptional.get().getImagen1());
+            deleteProductImageFile(productOptional.get().getImagen2());
+
             productoRepository.deleteById(id_product);
             return !productoRepository.existsById(id_product);
         } else {
             return false;
+        }
+    }
+
+    private void deleteProductImageFile(String filename) {
+        if (filename == null || filename.isEmpty()) {
+            return;
+        }
+        try {
+            Path filePath = Paths.get(filePathProductPhotos).resolve(filename).toAbsolutePath();
+            Files.delete(filePath);
+            System.out.println("Archivo de imagen eliminado: " + filePath);
+        } catch (NoSuchFileException e) {
+            System.out.println("Advertencia: El archivo de imagen " + filename + " no se encontró en el disco, pero su referencia fue eliminada de la BD. " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("Error al intentar eliminar el archivo de imagen " + filename + ": " + e.getMessage());
         }
     }
 

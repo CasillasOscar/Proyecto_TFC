@@ -3,7 +3,7 @@ import { CardMedia } from "@mui/material";
 import { toast } from "react-toastify";
 import { getImageProduct } from "../../backend/Product/Product";
 
-export const ImageProduct = ({ producto, num }) => {
+export const ImageProductDetail = ({ producto, num }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const [loading, setLoading] = useState(true);
   const IMG_DEFAULT =
@@ -72,8 +72,9 @@ export const ImageProduct = ({ producto, num }) => {
       alt="Imagen del producto"
       sx={{
         width: "100%",
-        height: 200,
+        height: "100%",
         objectPosition: "center",
+        objectFit: "ill"
       }}
     />
 

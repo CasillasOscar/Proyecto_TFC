@@ -32,10 +32,6 @@ export const MisProductos = ({user}) => {
     fetchProductosUser();
   }, [fetchProductosUser]);
 
-  useEffect(() => {
-    console.log(productos);
-  }, [productos]);
-
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" gutterBottom textAlign="center">

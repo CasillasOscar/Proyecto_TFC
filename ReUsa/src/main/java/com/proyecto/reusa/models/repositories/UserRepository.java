@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByEmail(@Size(max = 50) @NotNull String email);
 
     Optional<Usuario> getUsuarioByEmail(@Size(max = 50) @NotNull String email);
+
+    Optional<Usuario> getUsuarioById(Integer id);
 }

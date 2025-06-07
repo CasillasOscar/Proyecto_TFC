@@ -20,6 +20,7 @@ import { useState } from "react";
 import { UpdateProductPopup } from "../Popups/UpdateProductPopup";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from "react-router-dom";
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 
 export const ProductCard = ({ user, producto, favoritos, setFavoritos, fetchProductos }) => {
   const [editProductIsOpen, setEditProductIsOpen] = useState(false);
@@ -161,11 +162,13 @@ export const ProductCard = ({ user, producto, favoritos, setFavoritos, fetchProd
           </Typography>
           <Box sx={{ mt: 2, textAlign: "center" }}>
             <Button
-              variant="outlined"
+              variant="contained"
+              color="success"
               size="small"
               onClick={() => handleProductSelect(producto.id)}
             >
-              🔍 Ver más
+              <ManageSearchIcon/> 
+              <Typography>Ver más</Typography>
             </Button>
           </Box>
         </CardContent>

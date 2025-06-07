@@ -90,6 +90,7 @@ public class ProductResponses {
         productData.put("subcategoria", p.getSubcategoria());
         productData.put("imagen1", p.getImagen1());
         productData.put("imagen2", p.getImagen2());
+        productData.put("vendedor", p.getIdUsuario().getNickname());
 
         return productData;
     }
