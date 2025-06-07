@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { removeFavorite } from "../../backend/User/user";
-import { saveFavorite } from "../../backend/Product/Product";
+import { deleteProduct, saveFavorite } from "../../backend/Product/Product";
 import {
   Box,
   Typography,
@@ -18,10 +18,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import { limitText } from "../../utils/textUtils";
 import { useState } from "react";
 import { UpdateProductPopup } from "../Popups/UpdateProductPopup";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from "react-router-dom";
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 
-export const ProductCard = ({ user, producto, favoritos, setFavoritos }) => {
+export const ProductCard = ({ user, producto, favoritos, setFavoritos, fetchProductos }) => {
   const [editProductIsOpen, setEditProductIsOpen] = useState(false);
   const [idProductEdit, setProductEdit] = useState();
+  const navigate = useNavigate()
 
   const ensureIdIsNumber = (productoId) => {
     let idToCompare = productoId;
@@ -76,46 +80,78 @@ export const ProductCard = ({ user, producto, favoritos, setFavoritos }) => {
   };
 
   const handleProductSelect = (productId) => {
-    console.log(productId);
+    navigate(`/producto/${productId}`);
   };
 
+  const handleDeleteProduct = async (productId) => {
+    try{
+      console.log(productId)
+      const response = await deleteProduct(productId)
+      if(response.status == 200){
+        toast.success("Producto eliminado")
+        fetchProductos()
+      } else {
+        toast.error("Fallo al eliminar el producto")
+      }
+    } catch (error){
+      toast.error("Fallo al eliminar el producto")
+      console.error("Fallo al eliminar el producto", error)
+    }
+  }
+
   return (
-    <Grid item xs={12} sm={6} md={4} lg={3} key={producto.id}>
-      <Card sx={{ position: "relative", width: "200px" }}>
+    <Grid item key={producto.id}>
+      <Card sx={{ position: "relative", width: "200px"}}>
         {user && (
-          <IconButton
-            onClick={() => {
-              if (user.nickname !== producto.usuario) {
-                handleToggleFavorite(producto.id);
-              } else {
-                handleEditProduct(producto.id);
-              }
-            }}
-            sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              backgroundColor: "white",
-              "&:hover": { backgroundColor: "#eee" },
-            }}
-          >
-            {user && user.nickname !== producto.usuario ? (
-              <Tooltip title="Agregar a favoritos">
-                {isFavorite(producto.id) ? (
-                  <FavoriteIcon color="error" />
-                ) : (
-                  <FavoriteBorderIcon />
-                )}
+          <>
+            <IconButton
+              onClick={() => {
+                if (user.nickname !== producto.usuario) {
+                  handleToggleFavorite(producto.id);
+                } else {
+                  handleEditProduct(producto.id);
+                }
+              }}
+              sx={{
+                position: "absolute",
+                top: 8,
+                right: 8,
+                backgroundColor: "white",
+                "&:hover": { backgroundColor: "#eee" },
+              }}
+            >
+              {user && user.nickname !== producto.usuario ? (
+                <Tooltip title="Agregar a favoritos">
+                  {isFavorite(producto.id) ? (
+                    <FavoriteIcon color="error" />
+                  ) : (
+                    <FavoriteBorderIcon />
+                  )}
+                </Tooltip>
+              ) : (
+                <Tooltip title="Editar producto">
+                  <EditIcon />
+                </Tooltip>
+              )}
+            </IconButton>
+
+            {user.nickname == producto.usuario && (
+              <IconButton sx={{
+                position: "absolute",
+                top: 8,
+                right: 60,
+                backgroundColor: "white",
+                "&:hover": { backgroundColor: "#eee" },
+              }}
+               onClick={()=>handleDeleteProduct(producto.id)}>
+              <Tooltip title="Eliminar producto">
+                <DeleteIcon />
               </Tooltip>
-            ) : (
-              <Tooltip title="Editar producto">
-                <EditIcon />
-              </Tooltip>
-            )}
-          </IconButton>
+            </IconButton>)}
+          </>
         )}
 
-        <ImageProduct producto={producto} />
+        <ImageProduct producto={producto} num={1} />
 
         <CardContent>
           <Typography variant="subtitle1">
@@ -126,11 +162,13 @@ export const ProductCard = ({ user, producto, favoritos, setFavoritos }) => {
           </Typography>
           <Box sx={{ mt: 2, textAlign: "center" }}>
             <Button
-              variant="outlined"
+              variant="contained"
+              color="success"
               size="small"
               onClick={() => handleProductSelect(producto.id)}
             >
-              🔍 Ver más
+              <ManageSearchIcon/> 
+              <Typography>Ver más</Typography>
             </Button>
           </Box>
         </CardContent>
@@ -140,6 +178,7 @@ export const ProductCard = ({ user, producto, favoritos, setFavoritos }) => {
           idProduct={idProductEdit}
           isOpen={editProductIsOpen}
           onCancel={() => setEditProductIsOpen(false)}
+          fetchProductos={()=> fetchProductos()}
         />
       )}
     </Grid>

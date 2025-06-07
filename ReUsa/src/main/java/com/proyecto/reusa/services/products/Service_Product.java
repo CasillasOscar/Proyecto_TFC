@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -51,21 +52,15 @@ public class Service_Product {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
-    private ProductDTO convertToDto(Producto producto) {
-        ProductDTO dto = new ProductDTO();
 
-        dto.setId(producto.getId());
-        dto.setPrecio(producto.getPrecio());
-        dto.setNombre(producto.getNombre());
-        dto.setDescripcion(producto.getDescripcion());
-        dto.setEstado(producto.getEstado());
-        dto.setSubcategoria(producto.getSubcategoria());
-        dto.setCategoria(producto.getCategoria());
-        dto.setImagen1(producto.getImagen1());
-        dto.setImagen2(producto.getImagen2());
-        dto.setUsuario(producto.getIdUsuario().getNickname());
+    public List<ProductDTO> getProductsUser(String nickname) throws CustomException {
+        Usuario user = findNickname(nickname);
 
-        return dto;
+        List<Producto> listProducts = productoRepository.getProductosByIdUsuarioAndEtapa(user, "activo");
+
+        return listProducts.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     public ImageProductDTO getProductImageBytes(String path) throws CustomException {
@@ -157,6 +152,16 @@ public class Service_Product {
            producto.get().setEtapa("vendido");
            productoRepository.save(producto.get());
 
+           //Sumar venta y compra a los usuarios
+           user.setNCompras(user.getNCompras()+1);
+           producto.get().getIdUsuario().setNVentas(producto.get().getIdUsuario().getNVentas() + 1);
+
+           userRepository.save(user);
+           userRepository.save(producto.get().getIdUsuario());
+
+           deleteProductImageFile(producto.get().getImagen1());
+           deleteProductImageFile(producto.get().getImagen2());
+
         return new ProductResponses(newVenta, true).responseProductBought200();
     }
 
@@ -185,6 +190,35 @@ public class Service_Product {
         productoRepository.save(productFound);
 
         return true;
+    }
+
+    public boolean deleteProduct(Integer id_product){
+        Optional<Producto> productOptional = productoRepository.findById(id_product);
+
+        if (productOptional.isPresent()) {
+            deleteProductImageFile(productOptional.get().getImagen1());
+            deleteProductImageFile(productOptional.get().getImagen2());
+
+            productoRepository.deleteById(id_product);
+            return !productoRepository.existsById(id_product);
+        } else {
+            return false;
+        }
+    }
+
+    private void deleteProductImageFile(String filename) {
+        if (filename == null || filename.isEmpty()) {
+            return;
+        }
+        try {
+            Path filePath = Paths.get(filePathProductPhotos).resolve(filename).toAbsolutePath();
+            Files.delete(filePath);
+            System.out.println("Archivo de imagen eliminado: " + filePath);
+        } catch (NoSuchFileException e) {
+            System.out.println("Advertencia: El archivo de imagen " + filename + " no se encontró en el disco, pero su referencia fue eliminada de la BD. " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("Error al intentar eliminar el archivo de imagen " + filename + ": " + e.getMessage());
+        }
     }
 
     private String getFileExtension(String filename) {
@@ -216,6 +250,23 @@ public class Service_Product {
             throw new CustomException("Error al guardar la imagen: " + e.getMessage());
         }
 
+    }
+
+    private ProductDTO convertToDto(Producto producto) {
+        ProductDTO dto = new ProductDTO();
+
+        dto.setId(producto.getId());
+        dto.setPrecio(producto.getPrecio());
+        dto.setNombre(producto.getNombre());
+        dto.setDescripcion(producto.getDescripcion());
+        dto.setEstado(producto.getEstado());
+        dto.setSubcategoria(producto.getSubcategoria());
+        dto.setCategoria(producto.getCategoria());
+        dto.setImagen1(producto.getImagen1());
+        dto.setImagen2(producto.getImagen2());
+        dto.setUsuario(producto.getIdUsuario().getNickname());
+
+        return dto;
     }
 
     private Usuario findNickname(

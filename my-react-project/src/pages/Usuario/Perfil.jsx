@@ -22,6 +22,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { updateAvatar } from "../../backend/User/user";
 import { UpdateUserPopup } from "../../components/Popups/UpdateUserPopup";
+import { UserVentasPopup } from "../../components/Popups/UserVentasPopup";
+import { UserComprasPopup } from "../../components/Popups/UserComprasPopup";
 
 // Icono personalizado para Leaflet
 const icon = L.icon({
@@ -87,13 +89,18 @@ export default function Perfil({
 }) {
   const navigate = useNavigate();
   const [openUpdateUserPopup, setOpenUpdateUserPopup] = useState(false);
+  const [openVentasPopup, setOpenVentasPopUp] = useState(false);
+  const [openComprasPopup, setOpenComprasPopUp] = useState(false);
 
   const usuario = {
     nombre: user ? user.nombre : "Usuario Anónimo",
+    apellido: user ? user.apellido : "",
     email: user ? user.email : "Email no disponible",
     telefono: user ? user.telefono : "Teléfono no disponible",
     provincia: user ? user.provincia : "Dirección no disponible",
     valoracion: user ? user.valoracion : 0,
+    ventas: user ? user.ventas : 0,
+    compras: user ? user.compras : 0,
   };
 
   const handleLogout = async () => {
@@ -103,7 +110,7 @@ export default function Perfil({
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
-      localStorage.removeItem('favoritos')
+      localStorage.removeItem("favoritos");
       handleUserChange();
       toast.success(`${user.nombre} has cerrado sesión correctamente`);
       navigate("/login");
@@ -137,10 +144,13 @@ export default function Perfil({
     }
   };
 
-   const handleUserUpdatedInPopup = useCallback((updatedUserData) => {
-    localStorage.setItem("user", JSON.stringify(updatedUserData));
-    handleUserChange();
-  }, [handleUserChange]); 
+  const handleUserUpdatedInPopup = useCallback(
+    (updatedUserData) => {
+      localStorage.setItem("user", JSON.stringify(updatedUserData));
+      handleUserChange();
+    },
+    [handleUserChange]
+  );
 
   return (
     <Box sx={{ p: 4 }}>
@@ -161,8 +171,12 @@ export default function Perfil({
             {usuario.email}
           </Typography>
         </Box>
-        <IconButton onClick={()=>setOpenUpdateUserPopup(true)} color="primary" sx={{ ml: "auto" }}>
-          <EditIcon/>
+        <IconButton
+          onClick={() => setOpenUpdateUserPopup(true)}
+          color="primary"
+          sx={{ ml: "auto" }}
+        >
+          <EditIcon />
         </IconButton>
       </Box>
 
@@ -170,13 +184,25 @@ export default function Perfil({
 
       {/* Informacion de contacto */}
       <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={12} md={6} sx={{ display: "flex" }}>
+        <Grid item sx={{ display: "flex" }}>
           <Card sx={{ flex: 1 }}>
-            <CardContent sx={{ textAlign: "justify" }}>
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: 0.2,
+              }}
+            >
               <Typography variant="h6">Información de contacto</Typography>
-              <Typography>Teléfono: {usuario.telefono}</Typography>
               <Typography>
-                Provincia:{" "}
+                <strong>Nombre:</strong> {usuario.nombre} {usuario.apellido}
+              </Typography>
+              <Typography>
+                <strong>Teléfono:</strong> {usuario.telefono}
+              </Typography>
+              <Typography>
+                <strong>Provincia:</strong>{" "}
                 {usuario.provincia == "empty"
                   ? "No definida"
                   : usuario.provincia}
@@ -186,24 +212,160 @@ export default function Perfil({
         </Grid>
 
         {/* Valoración */}
-        <Grid item xs={12} md={6} sx={{ display: "flex" }}>
+        <Grid item sx={{ display: "flex" }}>
           <Card sx={{ flex: 1 }}>
-            <CardContent sx={{ textAlign: "justify" }}>
-              <Typography variant="h6">Valoración</Typography>
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: 2,
+              }}
+            >
+              <Typography variant="h6">Valoración del usuario</Typography>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <StarIcon color="warning" />
-                <Typography>{usuario.valoracion} / 5</Typography>
+                <StarIcon color="warning" fontSize="large" />
+                <Typography variant="h5">{usuario.valoracion} / 5</Typography>
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
-        {/* Productos */}
-        <Grid item xs={12} md={8} sx={{ display: "flex" }}>
+        <Grid item sx={{ display: "flex" }}>
           <Card sx={{ flex: 1 }}>
-            <CardContent sx={{ textAlign: "justify" }}>
-              <Typography variant="h6">Mis productos publicados</Typography>
-              <Typography color="text.secondary">Productos.</Typography>
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: 0.2,
+              }}
+            >
+              <Typography variant="h6">Historial en ReUsa</Typography>
+              <Typography>
+                <strong>Ventas:</strong> {usuario.ventas}
+              </Typography>
+              <Typography>
+                <strong>Compras:</strong> {usuario.compras}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      <Divider sx={{ mb: 4, mt: 4 }} />
+
+      {/* Informacion de ventas y compras */}
+      <Grid container spacing={2} justifyContent="center">
+        {/* Ventas */}
+        <Grid item sx={{ display: "flex" }}>
+          <Card
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "stretch",
+              textAlign: "justify",
+              cursor: "pointer",
+            }}
+          >
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 3,
+              }}
+            >
+              <Typography variant="h6">
+                Haz click para ver tus compras
+              </Typography>
+              <Button
+                variant="contained"
+                color="success"
+                sx={{ width: "70%" }}
+                onClick={() => setOpenComprasPopUp(true)}
+              >
+                Ver tus compras
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Productos */}
+        <Grid item sx={{ display: "flex" }}>
+          <Card
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "stretch",
+              textAlign: "justify",
+              cursor: "pointer",
+            }}
+          >
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 3,
+              }}
+            >
+              <Typography variant="h6">
+                Haz click para ver tus productos activos
+              </Typography>
+              <Button
+                variant="contained"
+                color="success"
+                sx={{ width: "70%" }}
+                onClick={() => {
+                  navigate(`misProductos/${user.nickname}`);
+                }}
+              >
+                Ver tus productos
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Ventas */}
+        <Grid item sx={{ display: "flex" }}>
+          <Card
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "stretch",
+              textAlign: "justify",
+              cursor: "pointer",
+            }}
+          >
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 3,
+              }}
+            >
+              <Typography variant="h6">
+                Haz click para ver tus ventas
+              </Typography>
+              <Button
+                variant="contained"
+                color="success"
+                sx={{ width: "70%" }}
+                onClick={() => setOpenVentasPopUp(true)}
+              >
+                Ver tus ventas
+              </Button>
             </CardContent>
           </Card>
         </Grid>
@@ -247,6 +409,20 @@ export default function Perfil({
           isOpen={openUpdateUserPopup}
           onClose={() => setOpenUpdateUserPopup(false)}
           onUserUpdated={handleUserUpdatedInPopup}
+        />
+      )}
+      {openVentasPopup && (
+        <UserVentasPopup
+          isOpen={openVentasPopup}
+          onClose={() => setOpenVentasPopUp(false)}
+          nickname={user.nickname}
+        />
+      )}
+      {openComprasPopup && (
+        <UserComprasPopup
+          isOpen={openComprasPopup}
+          onClose={() => setOpenComprasPopUp(false)}
+          nickname={user.nickname}
         />
       )}
     </Box>

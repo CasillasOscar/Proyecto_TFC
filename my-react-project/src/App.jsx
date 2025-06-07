@@ -17,6 +17,8 @@ import Recuperar from './pages/Auth/Recuperar';
 import AcercaDe from './pages/AcercaDe';
 import Valoraciones from './pages/Valoraciones';
 import { getAvatar, listFavorites } from './backend/User/user';
+import { Producto } from './pages/Producto/Producto';
+import { MisProductos } from './pages/Usuario/MisProductos';
 
 
 export default function App() {
@@ -108,6 +110,8 @@ export default function App() {
         <Route path="/recuperar" element={<Recuperar />} />
         <Route path="/AcercaDe" element={<AcercaDe />} />
         <Route path="/Valoraciones" element={<Valoraciones />} />
+        <Route path="/producto/:id" element={<Producto user={user} handleUserChange={handleUserChange}/>} />
+        <Route path="/perfil/misProductos/:nickname" element={<MisProductos user={user}/>} />
       </Routes>
       <Footer user={user}/>
     </BrowserRouter>

@@ -7,6 +7,11 @@ export const listProducts = async () => {
   return response;
 };
 
+export const listProductsUser = async (nickname: string) => {
+  const response = await axiosPrivate.get(`${CONTROLLER}myProducts/${nickname}`);
+  return response;
+};
+
 export const getImageProduct = async (path: string) => {
   const response = await axiosPublic.post(
     `${CONTROLLER}imageProduct`,
@@ -62,4 +67,14 @@ export const updateProduct = async (dataToSend: object)=>{
   console.log(dataToSend)
 const response = axiosPrivate.post(`${CONTROLLER}updateProduct`, dataToSend)
 return response;
+}
+
+export const deleteProduct = async(idProducto: number)=>{
+  const response = await axiosPrivate.delete(`${CONTROLLER}delete/${idProducto}`)
+  return response
+}
+
+export const buyProduct = async(idProducto: number, nickname: string)=>{
+ const response = await axiosPrivate.post(`${CONTROLLER}buy/${nickname}/${idProducto}`)
+ return response
 }
