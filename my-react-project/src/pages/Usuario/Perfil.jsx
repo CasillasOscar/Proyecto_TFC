@@ -89,8 +89,8 @@ export default function Perfil({
 }) {
   const navigate = useNavigate();
   const [openUpdateUserPopup, setOpenUpdateUserPopup] = useState(false);
-  const [openVentasPopup, setOpenVentasPopUp] = useState(false)
-  const [openComprasPopup, setOpenComprasPopUp] = useState(false)
+  const [openVentasPopup, setOpenVentasPopUp] = useState(false);
+  const [openComprasPopup, setOpenComprasPopUp] = useState(false);
 
   const usuario = {
     nombre: user ? user.nombre : "Usuario Anónimo",
@@ -99,6 +99,8 @@ export default function Perfil({
     telefono: user ? user.telefono : "Teléfono no disponible",
     provincia: user ? user.provincia : "Dirección no disponible",
     valoracion: user ? user.valoracion : 0,
+    ventas: user ? user.ventas : 0,
+    compras: user ? user.compras : 0,
   };
 
   const handleLogout = async () => {
@@ -228,14 +230,35 @@ export default function Perfil({
             </CardContent>
           </Card>
         </Grid>
+
+        <Grid item sx={{ display: "flex" }}>
+          <Card sx={{ flex: 1 }}>
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: 0.2,
+              }}
+            >
+              <Typography variant="h6">Historial en ReUsa</Typography>
+              <Typography>
+                <strong>Ventas:</strong> {usuario.ventas}
+              </Typography>
+              <Typography>
+                <strong>Compras:</strong> {usuario.compras}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
 
       <Divider sx={{ mb: 4, mt: 4 }} />
 
       {/* Informacion de ventas y compras */}
       <Grid container spacing={2} justifyContent="center">
-           {/* Ventas */}
-        <Grid item sx={{ display: "flex"}}>
+        {/* Ventas */}
+        <Grid item sx={{ display: "flex" }}>
           <Card
             sx={{
               flex: 1,
@@ -272,7 +295,7 @@ export default function Perfil({
         </Grid>
 
         {/* Productos */}
-        <Grid item sx={{ display: "flex"}}>
+        <Grid item sx={{ display: "flex" }}>
           <Card
             sx={{
               flex: 1,
@@ -310,8 +333,8 @@ export default function Perfil({
           </Card>
         </Grid>
 
-         {/* Ventas */}
-        <Grid item sx={{ display: "flex"}}>
+        {/* Ventas */}
+        <Grid item sx={{ display: "flex" }}>
           <Card
             sx={{
               flex: 1,
@@ -390,16 +413,16 @@ export default function Perfil({
       )}
       {openVentasPopup && (
         <UserVentasPopup
-        isOpen={openVentasPopup} 
-        onClose={()=> setOpenVentasPopUp(false)}
-        nickname={user.nickname}
+          isOpen={openVentasPopup}
+          onClose={() => setOpenVentasPopUp(false)}
+          nickname={user.nickname}
         />
       )}
       {openComprasPopup && (
         <UserComprasPopup
-        isOpen={openComprasPopup} 
-        onClose={()=> setOpenComprasPopUp(false)}
-        nickname={user.nickname}
+          isOpen={openComprasPopup}
+          onClose={() => setOpenComprasPopUp(false)}
+          nickname={user.nickname}
         />
       )}
     </Box>

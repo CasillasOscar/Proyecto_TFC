@@ -17,8 +17,9 @@ import {
 import { toast } from "react-toastify";
 import { ImageProductDetail } from "../../components/Products/ImageProductDetail";
 import { UpdateProductPopup } from "../../components/Popups/UpdateProductPopup";
+import { getUser } from "../../backend/User/user";
 
-export const Producto = ({ user }) => {
+export const Producto = ({ user, handleUserChange }) => {
   const { id } = useParams();
   const [producto, setProducto] = useState();
   const [loading, setLoading] = useState(true);
@@ -66,6 +67,7 @@ export const Producto = ({ user }) => {
         toast.success(
           "Enorabuena! revisa en tu perfil tu compras y ponte en contacto con el vendedor"
         );
+        fetchUser()
         navigate("/perfil");
       } else {
         toast.error("Algo ha salido mal en la compra del producto");
@@ -75,6 +77,24 @@ export const Producto = ({ user }) => {
       console.log("Error al comprar el producto", error);
     }
   };
+
+  const fetchUser = async () => {
+     try {
+      const response = await getUser(user.nickname);
+      if (response.status === 200) {
+        saveInfoInLocalStorage(response.data.user)
+        handleUserChange()
+      } else {
+        console.log("Error al actualizar usuario");
+    }
+    } catch (error) {
+      console.log("Error al actualizar usuario", error);
+    }
+  }
+
+   const saveInfoInLocalStorage = (user) => {
+    localStorage.setItem("user", JSON.stringify(user));
+  }
 
   return (
     <Box

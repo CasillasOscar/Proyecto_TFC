@@ -47,24 +47,13 @@ public class Service_user {
     @Autowired
     private VentaRepository ventaRepository;
 
-    public SerializerUser getUserByNickname(
+    public Map<String, Object> getUserByNickname(
             String nickname
     ) throws CustomException {
 
         Usuario user = findNickname(nickname);
 
-        return new SerializerUser(
-                user.getNickname(),
-                user.getNombre(),
-                user.getApellido(),
-                user.getEmail(),
-                user.getProvincia(),
-                user.getCCAA(),
-                user.getValoracion(),
-                user.getNVentas(),
-                user.getNCompras(),
-                user.getImagenPerfil()
-        );
+        return new UserResponses(user, true).responseGetUser200();
     }
 
 

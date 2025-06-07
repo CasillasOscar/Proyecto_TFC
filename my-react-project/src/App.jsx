@@ -110,7 +110,7 @@ export default function App() {
         <Route path="/recuperar" element={<Recuperar />} />
         <Route path="/AcercaDe" element={<AcercaDe />} />
         <Route path="/Valoraciones" element={<Valoraciones />} />
-        <Route path="/producto/:id" element={<Producto user={user}/>} />
+        <Route path="/producto/:id" element={<Producto user={user} handleUserChange={handleUserChange}/>} />
         <Route path="/perfil/misProductos/:nickname" element={<MisProductos user={user}/>} />
       </Routes>
       <Footer user={user}/>
