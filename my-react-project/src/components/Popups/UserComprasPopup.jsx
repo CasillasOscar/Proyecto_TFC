@@ -4,11 +4,8 @@ import {
   DialogActions,
   DialogTitle,
   DialogContent,
-  Card,
-  CardContent,
   Typography,
   Box,
-  Divider,
   TableContainer,
   Paper,
   Table,
@@ -42,10 +39,6 @@ export const UserComprasPopup = ({ isOpen, onClose, nickname }) => {
     fetchPurchases();
   }, [fetchPurchases]);
 
-  useEffect(() => {
-    console.log(compras);
-  }, [compras]);
-
   return (
     <Dialog
       open={isOpen}
@@ -55,7 +48,7 @@ export const UserComprasPopup = ({ isOpen, onClose, nickname }) => {
       sx={{ display: "flex", flexDirection: "column" }}
     >
       <DialogTitle sx={{ textAlign: "center" }}>
-        Estas son tus compras <strong>{nickname}</strong>
+        Historial de compras de <strong>{nickname}</strong>
       </DialogTitle>
       <DialogContent>
       {compras && compras.length > 0 ? (
@@ -93,7 +86,7 @@ export const UserComprasPopup = ({ isOpen, onClose, nickname }) => {
           </Table>
         </TableContainer>
       ) : (
-        <Box sx={{ p: 2, textAlign: 'center' }}> {/* Un Box simple para el mensaje */}
+        <Box sx={{ p: 2, textAlign: 'center' }}>
           <Typography>No tienes compras</Typography>
         </Box>
       )}

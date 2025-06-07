@@ -136,5 +136,12 @@ public class Controller_User {
         return ResponseEntity.ok(serviceUser.getUserPurchases(nickname));
     }
 
+    @GetMapping("/ventas/{nickname}")
+    public ResponseEntity<?> getUserSales(
+            @PathVariable String nickname
+    ) throws CustomException {
+        return ResponseEntity.ok(serviceUser.getUserSales(nickname));
+    }
+
 
 }

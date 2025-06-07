@@ -392,7 +392,7 @@ export default function Perfil({
         <UserVentasPopup
         isOpen={openVentasPopup} 
         onClose={()=> setOpenVentasPopUp(false)}
-        user={user}
+        nickname={user.nickname}
         />
       )}
       {openComprasPopup && (

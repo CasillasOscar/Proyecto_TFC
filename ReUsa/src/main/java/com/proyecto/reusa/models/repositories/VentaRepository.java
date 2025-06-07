@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface VentaRepository extends JpaRepository<Venta, Integer> {
     List<Venta> getVentasByIdUsuarioComprador_Id(Integer idUsuarioCompradorId);
+
+    List<Venta> getVentasByIdUsuarioVendedor_Id(Integer idUsuarioVendedorId);
 }

@@ -251,6 +251,13 @@ public class Service_user {
         return purchasesList;
     }
 
+    public List<Venta> getUserSales(String nickname) throws CustomException {
+        Usuario user = findNickname(nickname);
+
+        List<Venta> salesList = ventaRepository.getVentasByIdUsuarioVendedor_Id(user.getId());
+        return salesList;
+    }
+
 
 
     private String getFileExtension(String filename) {
