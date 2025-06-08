@@ -47,11 +47,10 @@ export default function LoginPage({handleUserChange}) {
   return (
     <Box
       sx={{
-        minHeight: "80vh",
+        minHeight: "60vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f5f5f5",
       }}
     >
       <Paper elevation={6} sx={{ padding: 4, width: "100%", maxWidth: 400 }}>
