@@ -105,7 +105,7 @@ export default function App() {
         />
 
         <Header user={user} avatarUrl={avatarUrl} />
-        <Box component="main" sx={{ flexGrow: 1 }}>
+        <Box component="main" sx={{ flexGrow: 1}}>
           <Routes>
             <Route
               path="/"
