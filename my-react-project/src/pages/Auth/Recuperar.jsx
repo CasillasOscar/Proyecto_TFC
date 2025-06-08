@@ -4,21 +4,22 @@ import { useNavigate } from 'react-router-dom';
 
 export default function RecuperarPage() {
   const [email, setEmail] = useState('');
+  const [openHelperText, setOpenHelperText] = useState(true)
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setOpenHelperText(true)
     console.log('Enviar enlace a:', email);
   };
 
   return (
     <Box
       sx={{
-        minHeight: '80vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#eceff1',
+        height:'60vh',
       }}
     >
       <Paper elevation={6} sx={{ padding: 4, width: '100%', maxWidth: 400, borderRadius: 3 }}>
@@ -39,9 +40,11 @@ export default function RecuperarPage() {
               label="Dirección de e-mail"
               type="email"
               fullWidth
-              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              helperText={openHelperText && 'Próximamente se desarrollará funcionalidad'}
+              error={true}
+              disabled={true}
             />
 
             <Button
@@ -57,6 +60,7 @@ export default function RecuperarPage() {
                 borderRadius: 10,
                 py: 1.5,
               }}
+              disabled='true'
             >
               Enviar e-mail
             </Button>

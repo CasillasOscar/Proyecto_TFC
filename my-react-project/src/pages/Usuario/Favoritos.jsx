@@ -35,7 +35,7 @@ export default function Favoritos({ user, favoritos, setFavoritos }) {
 
       {listFavorites.length < 1 && (
         <Typography textAlign="center" sx={{ mt: 4 }} color="text.secondary">
-          No has guardado ningún producto como favorito todavía.
+          No has guardado ningún producto como favorito todavía o el vendedor ha eliminado el producto.
         </Typography>
       )}
 

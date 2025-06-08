@@ -55,6 +55,9 @@ public class UserResponses {
         userData.put("provincia", user.getProvincia());
         userData.put("comunidadAutonoma", user.getCCAA());
         userData.put("telefono", user.getTelefono().toString());
+        userData.put("valoracion", user.getValoracion().toString());
+        userData.put("ventas", user.getNVentas().toString());
+        userData.put("compras", user.getNCompras().toString());
 
         response.put("user", userData);
         response.put("response_successfully", responseBoolean.toString());

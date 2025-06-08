@@ -105,7 +105,6 @@ export const Producto = ({ user, handleUserChange }) => {
       sx={{
         width: "100%",
         minHeight: "100vh",
-        backgroundColor: "#f0f2f5",
         py: 3,
       }}
     >

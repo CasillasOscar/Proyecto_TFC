@@ -10,6 +10,7 @@ import {
   Divider,
   IconButton,
   styled,
+  Tooltip,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -171,13 +172,15 @@ export default function Perfil({
             {usuario.email}
           </Typography>
         </Box>
-        <IconButton
-          onClick={() => setOpenUpdateUserPopup(true)}
-          color="primary"
-          sx={{ ml: "auto" }}
-        >
-          <EditIcon />
-        </IconButton>
+        <Tooltip title='Editar usuario'>
+          <IconButton
+            onClick={() => setOpenUpdateUserPopup(true)}
+            color="primary"
+            sx={{ ml: "auto" }}
+          >
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
       </Box>
 
       <Divider sx={{ mb: 4 }} />
