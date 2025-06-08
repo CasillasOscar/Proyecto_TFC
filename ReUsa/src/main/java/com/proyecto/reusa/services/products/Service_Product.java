@@ -9,6 +9,7 @@ import com.proyecto.reusa.services.products.serializers.ImageProductDTO;
 import com.proyecto.reusa.services.products.serializers.ProductDTO;
 import com.proyecto.reusa.services.products.serializers.SellProductDTO;
 import com.proyecto.reusa.services.users.serializers.ProfilePhotoDTO;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -130,6 +131,7 @@ public class Service_Product {
         return new ProductResponses(filteredProducts, true).responseProductFilters200();
     }
 
+    @Transactional
     public Map<String, Object> buyProduct(String buyer_nickname, Integer id_product) throws CustomException {
         Usuario user = findNickname(buyer_nickname);
 
@@ -151,6 +153,7 @@ public class Service_Product {
 
            producto.get().setEtapa("vendido");
            productoRepository.save(producto.get());
+           cleanProductInFavorites(producto.get());
 
            //Sumar venta y compra a los usuarios
            user.setNCompras(user.getNCompras()+1);
@@ -192,6 +195,7 @@ public class Service_Product {
         return true;
     }
 
+    @Transactional
     public boolean deleteProduct(Integer id_product){
         Optional<Producto> productOptional = productoRepository.findById(id_product);
 
@@ -199,6 +203,7 @@ public class Service_Product {
             deleteProductImageFile(productOptional.get().getImagen1());
             deleteProductImageFile(productOptional.get().getImagen2());
 
+            cleanProductInFavorites(productOptional.get());
             productoRepository.deleteById(id_product);
             return !productoRepository.existsById(id_product);
         } else {
@@ -283,6 +288,10 @@ public class Service_Product {
         return user.get();
     }
 
+    @Transactional
+    protected void cleanProductInFavorites(Producto producto){
+       favoritosRepository.removeFavoritosByIdProducto(producto);
+    }
 
 }
 
