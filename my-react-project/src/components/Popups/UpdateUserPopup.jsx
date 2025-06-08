@@ -11,6 +11,7 @@ import {
   Select,
   MenuItem,
   OutlinedInput,
+  Typography,
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { getListProvincias, updateUser } from "../../backend/User/user";
@@ -21,6 +22,8 @@ export const UpdateUserPopup = ({ isOpen, onClose, onUserUpdated }) => {
   const originalUserObjectRef = useRef(null);
 
   const [provincias, setProvincias] = useState([]);
+  const [loadingProvincias, setLoadingProvincias] = useState(false);
+  const [errorProvincias, setErrorProvincias] = useState(null);
 
   const [nickname, setNickname] = useState("");
   const [nombre, setNombre] = useState("");
@@ -39,6 +42,8 @@ export const UpdateUserPopup = ({ isOpen, onClose, onUserUpdated }) => {
   });
 
   const fetchProvincias = useCallback(async () => {
+    setLoadingProvincias(true);
+    setErrorProvincias(null);
     try {
       const response = await getListProvincias();
       if (response.status === 200) {
@@ -48,15 +53,19 @@ export const UpdateUserPopup = ({ isOpen, onClose, onUserUpdated }) => {
         }));
         setProvincias(processedProvincias);
       } else {
-        console.error(
-          "Error al obtener las provincias:",
-          response.data.message
-        );
-        toast.error("Error al obtener las provincias");
+        const msg =
+          response.data?.message || "Error al obtener las provincias.";
+        console.error("Error al obtener las provincias:", msg);
+        toast.error(msg);
+        setErrorProvincias(msg);
       }
     } catch (error) {
-      toast.error("Error al obtener las provincias");
+      const msg = "Error de conexión al obtener las provincias.";
+      toast.error(msg);
+      setErrorProvincias(msg);
       console.error("Error al obtener las provincias:", error);
+    } finally {
+      setLoadingProvincias(false);
     }
   }, []);
 
@@ -86,12 +95,7 @@ export const UpdateUserPopup = ({ isOpen, onClose, onUserUpdated }) => {
         setApellido(currentUser.apellido || "");
         setTelefono(currentUser.telefono || "");
         setEmail(currentUser.email || "");
-
-        if (currentUser.provincia && currentUser.provincia !== "empty") {
-          setSelectedProvincia(String(currentUser.provincia));
-        } else {
-          setSelectedProvincia("");
-        }
+        setSelectedProvincia(""); 
       } else {
         setNickname("");
         setNombre("");
@@ -111,6 +115,45 @@ export const UpdateUserPopup = ({ isOpen, onClose, onUserUpdated }) => {
       setDisabledUpdated(true);
     }
   }, [isOpen, localStorageUserString, fetchProvincias]);
+
+  useEffect(() => {
+    if (
+      isOpen &&
+      provincias.length > 0 &&
+      originalUserObjectRef.current &&
+      !loadingProvincias &&
+      !errorProvincias
+    ) {
+      const currentUser = originalUserObjectRef.current;
+      const currentUserProvincia = currentUser.provincia;
+
+      if (currentUserProvincia && currentUserProvincia !== "empty") {
+        const provinciaEncontrada = provincias.find(
+          (p) =>
+            String(p.id) === String(currentUserProvincia) ||
+            p.nombre === currentUserProvincia
+        );
+
+        if (provinciaEncontrada) {
+          setSelectedProvincia(String(provinciaEncontrada.id));
+        } else {
+          setSelectedProvincia("");
+          console.warn(
+            "La provincia del usuario no se encontró en la lista de provincias disponibles. Resetting to empty."
+          );
+        }
+      } else {
+        setSelectedProvincia("");
+      }
+    } else if (
+      isOpen &&
+      provincias.length === 0 &&
+      !loadingProvincias &&
+      !errorProvincias
+    ) {
+      setSelectedProvincia(""); 
+    }
+  }, [isOpen, provincias, loadingProvincias, errorProvincias]);
 
   useEffect(() => {
     const hasAnyChange = Object.values(changeFlags).some((flag) => flag);
@@ -141,12 +184,13 @@ export const UpdateUserPopup = ({ isOpen, onClose, onUserUpdated }) => {
 
   const handleUserChange = async () => {
     try {
-      const originalNickname = originalUserObjectRef.current?.nickname; 
+      const originalNickname = originalUserObjectRef.current?.nickname;
 
       if (!originalNickname) {
         toast.error("No se pudo obtener el nickname original del usuario.");
         return;
       }
+
       let provinciaNombre = "";
       if (selectedProvincia) {
         const provinciaEncontrada = provincias.find(
@@ -160,6 +204,7 @@ export const UpdateUserPopup = ({ isOpen, onClose, onUserUpdated }) => {
             selectedProvincia
           );
           toast.error("No se encontró el nombre de la provincia seleccionada.");
+          return;
         }
       }
 
@@ -168,21 +213,23 @@ export const UpdateUserPopup = ({ isOpen, onClose, onUserUpdated }) => {
         nombre,
         apellido,
         telefono,
-        provincia: provinciaNombre, 
+        provincia: provinciaNombre,
       };
+
       const response = await updateUser(originalNickname, updatedUserData);
-        console.log("Response from updateUser:", response);
+      console.log("Response from updateUser:", response);
+
       if (response.status === 200) {
         toast.success("Usuario actualizado correctamente");
         onUserUpdated(response.data.user);
         onClose();
       } else {
         console.error("Error al actualizar el usuario:", response.data.message);
-        toast.error("Error al actualizar el usuario");
+        toast.error("Error al actualizar el usuario: " + response.data.message);
       }
     } catch (error) {
       console.error("Error al actualizar el usuario:", error);
-      toast.error("Error al actualizar el usuario");
+      toast.error("Error al actualizar el usuario.");
     }
   };
 
@@ -230,9 +277,16 @@ export const UpdateUserPopup = ({ isOpen, onClose, onUserUpdated }) => {
               value={selectedProvincia}
               onChange={handleProvinciaChange}
               input={<OutlinedInput label="Provincias" />}
+              disabled={loadingProvincias || !!errorProvincias}
             >
               <MenuItem value="">
-                <em>Selecciona una provincia</em>
+                <em>
+                  {loadingProvincias
+                    ? "Cargando provincias..."
+                    : errorProvincias
+                    ? "Error al cargar provincias"
+                    : "Selecciona una provincia"}
+                </em>
               </MenuItem>
               {provincias.map((provincia) => (
                 <MenuItem key={provincia.id} value={provincia.id}>
@@ -240,6 +294,15 @@ export const UpdateUserPopup = ({ isOpen, onClose, onUserUpdated }) => {
                 </MenuItem>
               ))}
             </Select>
+            {errorProvincias && (
+              <Typography
+                variant="caption"
+                color="error"
+                sx={{ ml: 1.5, mt: 0.5 }}
+              >
+                {errorProvincias}
+              </Typography>
+            )}
           </FormControl>
         </Box>
       </DialogContent>
