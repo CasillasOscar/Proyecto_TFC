@@ -20,6 +20,7 @@ import { getAvatar, listFavorites } from "./backend/User/user";
 import { Producto } from "./pages/Producto/Producto";
 import { MisProductos } from "./pages/Usuario/MisProductos";
 import { Box } from "@mui/material";
+import ScrollToTop from "./components/configureViews/ScrollToTop"
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -84,6 +85,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+    <ScrollToTop/>
       <Box
         sx={{
           display: "flex",
