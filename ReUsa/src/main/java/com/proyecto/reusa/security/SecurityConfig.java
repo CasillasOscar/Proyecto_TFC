@@ -85,7 +85,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // Permite el origen de tu frontend. ¡Importante! Reemplaza con el puerto real de tu frontend.
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://proyecto-tfc.onrender.com/"));
         configuration.setAllowedMethods(Arrays.asList(
                 HttpMethod.GET.name(),
                 HttpMethod.POST.name(),
