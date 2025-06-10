@@ -2,7 +2,10 @@
 FROM maven:3.8.2-openjdk-17 AS builder
 
 WORKDIR /app
-COPY . .
+
+COPY ReUsa/ ./ReUsa/
+
+WORKDIR /app/ReUsa
 
 RUN mvn clean package -DskipTests
 
