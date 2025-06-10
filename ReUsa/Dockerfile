@@ -1,12 +1,12 @@
 # --- ETAPA DE CONSTRUCCIÓN (BUILD STAGE) ---
-FROM maven:3.8.2-jdk-17 AS builder
+FROM maven:3.8.2-openjdk-17 AS builder
 
 WORKDIR /app
 COPY . .
 
 RUN mvn clean package -DskipTests
 
-FROM maven:3.8.2-openjdk-17 AS builder
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
