@@ -1,10 +1,14 @@
 # --- ETAPA DE CONSTRUCCIÓN (BUILD STAGE) ---
-FROM maven:3.9.6-eclipse-temurin-17 AS builder
+FROM maven:3.8.2-openjdk-17 AS builder
+
+WORKDIR /app
+
+COPY ReUsa/ ./ReUsa/
 
 WORKDIR /app/ReUsa
-COPY . .
 
 RUN mvn clean package -DskipTests
+
 FROM eclipse-temurin:17-jre
 
 WORKDIR /app
