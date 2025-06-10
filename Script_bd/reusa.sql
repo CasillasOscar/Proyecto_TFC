@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-06-2025 a las 21:04:00
+-- Tiempo de generación: 10-06-2025 a las 21:03:58
 -- Versión del servidor: 10.6.17-MariaDB
 -- Versión de PHP: 8.0.28
 
@@ -112,9 +112,12 @@ CREATE TABLE `favoritos` (
 --
 
 INSERT INTO `favoritos` (`id`, `id_usuario_comprador`, `id_producto`) VALUES
-(30, 7, 22),
 (31, 7, 20),
-(32, 10, 23);
+(39, 10, 32),
+(41, 11, 32),
+(42, 11, 31),
+(43, 11, 37),
+(44, 10, 31);
 
 -- --------------------------------------------------------
 
@@ -141,11 +144,20 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `nombre`, `id_usuario`, `id_subcategoria`, `precio`, `estado`, `descripcion`, `fecha_publicacion`, `imagen_1`, `imagen_2`, `etapa`) VALUES
-(20, 'Iphone 13', 10, 1, 700.00, 'Nuevo', 'Iphone 13 en perfecto estado', '2025-05-29', 'BlvckShvdow_productPhoto120250529174629.jpg', 'BlvckShvdow_productPhoto220250529174629.jpg', 'activo'),
-(21, 'BMW E87', 10, 25, 6500.00, 'Aceptable', 'Bmw serie 1 en buen estado de 2006', '2025-05-29', 'BlvckShvdow_productPhoto120250529174819.jpg', 'BlvckShvdow_productPhoto220250529174819.jpg', 'activo'),
-(22, 'Camiseta Leganes', 10, 11, 10.00, 'Seminuevo', 'Camiseta del leganes ', '2025-05-29', 'BlvckShvdow_productPhoto120250529174948.jpg', 'BlvckShvdow_productPhoto220250529174948.jpg', 'activo'),
-(23, 'Air force one', 7, 14, 50.00, 'Nuevo', 'Air forcce one en muy buen estado', '2025-05-30', 'San_productPhoto120250530165118.jpg', 'San_productPhoto220250530165118.jpg', 'activo'),
-(24, 'El monje que vendió su ferrari', 7, 21, 5.90, 'Aceptable', 'Libro buenísimo que me he leído muchas veces y es muy recomendable', '2025-05-30', 'San_productPhoto120250530201756.jpg', 'San_productPhoto220250530201756.jpg', 'activo');
+(20, 'Iphone 13+', 10, 1, 750.00, 'Nuevo', 'Iphone 13 en perfecto estado', '2025-05-29', 'BlvckShvdow_productPhoto120250529174629.jpg', 'BlvckShvdow_productPhoto220250529174629.jpg', 'activo'),
+(23, 'Air force one', 7, 14, 50.00, 'Nuevo', 'Air forcce one en muy buen estado', '2025-05-30', 'San_productPhoto120250530165118.jpg', 'San_productPhoto220250530165118.jpg', 'vendido'),
+(24, 'El monje que vendió su ferrari', 7, 21, 5.90, 'Aceptable', 'Libro buenísimo que me he leído muchas veces y es muy recomendable', '2025-05-30', 'San_productPhoto120250530201756.jpg', 'San_productPhoto220250530201756.jpg', 'vendido'),
+(25, 'BMW E87', 10, 25, 6500.00, 'Seminuevo', 'Muy bonito el coche', '2025-06-04', 'BlvckShvdow_productPhoto120250604195303.jpg', 'BlvckShvdow_productPhoto220250604195303.jpg', 'vendido'),
+(26, 'Camiseta del leganes', 10, 11, 10.00, 'Seminuevo', 'Camiseta con poco uso talla M', '2025-06-04', 'BlvckShvdow_productPhoto120250604195717.jpg', 'BlvckShvdow_productPhoto220250604195717.jpg', 'activo'),
+(27, 'Kia ceed', 7, 25, 9876.00, 'Seminuevo', 'Kia ceed 1.6', '2025-06-07', 'San_productPhoto120250607121828.jpg', 'San_productPhoto220250607121828.jpg', 'vendido'),
+(28, 'Martillo maravilloso', 7, 9, 7.00, 'Nuevo', 'Martillo nuevo', '2025-06-07', 'San_productPhoto120250607122013.jpg', 'San_productPhoto220250607122013.jpg', 'vendido'),
+(29, 'Silla plastico', 7, 8, 4.00, 'Seminuevo', 'Silla comodisima', '2025-06-07', 'San_productPhoto120250607122220.jpg', 'San_productPhoto220250607122220.jpg', 'vendido'),
+(31, 'BMW e87', 7, 25, 6500.00, 'Aceptable', 'Bmw serie1 en buen estado', '2025-06-08', 'San_productPhoto120250608201326.jpg', 'San_productPhoto220250608201326.jpg', 'activo'),
+(32, 'El monje que vendió su ferrari', 7, 21, 10.00, 'Aceptable', 'En buen estado, un libro muy recomendado', '2025-06-08', 'San_productPhoto120250608201412.jpg', 'San_productPhoto220250608201412.jpg', 'activo'),
+(33, 'Air force one', 7, 14, 37.00, 'Seminuevo', 'Estan en muy buen estado', '2025-06-08', 'San_productPhoto120250608201458.jpg', 'San_productPhoto220250608201458.jpg', 'activo'),
+(35, 'Kia ceed', 10, 25, 13000.00, 'Seminuevo', 'Kia ceed 1.6 turbo en buen estado', '2025-06-08', 'BlvckShvdow_productPhoto120250608201642.jpg', 'BlvckShvdow_productPhoto220250608201642.jpg', 'activo'),
+(36, 'Martillo', 10, 9, 20.00, 'Nuevo', 'Herramienta nueva', '2025-06-08', 'BlvckShvdow_productPhoto120250608201756.jpg', 'BlvckShvdow_productPhoto220250608201756.jpg', 'activo'),
+(37, 'Silla de plastico', 10, 8, 15.00, 'Seminuevo', 'Perfecta para tu jardin', '2025-06-08', 'BlvckShvdow_productPhoto120250608201844.jpg', 'BlvckShvdow_productPhoto220250608201844.jpg', 'activo');
 
 -- --------------------------------------------------------
 
@@ -358,7 +370,29 @@ INSERT INTO `token` (`id`, `token`, `token_type`, `revoked`, `expired`, `date_ex
 (94, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ4NjI5MTA4LCJleHAiOjE3NDkyMzM5MDh9.UR_sjapBV0kyLRecdgZIxfFrny4HVzq3XXo9UcOn-TNlLD0bwOaTqtB36cxvIE1q9RF9dHh-2rc9eG1LUirK7Q', 'BEARER', 1, 1, '2025-06-06 18:18:28', 10),
 (95, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ4Nzg5NjkxLCJleHAiOjE3NDkzOTQ0OTF9.ICx_Ori5Btcz-PuZLyhBr9Hkk1_RCliqKZV_IRjvOEJFbapbvf6305Dld_WBLZttTbwfnNgjoRAPCQYKoIiP4g', 'BEARER', 1, 1, '2025-06-08 14:54:51', 10),
 (96, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ4Nzk2Mjc3LCJleHAiOjE3NDk0MDEwNzd9.xSq3OL2kp-0lbCxuE2y-cPEBdocZbVfVERCfHheK_p7QKXjQY3iNR9mMxfdCm-KprxUPZ9VoXmGYJJAKTxhYpA', 'BEARER', 1, 1, '2025-06-08 16:44:37', 10),
-(97, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ4OTc1NTQ3LCJleHAiOjE3NDk1ODAzNDd9.a81sfj3KRhXM4rz4HoBNwhxeW9G09H5_mFCuP3MqNLzJ94GpLDFDLmPvm9e8v_Qtn8rVqn2cOK-p9yud0oxyQg', 'BEARER', 1, 1, '2025-06-10 18:32:27', 10);
+(97, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ4OTc1NTQ3LCJleHAiOjE3NDk1ODAzNDd9.a81sfj3KRhXM4rz4HoBNwhxeW9G09H5_mFCuP3MqNLzJ94GpLDFDLmPvm9e8v_Qtn8rVqn2cOK-p9yud0oxyQg', 'BEARER', 1, 1, '2025-06-10 18:32:27', 10),
+(98, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ4OTc5MjE0LCJleHAiOjE3NDk1ODQwMTR9.fdykzZ774lLLU381On0DMRtl0yXqqIGOP8Ob6GrQ_llYuYA90Y6yHCCZ6avALsvlP0ELsRXSxAnVqdziJHkleA', 'BEARER', 1, 1, '2025-06-10 19:33:34', 10),
+(99, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5MjI3MDkwLCJleHAiOjE3NDk4MzE4OTB9.9G2nYzmBk4BPxt0Dl4WTnWlZZgTt6vSeJevGR2sQl5N906_PweK3Svk4e9aq3ugvMvZ77EYfdIEt7cUq4uJWCA', 'BEARER', 1, 1, '2025-06-13 16:24:50', 10),
+(100, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5Mjg2NTQ4LCJleHAiOjE3NDk4OTEzNDh9.oSM-O4cQeVDU6ET0q2T_vtY6Heel38aAn-v12KV4uZSAY881PclqvYLoYHXiJjpwggiBrRI1y1uPICtynQMaJA', 'BEARER', 1, 1, '2025-06-14 08:55:48', 10),
+(101, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI3Iiwibm9tYnJlIjoiU2FuZHJhIiwic3ViIjoiYWRtaW4zQGVtYWlsLmNvbSIsImlhdCI6MTc0OTI5MTM4MywiZXhwIjoxNzQ5ODk2MTgzfQ.6fszDMpqgXQ8IzeV17PoKgQ77UuJLnBJCjsrW6640oawXS7nd6jAUfVBmqYYrwa51BuVVkecsAHHiMvRAG9Kkg', 'BEARER', 1, 1, '2025-06-14 10:16:23', 7),
+(102, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5MjkyMDQ4LCJleHAiOjE3NDk4OTY4NDh9.UjoR_i5XbudYqa5Dgv6MWYsjr-YrulUM6TSchZk8BwcDRrfFTbA7AI69FLHHSK-OLQezSKQv7aCvvkVajkY8AA', 'BEARER', 1, 1, '2025-06-14 10:27:28', 10),
+(103, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5MjkzNjA4LCJleHAiOjE3NDk4OTg0MDh9.yDGCM41W3PH3mYXZiPainm-o_XK4uvieER_RYNjj56M2fykGyh0Z9iIJvAuPXC2kBNARya4sIJnG0tdYkJgayA', 'BEARER', 1, 1, '2025-06-14 10:53:28', 10),
+(104, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5MzAyMzE3LCJleHAiOjE3NDk5MDcxMTd9.HFmzoJKmhUlsNf0k65LBN4vFTixCyE-5B0BLx5l-Zeapwqhmna81bsn6tQRR63ec_kym4ux1AmH-s6QAPC-bXA', 'BEARER', 1, 1, '2025-06-14 13:18:37', 10),
+(105, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI3Iiwibm9tYnJlIjoiU2FuZHJhIiwic3ViIjoiYWRtaW4zQGVtYWlsLmNvbSIsImlhdCI6MTc0OTMwNTI0MCwiZXhwIjoxNzQ5OTEwMDQwfQ.-oGxdT1YAMRRP3FLqGgRuFqE-LOaE56LAyI7FFkYdOFXNZWfvRcpdynBeXdkTlplRJUsvzOTG4q70tk-W2rxIA', 'BEARER', 1, 1, '2025-06-14 14:07:20', 7),
+(106, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5MzA1MzI0LCJleHAiOjE3NDk5MTAxMjR9.-08rzIZnRe6eYDUVOPp0XriyPtM6iYEWBVnJvkZaBDpj8ILm9LvVReB_npRLxh7kmUgPSX9NF8AexOz4LGR2xw', 'BEARER', 1, 1, '2025-06-14 14:08:44', 10),
+(107, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5MzA2MjMwLCJleHAiOjE3NDk5MTEwMzB9.gwzZAdstLuUKeA6jF2nbmKQSuWv1pVEkQSpMtOqWHUIa3mbUysOBPCqCVQWYy6fOnBH4wIC7SzC-Ug_7dezIRA', 'BEARER', 1, 1, '2025-06-14 14:23:50', 10),
+(108, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI3Iiwibm9tYnJlIjoiU2FuZHJhIiwic3ViIjoiYWRtaW4zQGVtYWlsLmNvbSIsImlhdCI6MTc0OTMwNzYxMiwiZXhwIjoxNzQ5OTEyNDEyfQ.ffMollphYozcZ5BpyI5palppy-LSEDr7vyraT_vshF37-6xcnIQCTL66WKB_ClYsfzHwWdt1ogDklmesdKJclQ', 'BEARER', 1, 1, '2025-06-14 14:46:52', 7),
+(109, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5MzA3NjM1LCJleHAiOjE3NDk5MTI0MzV9.oVB_kK-Lp0CbKCjHUkvgF1fs_ORrxsOavvEJE0FDNuHML8ty8SEt6TO63dJRdN7SUeXFbCOjvDA8PNc4CumWZg', 'BEARER', 1, 1, '2025-06-14 14:47:15', 10),
+(110, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5Mzk5ODEyLCJleHAiOjE3NTAwMDQ2MTJ9.Vk_ivx2PR9DzoKLoTCc6px4he8Vdc0KbqMDHi3n31G2vU-9s7Goyw90TbSzNLVWky8_fp_dzAsT92LacwLOZBg', 'BEARER', 1, 1, '2025-06-15 16:23:32', 10),
+(111, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI3Iiwibm9tYnJlIjoiU2FuZHJhIiwic3ViIjoiYWRtaW4zQGVtYWlsLmNvbSIsImlhdCI6MTc0OTQwMTMxNywiZXhwIjoxNzUwMDA2MTE3fQ.tu2pBZxsk_IiHSyRx-ZBUG2w0Ron8szWgCJ0VAUftwBRh7a125BYq8VEY0rejkvOao55_B5hIty-dWGgRwph7w', 'BEARER', 1, 1, '2025-06-15 16:48:37', 7),
+(112, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5NDAxMzM4LCJleHAiOjE3NTAwMDYxMzh9.QN6Zl5LMm3A-JNTCCoHWB01PwnNTC-I2_xgtRImiSyv1qftZWil-v9IZ3F16p71nba4-ADAZwrARrODSKQMwDw', 'BEARER', 1, 1, '2025-06-15 16:48:58', 10),
+(113, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI3Iiwibm9tYnJlIjoiU2FuZHJhIiwic3ViIjoiYWRtaW4zQGVtYWlsLmNvbSIsImlhdCI6MTc0OTQwNjM2MiwiZXhwIjoxNzUwMDExMTYyfQ.062MjsXTHg579ud6GyI0KQxAqg3gkb-x2gPia-tTAEPinVPNIKNtw5XMA4ME0NcXMZSiilGrX_IFZnmLIsh2Sg', 'BEARER', 1, 1, '2025-06-15 18:12:42', 7),
+(114, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5NDA2NTE3LCJleHAiOjE3NTAwMTEzMTd9.eeadQIo-uOnageeAkXEOCbADoXzVzalbCFhFaaKHwfeMCW885u7zVIucVTCX6Gi5QHkUyWPwxrhtdz3XrrQJRA', 'BEARER', 1, 1, '2025-06-15 18:15:17', 10),
+(115, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5NDA2ODU1LCJleHAiOjE3NTAwMTE2NTV9.JOUoZvlcAuJ6kyeQbEUeE6N9h6-y8h8-U8qX9mkT6dzx9XfKs73i1wySk78fWqNLRzFOIo8qxfbijn-I-Fzkng', 'BEARER', 1, 1, '2025-06-15 18:20:55', 10),
+(116, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5NDA3MTY1LCJleHAiOjE3NTAwMTE5NjV9.IJnuUkcKV7_krxKTs9-3RiwY4MOUcI9cZ4soe-4sALUla8XOx03tRBWvlEdu-DIoxu7D4oin3n0pMSrKtZveGA', 'BEARER', 1, 1, '2025-06-15 18:26:05', 10),
+(117, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5NDA3OTc5LCJleHAiOjE3NTAwMTI3Nzl9.OBRPewGteFdu3m1qgmyj23dj9Lh-cTx8OukStfhyKf-hYc8VIPRVs3cvtbi-bmOKWY6NohrUwXV-HjvmVqwi_w', 'BEARER', 1, 1, '2025-06-15 18:39:39', 10),
+(118, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMSIsIm5vbWJyZSI6Ikp1YW4iLCJzdWIiOiJqdWFuQGdtYWlsLmNvbSIsImlhdCI6MTc0OTQwODI0MiwiZXhwIjoxNzUwMDEzMDQyfQ.FMfc_VtFbKefqtQ_wqu5vVLKSOvdHkEdhlzLJKMOAIoesCLmIR-BJJmj2S3kynGvdMda7_WmMuGBJWaQYiA50Q', 'BEARER', 1, 1, '2025-06-15 18:44:02', 11),
+(119, 'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxMCIsIm5vbWJyZSI6Ik9zY2FyIiwic3ViIjoib3NjYXJAZ21haWwuY29tIiwiaWF0IjoxNzQ5NDA5MjY5LCJleHAiOjE3NTAwMTQwNjl9._iqHkTYEvwk4ZJq6De0Ri7-8wgkSKtbZ0IBmMIfOxSpWf9jD3O4708BzY55ve3zaXE8wmvrDK6vQq0DyiKNKYg', 'BEARER', 1, 1, '2025-06-15 19:01:09', 10);
 
 -- --------------------------------------------------------
 
@@ -386,8 +420,9 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nickname`, `password`, `nombre`, `apellido`, `imagen_perfil`, `id_provincia`, `telefono`, `email`, `valoracion`, `n_ventas`, `n_compras`) VALUES
-(7, 'San', '$2a$10$lI4SfzaNh6ufrKUnp6Bkw.8nt4jIXJo2Zb0RJEna7aXfc52LcOCE.', 'Sandra', 'Borja', 'San_profilePhoto.png', 42, 666666668, 'admin3@email.com', 5, 0, 0),
-(10, 'BlvckShvdow', '$2a$10$uAeCcbCcm4snp6zjj53jqOdb9vU50PCbr84haEgRNglkACEBy/waa', 'Oscar', 'Casillas', 'BlvckShvdow_profilePhoto.png', 42, 689350653, 'oscar@gmail.com', 5, 0, 0);
+(7, 'San', '$2a$10$lI4SfzaNh6ufrKUnp6Bkw.8nt4jIXJo2Zb0RJEna7aXfc52LcOCE.', 'Sandra', 'Borja', 'San_profilePhoto.png', 42, 666666668, 'admin3@email.com', 5, 6, 1),
+(10, 'BlvckShvdow', '$2a$10$uAeCcbCcm4snp6zjj53jqOdb9vU50PCbr84haEgRNglkACEBy/waa', 'Oscar', 'Casillas', 'BlvckShvdow_profilePhoto.png', 42, 689350653, 'oscar@gmail.com', 5, 1, 6),
+(11, 'JuanPedro', '$2a$10$EroO1rZqYik3wIOCUMBnTO8oGmgSp5H2WDrE6FebdjaB8IJZX5BCC', 'Juan', 'Ramirez', 'JuanPedro_profilePhoto.jpg', 8, 609350321, 'juan@gmail.com', 5, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -403,6 +438,19 @@ CREATE TABLE `venta` (
   `fecha_venta` date NOT NULL,
   `precio` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+--
+-- Volcado de datos para la tabla `venta`
+--
+
+INSERT INTO `venta` (`id`, `id_usuario_comprador`, `id_usuario_vendedor`, `id_producto`, `fecha_venta`, `precio`) VALUES
+(1, 10, 7, 27, '2025-06-07', 9876.00),
+(2, 10, 7, 28, '2025-06-07', 7.00),
+(3, 10, 7, 24, '2025-06-07', 5.90),
+(4, 10, 7, 29, '2025-06-07', 4.00),
+(5, 7, 10, 25, '2025-06-07', 6500.00),
+(7, 10, 7, 23, '2025-06-08', 50.00),
+(8, 10, 7, 23, '2025-06-08', 50.00);
 
 --
 -- Índices para tablas volcadas
@@ -511,13 +559,13 @@ ALTER TABLE `contraoferta`
 -- AUTO_INCREMENT de la tabla `favoritos`
 --
 ALTER TABLE `favoritos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT de la tabla `provincia`
@@ -535,19 +583,19 @@ ALTER TABLE `subcategorias`
 -- AUTO_INCREMENT de la tabla `token`
 --
 ALTER TABLE `token`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restricciones para tablas volcadas
